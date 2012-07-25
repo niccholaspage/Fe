@@ -4,6 +4,8 @@ main: org.melonbrew.fe.Fe
 
 version: 0.1
 
+load: startup
+
 commands:
   fe:
     usage: /<command> <name>
