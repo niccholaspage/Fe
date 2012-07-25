@@ -1,0 +1,87 @@
+package org.melonbrew.fe;
+
+import java.text.DecimalFormat;
+import java.util.List;
+
+import org.bukkit.ChatColor;
+import org.melonbrew.fe.database.Account;
+
+public class API {
+	private final Fe plugin;
+	
+	private final DecimalFormat moneyFormat;
+	
+	public API(Fe plugin){
+		this.plugin = plugin;
+		
+		moneyFormat = new DecimalFormat("###,###.###");
+	}
+	
+	public List<Account> getTopAccounts(){
+		return plugin.getFeDatabase().getTopAccounts();
+	}
+	
+	public double getDefaultHoldings(){
+		return plugin.getConfig().getDouble("holdings");
+	}
+	
+	public Account createAccount(String name){
+		return plugin.getFeDatabase().createAccount(name.toLowerCase());
+	}
+	
+	public void removeAccount(String name){
+		plugin.getFeDatabase().removeAccount(name.toLowerCase());
+	}
+	
+	public Account getAccount(String name){
+		return plugin.getFeDatabase().getAccount(name.toLowerCase());
+	}
+	
+	public boolean accountExists(String name){
+		return plugin.getFeDatabase().accountExists(name.toLowerCase());
+	}
+	
+	public String formatNoColor(double amount){
+		return ChatColor.stripColor(format(amount));
+	}
+	
+	public String format(double amount){
+		amount = getMoneyRounded(amount);
+		
+		String suffix = " ";
+		
+		if (amount == 1.0){
+			suffix += getCurrencySingle();
+		}else {
+			suffix += getCurrencyMultiple();
+		}
+		
+		return ChatColor.GOLD.toString() + moneyFormat.format(amount) + ChatColor.GRAY  + suffix;
+	}
+	
+	private double getMoneyRounded(double amount){
+		DecimalFormat twoDForm = new DecimalFormat("#.##");
+
+		return Double.valueOf(twoDForm.format(amount));
+	}
+	
+	public String formatNoColor(Account account){
+		return ChatColor.stripColor(format(account));
+	}
+	
+	public String format(Account account){
+		return format(account.getMoney());
+	}
+	
+	public String getCurrencySingle(){
+		return plugin.getCurrencySingle();
+	}
+	
+	public String getCurrencyMultiple(){
+		return plugin.getCurrencyMultiple();
+	}
+	
+	public void clean(){
+		
+	}
+}

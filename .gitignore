@@ -1,0 +1,10 @@
+.settings/
+bin/
+target/
+build/
+repos/
+Space.jar
+.gradle/
+.classpath
+.project
+.DS_Store
