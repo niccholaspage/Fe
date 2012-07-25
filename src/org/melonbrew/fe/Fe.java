@@ -2,9 +2,13 @@ package org.melonbrew.fe;
 
 import java.util.logging.Logger;
 
+import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.melonbrew.fe.database.Account;
 import org.melonbrew.fe.database.Database;
@@ -40,10 +44,24 @@ public class Fe extends JavaPlugin {
 			return;
 		}
 		
+		setupVault();
+		
 		getCommand("fe").setExecutor(new FeCommand(this));
 	}
 	
+	private void setupVault(){
+		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
+		
+		if (economyProvider != null){
+			getServer().getServicesManager().unregister(economyProvider.getProvider());
+		}
+		
+		getServer().getServicesManager().register(Economy.class, new Economy_Fe(this), this, ServicePriority.Highest);
+	}
+	
 	public void onDisable(){
+		getServer().getServicesManager().unregisterAll(this);
+		
 		getFeDatabase().close();
 	}
 	
