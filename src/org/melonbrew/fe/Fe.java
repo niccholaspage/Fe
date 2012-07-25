@@ -7,6 +7,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -56,7 +57,11 @@ public class Fe extends JavaPlugin {
 			getServer().getServicesManager().unregister(economyProvider.getProvider());
 		}
 		
-		getServer().getServicesManager().register(Economy.class, new Economy_Fe(this), this, ServicePriority.Highest);
+		Plugin vault = getServer().getPluginManager().getPlugin("Vault");
+		
+		if (vault != null){
+			getServer().getServicesManager().register(Economy.class, new Economy_Fe(this), this, ServicePriority.Highest);
+		}
 	}
 	
 	public void onDisable(){
