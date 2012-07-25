@@ -2,7 +2,6 @@ package org.melonbrew.fe;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -20,8 +19,6 @@ import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.database.Account;
 
 public class Economy_Fe implements Economy {
-	private static final Logger log = Logger.getLogger("Minecraft");
-
 	private final String name = "Fe";
 	private Plugin plugin = null;
 	private Fe fe = null;
@@ -36,7 +33,6 @@ public class Economy_Fe implements Economy {
 			if (efe != null && efe.isEnabled()) {
 				fe = (Fe) efe;
 				api = fe.getAPI();
-				log.info(String.format("[%s][Economy] %s hooked.", plugin.getDescription().getName(), name));
 			}
 		}
 	}
@@ -55,7 +51,6 @@ public class Economy_Fe implements Economy {
 				if (efe != null && efe.isEnabled()) {
 					fe = (Fe) efe;
 					api = fe.getAPI();
-					log.info(String.format("[%s][Economy] %s hooked.", plugin.getDescription().getName(), name));
 				}
 			}
 		}
@@ -66,7 +61,6 @@ public class Economy_Fe implements Economy {
 				if (event.getPlugin().getDescription().getName().equals("Fe")) {
 					fe = null;
 					api = null;
-					log.info(String.format("[%s][Economy] %s unhooked.", plugin.getDescription().getName(), economy.name));
 				}
 			}
 		}
