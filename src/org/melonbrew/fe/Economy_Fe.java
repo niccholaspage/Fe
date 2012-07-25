@@ -2,6 +2,7 @@ package org.melonbrew.fe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -19,6 +20,8 @@ import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.database.Account;
 
 public class Economy_Fe implements Economy {
+	private static final Logger log = Logger.getLogger("Minecraft");
+
 	private final String name = "Fe";
 	private Plugin plugin = null;
 	private Fe fe = null;
@@ -33,6 +36,7 @@ public class Economy_Fe implements Economy {
 			if (efe != null && efe.isEnabled()) {
 				fe = (Fe) efe;
 				api = fe.getAPI();
+				log.info("Vault support enabled.");
 			}
 		}
 	}
@@ -51,6 +55,7 @@ public class Economy_Fe implements Economy {
 				if (efe != null && efe.isEnabled()) {
 					fe = (Fe) efe;
 					api = fe.getAPI();
+					log.info("Vault support enabled.");
 				}
 			}
 		}
@@ -61,6 +66,7 @@ public class Economy_Fe implements Economy {
 				if (event.getPlugin().getDescription().getName().equals("Fe")) {
 					fe = null;
 					api = null;
+					log.info("Vault support disabled.");
 				}
 			}
 		}
@@ -79,131 +85,131 @@ public class Economy_Fe implements Economy {
 	public String getName() {
 		return name;
 	}
-	
+
 	@Override
 	public String format(double amount) {
 		return api.formatNoColor(amount);
 	}
-	
-    @Override
-    public String currencyNameSingular() {
-        return api.getCurrencySingle();
-    }
 
-    @Override
-    public String currencyNamePlural() {
-        return api.getCurrencyMultiple();
-    }
-    
-    @Override
-    public double getBalance(String playerName) {
-        if (api.accountExists(playerName)) {
-            return api.getAccount(playerName).getMoney();
-        } else {
-            return 0;
-        }
-    }
-    
-    @Override
-    public EconomyResponse withdrawPlayer(String playerName, double amount) {
-        if (amount < 0) {
-            return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot withdraw negative funds");
-        }
-        
-        if (!api.accountExists(playerName)){
-        	return new EconomyResponse(0, 0, ResponseType.FAILURE, "Account doesn't exist");
-        }
+	@Override
+	public String currencyNameSingular() {
+		return api.getCurrencySingle();
+	}
 
-        Account account = api.getAccount(playerName);
-        if (account.has(amount)) {
-            account.withdraw(amount);
-            return new EconomyResponse(amount, account.getMoney(), ResponseType.SUCCESS, "");
-        } else {
-            return new EconomyResponse(0, account.getMoney(), ResponseType.FAILURE, "Insufficient funds");
-        }
-    }
+	@Override
+	public String currencyNamePlural() {
+		return api.getCurrencyMultiple();
+	}
 
-    @Override
-    public EconomyResponse depositPlayer(String playerName, double amount) {
-        if (amount < 0) {
-            return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot desposit negative funds");
-        }
-        
-        if (!api.accountExists(playerName)){
-        	return new EconomyResponse(0, 0, ResponseType.FAILURE, "Account doesn't exist");
-        }
+	@Override
+	public double getBalance(String playerName) {
+		if (api.accountExists(playerName)) {
+			return api.getAccount(playerName).getMoney();
+		} else {
+			return 0;
+		}
+	}
 
-        Account account = api.getAccount(playerName);
-        account.deposit(amount);
-        return new EconomyResponse(amount, account.getMoney(), ResponseType.SUCCESS, "");
-    }
-    
-    @Override
-    public boolean has(String playerName, double amount) {
-        return getBalance(playerName) >= amount;
-    }
-    
-    @Override
-    public EconomyResponse createBank(String name, String player) {
-        return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
-    }
+	@Override
+	public EconomyResponse withdrawPlayer(String playerName, double amount) {
+		if (amount < 0) {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot withdraw negative funds");
+		}
 
-    @Override
-    public EconomyResponse deleteBank(String name) {
-        return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
-    }
+		if (!api.accountExists(playerName)){
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Account doesn't exist");
+		}
 
-    @Override
-    public EconomyResponse bankHas(String name, double amount) {
-        return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
-    }
+		Account account = api.getAccount(playerName);
+		if (account.has(amount)) {
+			account.withdraw(amount);
+			return new EconomyResponse(amount, account.getMoney(), ResponseType.SUCCESS, "");
+		} else {
+			return new EconomyResponse(0, account.getMoney(), ResponseType.FAILURE, "Insufficient funds");
+		}
+	}
 
-    @Override
-    public EconomyResponse bankWithdraw(String name, double amount) {
-        return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
-    }
+	@Override
+	public EconomyResponse depositPlayer(String playerName, double amount) {
+		if (amount < 0) {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot desposit negative funds");
+		}
 
-    @Override
-    public EconomyResponse bankDeposit(String name, double amount) {
-        return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
-    }
+		if (!api.accountExists(playerName)){
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Account doesn't exist");
+		}
 
-    @Override
-    public EconomyResponse isBankOwner(String name, String playerName) {
-        return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
-    }
+		Account account = api.getAccount(playerName);
+		account.deposit(amount);
+		return new EconomyResponse(amount, account.getMoney(), ResponseType.SUCCESS, "");
+	}
 
-    @Override
-    public EconomyResponse isBankMember(String name, String playerName) {
-        return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
-    }
+	@Override
+	public boolean has(String playerName, double amount) {
+		return getBalance(playerName) >= amount;
+	}
 
-    @Override
-    public EconomyResponse bankBalance(String name) {
-        return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
-    }
+	@Override
+	public EconomyResponse createBank(String name, String player) {
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
+	}
 
-    @Override
-    public List<String> getBanks() {
-        return new ArrayList<String>();
-    }
+	@Override
+	public EconomyResponse deleteBank(String name) {
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
+	}
 
-    @Override
-    public boolean hasBankSupport() {
-        return false;
-    }
-    
-    @Override
-    public boolean hasAccount(String playerName) {
-        return api.accountExists(playerName);
-    }
-	
-    @Override
-    public boolean createPlayerAccount(String playerName) {
-        if (hasAccount(playerName)) {
-            return false;
-        }
-        api.createAccount(playerName);
-        return true;
-    }
+	@Override
+	public EconomyResponse bankHas(String name, double amount) {
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
+	}
+
+	@Override
+	public EconomyResponse bankWithdraw(String name, double amount) {
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
+	}
+
+	@Override
+	public EconomyResponse bankDeposit(String name, double amount) {
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
+	}
+
+	@Override
+	public EconomyResponse isBankOwner(String name, String playerName) {
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
+	}
+
+	@Override
+	public EconomyResponse isBankMember(String name, String playerName) {
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
+	}
+
+	@Override
+	public EconomyResponse bankBalance(String name) {
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
+	}
+
+	@Override
+	public List<String> getBanks() {
+		return new ArrayList<String>();
+	}
+
+	@Override
+	public boolean hasBankSupport() {
+		return false;
+	}
+
+	@Override
+	public boolean hasAccount(String playerName) {
+		return api.accountExists(playerName);
+	}
+
+	@Override
+	public boolean createPlayerAccount(String playerName) {
+		if (hasAccount(playerName)) {
+			return false;
+		}
+		api.createAccount(playerName);
+		return true;
+	}
 }
