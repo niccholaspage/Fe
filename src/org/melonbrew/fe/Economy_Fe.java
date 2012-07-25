@@ -30,7 +30,7 @@ public class Economy_Fe implements Economy {
 	public Economy_Fe(Plugin plugin) {
 		this.plugin = plugin;
 		Bukkit.getServer().getPluginManager().registerEvents(new EconomyServerListener(this), plugin);
-		// Load Plugin in case it was loaded before
+		
 		if (fe == null) {
 			Plugin efe = plugin.getServer().getPluginManager().getPlugin("Fe");
 			if (efe != null && efe.isEnabled()) {
