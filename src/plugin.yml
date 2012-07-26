@@ -40,5 +40,3 @@ permissions:
     description: Allows you grant players money with the /fe grant name amount command
   fe.reload:
     description: Allows you to reload the configuration with the /fe reload command
-  fe.help:
-    description: Allows you to get help with the /fe help command
