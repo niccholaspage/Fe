@@ -24,16 +24,13 @@
     <target name="compile" description="Compilation target">
     	<echo>Compiling</echo>
         <javac srcdir="." destdir="build" debug="on" debuglevel="lines,vars,source" classpathref="classpath" includeantruntime="false" />
-    	<copy file="src/plugin.yml" tofile="build/plugin.yml" />
-    	<copy file="src/config.yml" tofile="build/config.yml" />
+    	<copy file="plugin.yml" tofile="build/plugin.yml" />
+    	<copy file="config.yml" tofile="build/config.yml" />
     </target>
   
   <target name="compress" description="Compression target">
 	<echo>Compressing</echo>
         <jar jarfile="Fe.jar" basedir="build" includes="org/**/*, plugin.yml, config.yml">
-		<manifest>
-			<attribute name="Built-By" value="${user.name}" />
-		</manifest>
         </jar>
     	<delete dir="build" />
   </target>
