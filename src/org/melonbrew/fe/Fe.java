@@ -54,6 +54,8 @@ public class Fe extends JavaPlugin {
 	
 	public void reloadConfig(){
 		super.reloadConfig();
+		
+		loadAliases();
 	}
 	
 	private void loadAliases(){
