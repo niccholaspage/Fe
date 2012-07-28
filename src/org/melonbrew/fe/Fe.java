@@ -48,18 +48,6 @@ public class Fe extends JavaPlugin {
 		setupVault();
 		
 		getCommand("fe").setExecutor(new FeCommand(this));
-		
-		loadAliases();
-	}
-	
-	public void reloadConfig(){
-		super.reloadConfig();
-		
-		loadAliases();
-	}
-	
-	private void loadAliases(){
-		getCommand("fe").setAliases(getConfig().getStringList("aliases"));
 	}
 	
 	private void setupVault(){
