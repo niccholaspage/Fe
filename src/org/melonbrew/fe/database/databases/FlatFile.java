@@ -15,12 +15,16 @@ import org.melonbrew.fe.database.AccountCompare;
 import org.melonbrew.fe.database.Database;
 
 public class FlatFile extends Database {
+	private final Fe plugin;
+	
 	private final File storageFile;
 	
 	private final Properties storage;
 	
 	public FlatFile(Fe plugin){
 		super(plugin);
+		
+		this.plugin = plugin;
 		
 		storageFile = new File(plugin.getDataFolder(), "flatdatabase.prop");
 		
@@ -113,5 +117,17 @@ public class FlatFile extends Database {
 		}
 		
 		return finalAccounts;
+	}
+	
+	public void clean(){
+		for (String name : storage.stringPropertyNames()){
+			Account account = getAccount(name);
+			
+			if (account.getMoney() == plugin.getAPI().getDefaultHoldings()){
+				removeAccount(name);
+			}
+		}
+		
+		saveFile();
 	}
 }

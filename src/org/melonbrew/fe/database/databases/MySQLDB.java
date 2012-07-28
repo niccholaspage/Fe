@@ -146,4 +146,10 @@ public class MySQLDB extends Database {
 			}
 		}
 	}
+	
+	public void clean(){
+		String sql = "DELETE FROM " + accounts + " WHERE money=" + plugin.getAPI().getDefaultHoldings();
+		
+		mySQL.query(sql);
+	}
 }

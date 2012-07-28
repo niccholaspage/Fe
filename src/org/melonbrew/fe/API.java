@@ -82,6 +82,6 @@ public class API {
 	}
 	
 	public void clean(){
-		
+		plugin.getFeDatabase().clean();
 	}
 }

@@ -21,6 +21,8 @@ public abstract class Database {
 	
 	public abstract void removeAccount(String name);
 	
+	public abstract void clean();
+	
 	public abstract void close();
 	
 	public Account getAccount(String name){
