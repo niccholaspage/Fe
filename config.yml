@@ -2,6 +2,14 @@ holdings: 10.00
 
 type: flatfile
 
+aliases: []
+
+prefix: Fe
+
+currency:
+  single: Fe
+  multiple: Fe
+
 mysql:
   host: localhost
   port: 3306
