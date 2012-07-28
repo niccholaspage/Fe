@@ -18,7 +18,7 @@ public class SendCommand extends SubCommand {
 		this.plugin = plugin;
 	}
 	
-	public boolean onCommand(CommandSender sender, Command cmd, String[] args){
+	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		if (args.length < 2){
 			return false;
 		}

@@ -72,7 +72,7 @@ public class FeCommand implements CommandExecutor {
 		return result;
 	}
 	
-	private void sendDefaultCommand(CommandSender sender, Command cmd, String[] args){
+	private void sendDefaultCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		String command;
 		
 		if (sender instanceof Player){
@@ -81,12 +81,12 @@ public class FeCommand implements CommandExecutor {
 			command = "help";
 		}
 		
-		onCommand(sender, cmd, null, merge(new String[]{command}, args));
+		onCommand(sender, cmd, commandLabel, merge(new String[]{command}, args));
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		if (args.length < 1){
-			sendDefaultCommand(sender, cmd, args);
+			sendDefaultCommand(sender, cmd, commandLabel, args);
 			
 			return true;
 		}
@@ -94,7 +94,7 @@ public class FeCommand implements CommandExecutor {
 		SubCommand command = getCommand(args[0]);
 		
 		if (command == null){
-			sendDefaultCommand(sender, cmd, args);
+			sendDefaultCommand(sender, cmd, commandLabel, args);
 			
 			return true;
 		}
@@ -122,24 +122,24 @@ public class FeCommand implements CommandExecutor {
         String[] realArgs = new String[args.length - 1];
 
         for (int i = 1; i < args.length; i++){
-                realArgs[i - 1] = args[i];
+        	realArgs[i - 1] = args[i];
         }
-		
-		if (!command.onCommand(sender, cmd, realArgs)){
+        
+		if (!command.onCommand(sender, cmd, commandLabel, realArgs)){
 			sender.sendMessage(plugin.getMessagePrefix() + "Try " + ChatColor.GOLD + "/" + cmd.getName() + " " + command.getUsage());
 		}
 		
 		return true;
 	}
 	
-	public String parse(SubCommand command){
+	public String parse(String label, SubCommand command){
 		ChatColor commandColor = ChatColor.GOLD;
 		
 		ChatColor operatorsColor = ChatColor.DARK_GRAY;
 		
 		ChatColor argumentColor = ChatColor.YELLOW;
 		
-		String finalMessage = commandColor + "/fe";
+		String finalMessage = commandColor + "/" + label;
 		
 		if (!command.getFirstName().equalsIgnoreCase("balance")){
 			 finalMessage += " " + command.getFirstName() + " ";

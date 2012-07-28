@@ -17,7 +17,7 @@ public class CreateCommand extends SubCommand {
 		this.plugin = plugin;
 	}
 	
-	public boolean onCommand(CommandSender sender, Command cmd, String[] args){
+	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		if (args.length < 1){
 			return false;
 		}

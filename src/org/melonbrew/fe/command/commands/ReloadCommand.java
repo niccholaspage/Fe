@@ -16,7 +16,7 @@ public class ReloadCommand extends SubCommand {
 		this.plugin = plugin;
 	}
 	
-	public boolean onCommand(CommandSender sender, Command cmd, String[] args){
+	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		plugin.reloadConfig();
 		
 		sender.sendMessage(plugin.getMessagePrefix() + Phrase.CONFIG_RELOADED.parse());
