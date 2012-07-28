@@ -50,5 +50,5 @@ public abstract class SubCommand {
 		return commandType;
 	}
 	
-	public abstract boolean onCommand(CommandSender sender, Command cmd, String[] args);
+	public abstract boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args);
 }

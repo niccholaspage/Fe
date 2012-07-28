@@ -20,7 +20,7 @@ public class TopCommand extends SubCommand {
 		this.plugin = plugin;
 	}
 	
-	public boolean onCommand(CommandSender sender, Command cmd, String[] args){
+	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		List<Account> topAccounts = plugin.getAPI().getTopAccounts();
 		
 		if (topAccounts.size() < 1){

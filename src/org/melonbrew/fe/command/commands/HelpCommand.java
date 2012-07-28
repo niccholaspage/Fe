@@ -23,7 +23,7 @@ public class HelpCommand extends SubCommand {
 		this.command = command;
 	}
 	
-	public boolean onCommand(CommandSender sender, Command cmd, String[] args){
+	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		sender.sendMessage(plugin.getEqualMessage(Phrase.HELP.parse(), 10));
 		
 		ChatColor operatorColor = ChatColor.DARK_GRAY;
@@ -45,7 +45,7 @@ public class HelpCommand extends SubCommand {
 				continue;
 			}
 			
-			sender.sendMessage(this.command.parse(command) + textColor + " - " + command.getDescription());
+			sender.sendMessage(this.command.parse(commandLabel, command) + textColor + " - " + command.getDescription());
 		}
 		
 		sender.sendMessage(plugin.getEndEqualMessage(27));

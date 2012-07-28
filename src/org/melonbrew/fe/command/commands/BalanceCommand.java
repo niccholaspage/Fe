@@ -17,7 +17,7 @@ public class BalanceCommand extends SubCommand {
 		this.plugin = plugin;
 	}
 	
-	public boolean onCommand(CommandSender sender, Command cmd, String[] args){
+	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		Account account;
 		
 		String message = plugin.getMessagePrefix();

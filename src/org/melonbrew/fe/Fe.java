@@ -35,6 +35,8 @@ public class Fe extends JavaPlugin {
 		
 		getConfig().options().header("Fe Config - melonbrew.org\n" +
 				"holdings - The amount of money that the player will start out with\n" +
+				"prefix - The message prefix\n" +
+				"currency - The single and multiple names for the currency\n" +
 				"type - The type of database used (mysql or flatfile)\n");
 		
 		saveConfig();
