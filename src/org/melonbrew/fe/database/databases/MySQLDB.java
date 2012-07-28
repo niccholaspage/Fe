@@ -148,8 +148,22 @@ public class MySQLDB extends Database {
 	}
 	
 	public void clean(){
-		String sql = "DELETE FROM " + accounts + " WHERE money=" + plugin.getAPI().getDefaultHoldings();
+		String sql = "SELECT * FROM " + accounts + " WHERE money=" + plugin.getAPI().getDefaultHoldings();
 		
-		mySQL.query(sql);
+		ResultSet set = mySQL.query(sql);
+		
+		try {
+			while (set.next()){
+				String name = set.getString("name");
+				
+				if (plugin.getServer().getPlayerExact(name) != null){
+					continue;
+				}
+				
+				mySQL.query("DELETE FROM " + accounts + " WHERE name=" + name);
+			}
+		} catch (SQLException e){
+			
+		}
 	}
 }

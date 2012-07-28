@@ -29,7 +29,7 @@ public class FeCommand implements CommandExecutor {
 		commands.add(new CreateCommand(plugin));
 		commands.add(new RemoveCommand(plugin));
 		commands.add(new SetCommand(plugin));
-		commands.add(new GrantCommand(plugin));
+		commands.add(new GrantCommand(plugin)); 
 		commands.add(new CleanCommand(plugin));
 		commands.add(new HelpCommand(plugin, this));
 	}

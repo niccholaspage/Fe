@@ -123,6 +123,10 @@ public class FlatFile extends Database {
 		for (String name : storage.stringPropertyNames()){
 			Account account = getAccount(name);
 			
+			if (plugin.getServer().getPlayerExact(name) != null){
+				continue;
+			}
+			
 			if (account.getMoney() == plugin.getAPI().getDefaultHoldings()){
 				removeAccount(name);
 			}
