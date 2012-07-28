@@ -127,7 +127,5 @@ public class FlatFile extends Database {
 				removeAccount(name);
 			}
 		}
-		
-		saveFile();
 	}
 }
