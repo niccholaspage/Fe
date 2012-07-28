@@ -154,8 +154,6 @@ public class MySQLDB extends Database {
 		
 		try {
 			while (set.next()){
-				System.out.println("diosj");
-				
 				String name = set.getString("name");
 				
 				if (plugin.getServer().getPlayerExact(name) != null){
