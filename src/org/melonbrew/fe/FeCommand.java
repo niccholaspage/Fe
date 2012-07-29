@@ -126,7 +126,7 @@ public class FeCommand implements CommandExecutor {
         }
         
 		if (!command.onCommand(sender, cmd, commandLabel, realArgs)){
-			sender.sendMessage(plugin.getMessagePrefix() + "Try " + ChatColor.GOLD + "/" + cmd.getName() + " " + command.getUsage());
+			sender.sendMessage(plugin.getMessagePrefix() + "Try " + ChatColor.GOLD + "/" + commandLabel + " " + command.getUsage());
 		}
 		
 		return true;
