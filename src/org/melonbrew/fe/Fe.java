@@ -53,17 +53,19 @@ public class Fe extends JavaPlugin {
 	}
 	
 	private void setupVault(){
+		Plugin vault = getServer().getPluginManager().getPlugin("Vault");
+		
+		if (vault == null){
+			return;
+		}
+		
 		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
 		
 		if (economyProvider != null){
 			getServer().getServicesManager().unregister(economyProvider.getProvider());
 		}
 		
-		Plugin vault = getServer().getPluginManager().getPlugin("Vault");
-		
-		if (vault != null){
-			getServer().getServicesManager().register(Economy.class, new Economy_Fe(this), this, ServicePriority.Highest);
-		}
+		getServer().getServicesManager().register(Economy.class, new Economy_Fe(this), this, ServicePriority.Highest);
 	}
 	
 	public void onDisable(){
