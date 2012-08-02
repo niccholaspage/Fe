@@ -44,3 +44,22 @@ permissions:
     description: Allows you to clean all accounts with the default balance with the /fe clean command
   fe.reload:
     description: Allows you to reload the configuration with the /fe reload command
+  fe.member:
+    children:
+      fe.balance: true
+      fe.balance.other: true
+      fe.send: true
+      fe.top: true
+      fe.?: true
+  fe.admin:
+    children:
+      fe.create: true
+      fe.remove: true
+      fe.set: true
+      fe.grant: true
+      fe.clean: true
+      fe.reload: true
+  fe.*:
+    children:
+      fe.member: true
+      fe.admin: true
