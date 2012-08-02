@@ -152,6 +152,8 @@ public class MySQLDB extends Database {
 		
 		ResultSet set = mySQL.query(sql);
 		
+		String deleteQuery = "DELETE FROM " + accounts + " WHERE name IN (";
+		
 		try {
 			while (set.next()){
 				String name = set.getString("name");
@@ -160,8 +162,12 @@ public class MySQLDB extends Database {
 					continue;
 				}
 				
-				mySQL.query("DELETE FROM " + accounts + " WHERE name='" + name + "'");
+				deleteQuery += "'" + name + "', ";
 			}
+			
+			deleteQuery = deleteQuery.substring(0, deleteQuery.length() - 2) + ")";
+			
+			mySQL.query(deleteQuery);
 		} catch (SQLException e){
 			
 		}
