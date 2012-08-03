@@ -126,7 +126,7 @@ public class SQLite extends Database {
 	}
 
 	@Override
-	PreparedStatement prepare(String query) {
+	public PreparedStatement prepare(String query) {
 		try
 	    {
 	        connection = open();

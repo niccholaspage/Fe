@@ -103,7 +103,7 @@ public abstract class Database {
 	 * <br>
 	 * @return the success of the method.
 	 */
-	abstract Connection open();
+	public abstract Connection open();
 	
 	/**
 	 * <b>close</b><br>
@@ -112,7 +112,7 @@ public abstract class Database {
 	 * <br>
 	 * <br>
 	 */
-	abstract void close();
+	public abstract void close();
 	
 	/**
 	 * <b>getConnection</b><br>
@@ -132,7 +132,7 @@ public abstract class Database {
 	 * <br>
 	 * @return the status of the connection, true for up, false for down.
 	 */
-	abstract boolean checkConnection();
+	public abstract boolean checkConnection();
 	
 	/**
 	 * <b>query</b><br>
@@ -142,7 +142,7 @@ public abstract class Database {
 	 * @param query - the SQL query to send to the database.
 	 * @return the table of results from the query.
 	 */
-	abstract ResultSet query(String query);
+	public abstract ResultSet query(String query);
 	
 	/**
 	 * <b>prepare</b><br>
@@ -152,7 +152,7 @@ public abstract class Database {
 	 * @param query - the SQL query to prepare to send to the database.
 	 * @return the prepared statement.
 	 */
-	abstract PreparedStatement prepare(String query);
+	public abstract PreparedStatement prepare(String query);
 	
 	/**
 	 * <b>getStatement</b><br>
@@ -203,7 +203,7 @@ public abstract class Database {
 	 * @param query - the SQL query for creating a table.
 	 * @return the success of the method.
 	 */
-	abstract boolean createTable(String query);
+	public abstract boolean createTable(String query);
 	
 	/**
 	 * <b>checkTable</b><br>
