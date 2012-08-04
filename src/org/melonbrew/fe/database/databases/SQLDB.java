@@ -146,13 +146,19 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	}
 	
 	public void clean(){
-		String sql = "SELECT name FROM " + accounts + " WHERE money=" + plugin.getAPI().getDefaultHoldings();
-		
-		ResultSet set = database.query(sql);
-		
-		String deleteQuery = "DELETE FROM " + accounts + " WHERE name IN (";
+		String sql = "SELECT * FROM " + accounts + " WHERE money=?";
 		
 		try {
+			PreparedStatement prest = database.prepare(sql);
+			
+			prest.setDouble(1, plugin.getAPI().getDefaultHoldings());
+			
+			ResultSet set = prest.executeQuery();
+			
+			String deleteQuery = "DELETE FROM " + accounts + " WHERE name IN (";
+			
+			boolean executeQuery = false;
+			
 			while (set.next()){
 				String name = set.getString("name");
 				
@@ -160,12 +166,18 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 					continue;
 				}
 				
+				executeQuery = true;
+				
 				deleteQuery += "'" + name + "', ";
 			}
 			
+			prest.close();
+			
 			deleteQuery = deleteQuery.substring(0, deleteQuery.length() - 2) + ")";
 			
-			database.query(deleteQuery);
+			if (executeQuery){
+				database.query(deleteQuery);
+			}
 		} catch (SQLException e){
 			
 		}
