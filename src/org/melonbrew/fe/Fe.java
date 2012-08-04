@@ -1,6 +1,7 @@
 package org.melonbrew.fe;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -38,7 +39,6 @@ public class Fe extends JavaPlugin {
 		
 		databases = new HashMap<String, Class<? extends Database>>();
 		
-		databases.put("flatfile", FlatFile.class);
 		databases.put("mysql", MySQLDB.class);
 		databases.put("sqlite", SQLiteDB.class);
 		
@@ -48,7 +48,7 @@ public class Fe extends JavaPlugin {
 				"holdings - The amount of money that the player will start out with\n" +
 				"prefix - The message prefix\n" +
 				"currency - The single and multiple names for the currency\n" +
-				"type - The type of database used (mysql or flatfile)\n");
+				"type - The type of database used (sqlite or mysql)\n");
 		
 		saveConfig();
 		
@@ -102,11 +102,28 @@ public class Fe extends JavaPlugin {
 	}
 	
 	private boolean setupDatabase(){
+		return setupDatabase(null);
+	}
+	
+	private boolean setupDatabase(List<Account> accounts){
 		String type = getConfig().getString("type");
 		
 		database = null;
 		
+		if (type.equalsIgnoreCase("flatfile")){
+			database = new FlatFile(this);
+			
+			if (database.init()){
+				getConfig().set("type", "sqlite");
+				
+				saveConfig();
+				
+				return setupDatabase(database.getTopAccounts());
+			}
+		}
+		
 		for (String name : databases.keySet()){
+			
 			if (type.equalsIgnoreCase(name)){
 				try {
 					database = databases.get(name).getDeclaredConstructor(Fe.class).newInstance(this);
@@ -130,6 +147,12 @@ public class Fe extends JavaPlugin {
 			getServer().getPluginManager().disablePlugin(this);
 			
 			return false;
+		}
+		
+		if (accounts != null){
+			for (Account account : accounts){
+				database.createAccount(account.getName()).setMoney(account.getMoney());
+			}
 		}
 		
 		return true;
