@@ -114,6 +114,8 @@ public class Fe extends JavaPlugin {
 			database = new FlatFile(this);
 			
 			if (database.init()){
+				log("Converting flat file into SQLite...");
+				
 				getConfig().set("type", "sqlite");
 				
 				saveConfig();
@@ -153,6 +155,8 @@ public class Fe extends JavaPlugin {
 			for (Account account : accounts){
 				database.createAccount(account.getName()).setMoney(account.getMoney());
 			}
+			
+			log("Finished conversion.");
 		}
 		
 		return true;
