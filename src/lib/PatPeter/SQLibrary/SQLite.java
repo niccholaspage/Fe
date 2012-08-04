@@ -108,7 +108,6 @@ public class SQLite extends Database {
 				case SELECT:
 					result = statement.executeQuery(query);
 					return result;
-					
 				default:
 					statement.executeUpdate(query);
 					return result;	
