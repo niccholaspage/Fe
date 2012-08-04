@@ -155,9 +155,9 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 			
 			ResultSet set = prest.executeQuery();
 			
-			String deleteQuery = "DELETE FROM " + accounts + " WHERE name IN (";
-			
 			boolean executeQuery = false;
+			
+			String deleteQuery = "DELETE FROM " + accounts + " WHERE name IN (";
 			
 			while (set.next()){
 				String name = set.getString("name");

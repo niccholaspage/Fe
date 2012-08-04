@@ -110,7 +110,7 @@ public class SQLite extends Database {
 					return result;
 					
 				default:
-					statement.executeQuery(query);
+					statement.executeUpdate(query);
 					return result;	
 			}
 		} catch (SQLException ex) {
