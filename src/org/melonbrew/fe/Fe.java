@@ -1,5 +1,7 @@
 package org.melonbrew.fe;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
@@ -15,6 +17,7 @@ import org.melonbrew.fe.database.Account;
 import org.melonbrew.fe.database.Database;
 import org.melonbrew.fe.database.databases.FlatFile;
 import org.melonbrew.fe.database.databases.MySQLDB;
+import org.melonbrew.fe.database.databases.SQLiteDB;
 import org.melonbrew.fe.listeners.FePlayerListener;
 
 public class Fe extends JavaPlugin {
@@ -24,12 +27,20 @@ public class Fe extends JavaPlugin {
 	
 	private Database database;
 	
+	private Map<String, Class<? extends Database>> databases;
+	
 	public void onEnable(){
 		log = getServer().getLogger();
 		
 		getDataFolder().mkdirs();
 		
 		new FePlayerListener(this);
+		
+		databases = new HashMap<String, Class<? extends Database>>();
+		
+		databases.put("flatfile", FlatFile.class);
+		databases.put("mysql", MySQLDB.class);
+		databases.put("sqlite", SQLiteDB.class);
 		
 		getConfig().options().copyDefaults(true);
 		
@@ -93,10 +104,24 @@ public class Fe extends JavaPlugin {
 	private boolean setupDatabase(){
 		String type = getConfig().getString("type");
 		
-		if (type.equalsIgnoreCase("flatfile")){
-			database = new FlatFile(this);
-		}else {
-			database = new MySQLDB(this);
+		database = null;
+		
+		for (String name : databases.keySet()){
+			if (type.equalsIgnoreCase(name)){
+				try {
+					database = databases.get(name).getDeclaredConstructor(Fe.class).newInstance(this);
+					
+					break;
+				} catch (Exception e){
+					
+				}
+			}
+		}
+		
+		if (database == null){
+			log(Phrase.DATABASE_TYPE_DOES_NOT_EXIST);
+			
+			return false;
 		}
 		
 		if (!database.init()){

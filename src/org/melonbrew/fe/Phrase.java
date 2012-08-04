@@ -1,6 +1,7 @@
 package org.melonbrew.fe;
 
 public enum Phrase {
+	DATABASE_TYPE_DOES_NOT_EXIST("That database type doesn't exist."),
 	DATABASE_FAILURE_DISABLE("Database initialization has failed, disabling Fe."),
 	COMMAND_NEEDS_ARGUMENTS("That command needs arguments."),
 	COMMAND_NOT_CONSOLE("The command '$1' cannot be used in the console."),
