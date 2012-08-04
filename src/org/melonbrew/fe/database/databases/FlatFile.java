@@ -5,13 +5,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.database.Account;
-import org.melonbrew.fe.database.AccountCompare;
 import org.melonbrew.fe.database.Database;
 
 public class FlatFile extends Database {
@@ -102,21 +100,7 @@ public class FlatFile extends Database {
 			allAccounts.add(account);
 		}
 		
-		Account[] array = allAccounts.toArray(new Account[allAccounts.size()]);
-		
-		Arrays.sort(array, new AccountCompare());
-		
-		List<Account> finalAccounts = new ArrayList<Account>();
-		
-		for (int i = array.length - 1; i > array.length - 6; i--){
-			try {
-				finalAccounts.add(array[i]);
-			}catch (ArrayIndexOutOfBoundsException e){
-				break;
-			}
-		}
-		
-		return finalAccounts;
+		return allAccounts;
 	}
 	
 	public void clean(){
