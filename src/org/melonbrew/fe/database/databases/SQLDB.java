@@ -10,6 +10,7 @@ import lib.PatPeter.SQLibrary.Database;
 
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.database.Account;
+import org.melonbrew.fe.database.LogType;
 
 public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	private final Fe plugin;
@@ -18,12 +19,16 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	
 	private final String accounts;
 	
+	private final String logging;
+	
 	public SQLDB(Fe plugin){
 		super(plugin);
 		
 		this.plugin = plugin;
 		
 		accounts = "fe_accounts";
+		
+		logging = "fe_logging";
 	}
 	
 	public boolean init(){
@@ -37,6 +42,10 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 		
 		
 		if (!database.createTable("CREATE TABLE IF NOT EXISTS " + accounts + "(name varchar(16), money double);")){
+			return false;
+		}
+		
+		if (!database.createTable("CREATE TABLE IF NOT EXISTS " + logging + "(name varchar(33), money double, type int, time long);")){
 			return false;
 		}
 		
@@ -142,6 +151,30 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 			}catch (SQLException e){
 				
 			}
+		}
+	}
+	
+	public void log(String name, double money, LogType type){
+		long time = System.currentTimeMillis();
+		
+		String sql = "INSERT INTO " + logging + " (name, money, type, time) VALUES (?, ?, ?, ?)";
+		
+		try {
+			PreparedStatement prest = database.prepare(sql);
+			
+			prest.setString(1, name);
+			
+			prest.setDouble(2, money);
+			
+			prest.setInt(3, type.getID());
+			
+			prest.setLong(4, time);
+			
+			prest.executeUpdate();
+			
+			prest.close();
+		}catch (SQLException e){
+			
 		}
 	}
 	

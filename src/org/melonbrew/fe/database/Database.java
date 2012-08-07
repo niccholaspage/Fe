@@ -21,6 +21,8 @@ public abstract class Database {
 	
 	public abstract void removeAccount(String name);
 	
+	public abstract void log(String name, double money, LogType type);
+	
 	public abstract void clean();
 	
 	public abstract void close();
