@@ -11,6 +11,7 @@ import java.util.Properties;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.database.Account;
 import org.melonbrew.fe.database.Database;
+import org.melonbrew.fe.database.LogType;
 
 public class FlatFile extends Database {
 	private final Fe plugin;
@@ -101,6 +102,10 @@ public class FlatFile extends Database {
 		}
 		
 		return allAccounts;
+	}
+	
+	public void log(String name, double money, LogType type) {
+		
 	}
 	
 	public void clean(){
