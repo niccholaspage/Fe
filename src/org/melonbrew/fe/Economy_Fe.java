@@ -212,4 +212,9 @@ public class Economy_Fe implements Economy {
 		api.createAccount(playerName);
 		return true;
 	}
+
+	@Override
+	public int fractionalDigits(){
+		return -1;
+	}
 }
