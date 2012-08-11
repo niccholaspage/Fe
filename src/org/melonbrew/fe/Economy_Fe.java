@@ -63,7 +63,7 @@ public class Economy_Fe implements Economy {
 				if (event.getPlugin().getDescription().getName().equals("Fe")) {
 					fe = null;
 					api = null;
-					fe.log("Vault support disabled.");
+					Bukkit.getLogger().info("[Fe] Vault support disabled.");
 				}
 			}
 		}
