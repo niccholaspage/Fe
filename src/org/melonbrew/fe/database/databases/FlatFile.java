@@ -3,7 +3,6 @@ package org.melonbrew.fe.database.databases;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -32,20 +31,10 @@ public class FlatFile extends Database {
 	
 	public boolean init(){
 		try {
-			storageFile.createNewFile();
-		} catch (IOException e){
-			e.printStackTrace();
-			
-			return false;
-		}
-		
-		try {
 			FileInputStream inputStream = new FileInputStream(storageFile);
 			
 			storage.load(inputStream);
 		} catch (Exception e){
-			e.printStackTrace();
-			
 			return false;
 		}
 		

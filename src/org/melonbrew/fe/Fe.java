@@ -113,6 +113,8 @@ public class Fe extends JavaPlugin {
 		if (type.equalsIgnoreCase("flatfile")){
 			database = new FlatFile(this);
 			
+			boolean convert = false;
+			
 			if (database.init()){
 				log("Converting flat file into SQLite...");
 				
@@ -120,12 +122,19 @@ public class Fe extends JavaPlugin {
 				
 				saveConfig();
 				
+				convert = true;
+			}
+			
+			getConfig().set("type", "sqlite");
+			
+			saveConfig();
+			
+			if (convert){
 				return setupDatabase(database.getTopAccounts());
 			}
 		}
 		
 		for (String name : databases.keySet()){
-			
 			if (type.equalsIgnoreCase(name)){
 				try {
 					database = databases.get(name).getDeclaredConstructor(Fe.class).newInstance(this);
