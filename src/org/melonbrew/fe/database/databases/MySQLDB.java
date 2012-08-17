@@ -1,10 +1,10 @@
 package org.melonbrew.fe.database.databases;
 
-import lib.PatPeter.SQLibrary.Database;
-import lib.PatPeter.SQLibrary.MySQL;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.melonbrew.fe.Fe;
+import org.melonbrew.fe.SQLibrary.Database;
+import org.melonbrew.fe.SQLibrary.MySQL;
 
 public class MySQLDB extends SQLDB {
 	private final Fe plugin;
