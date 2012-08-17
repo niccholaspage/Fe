@@ -20,25 +20,23 @@ public class BalanceCommand extends SubCommand {
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		Account account;
 		
-		String message = plugin.getMessagePrefix();
+		String prefix = plugin.getMessagePrefix();
 		
 		if (args.length > 0 && sender.hasPermission("fe.balance.other")){
 			account = plugin.getAPI().getAccount(args[0]);
 			
 			if (account == null){
-				sender.sendMessage(plugin.getMessagePrefix() + Phrase.ACCOUNT_DOES_NOT_EXIST.parse());
+				sender.sendMessage(prefix + Phrase.ACCOUNT_DOES_NOT_EXIST.parse());
 				
 				return true;
 			}
 			
-			message += Phrase.ACCOUNT_HAS.parse(plugin.getReadName(account));
+			sender.sendMessage(prefix + Phrase.ACCOUNT_HAS.parse(plugin.getReadName(account), plugin.getAPI().format(account)));
 		}else {
 			account = plugin.getAPI().getAccount(sender.getName());
 			
-			message += Phrase.YOU_HAVE.parse();
+			sender.sendMessage(prefix + Phrase.YOU_HAVE.parse(plugin.getAPI().format(account)));
 		}
-		
-		sender.sendMessage(message + plugin.getAPI().format(account));
 		
 		return true;
 	}
