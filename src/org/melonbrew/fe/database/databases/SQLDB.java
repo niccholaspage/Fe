@@ -49,7 +49,7 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 			return false;
 		}
 		
-		database.query("ALTER TABLE " + accounts + " CHANGE name name varchar(64)");
+		database.query("ALTER TABLE " + accounts + "MODIFY name varchar(64)");
 		
 		return true;
 	}
