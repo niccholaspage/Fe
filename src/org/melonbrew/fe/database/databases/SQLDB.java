@@ -49,27 +49,7 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 			return false;
 		}
 		
-		String sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name=? AND column_name=? AND character_maximum_length=?";
-		
-		try {
-			PreparedStatement prest = database.prepare(sql);
-			
-			prest.setString(1, accounts);
-			
-			prest.setString(2, "name");
-			
-			prest.setInt(3, 16);
-			
-			ResultSet set = prest.executeQuery();
-			
-			if (set.next()){
-				database.query("ALTER TABLE name CHANGE name name varchar(64)");
-			}
-			
-			prest.close();
-		} catch (SQLException e){
-			
-		}
+		database.query("ALTER TABLE name CHANGE name name varchar(64)");
 		
 		return true;
 	}
