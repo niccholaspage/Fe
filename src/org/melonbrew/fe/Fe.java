@@ -1,8 +1,10 @@
 package org.melonbrew.fe;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
@@ -10,6 +12,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
@@ -169,6 +172,36 @@ public class Fe extends JavaPlugin {
 		}
 		
 		return true;
+	}
+	
+	private void setupPhrases(){
+		File phrasesFile = new File(getDataFolder(), "phrases.yml");
+		
+		for (Phrase phrase : Phrase.values()){
+			phrase.reset();
+		}
+
+		if (!phrasesFile.exists()){
+			return;
+		}
+
+		YamlConfiguration phrasesConfig = YamlConfiguration.loadConfiguration(phrasesFile);
+
+		Set<String> keys = phrasesConfig.getKeys(false);
+
+		for (Phrase phrase : Phrase.values()){
+			String phraseConfigName = phrase.getConfigName();
+
+			if (keys.contains(phraseConfigName)){
+				phrase.setMessage(phrasesConfig.getString(phraseConfigName));
+			}
+		}
+	}
+	
+	public void reloadConfig(){
+		super.reloadConfig();
+		
+		setupPhrases();
 	}
 	
 	public ConfigurationSection getMySQLConfig(){
