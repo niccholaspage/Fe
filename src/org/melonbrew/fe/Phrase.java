@@ -23,7 +23,8 @@ public enum Phrase {
 	ACCOUNT_CREATED_GRANT("Created an account for $1 and granted it $2"),
 	NO_ACCOUNTS_EXIST("No accounts exist."),
 	NAME_TOO_LONG("Sorry that name is too long."),
-	ACCOUNT_CLEANED("All accounts with the default balance have been removed.");
+	ACCOUNT_CLEANED("All accounts with the default balance have been removed."),
+	TRY_COMMAND("Try $1");
 
 	private String defaultMessage;
 
