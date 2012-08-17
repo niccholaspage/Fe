@@ -1,6 +1,7 @@
 package org.melonbrew.fe;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +63,12 @@ public class Fe extends JavaPlugin {
 		}
 		
 		setupVault();
+		
+		try {
+			new Metrics(this).start();
+		} catch (IOException e){
+			
+		}
 		
 		getCommand("fe").setExecutor(new FeCommand(this));
 	}
