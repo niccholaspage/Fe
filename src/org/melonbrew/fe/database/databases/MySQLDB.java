@@ -10,7 +10,7 @@ public class MySQLDB extends SQLDB {
 	private final Fe plugin;
 	
 	public MySQLDB(Fe plugin){
-		super(plugin);
+		super(plugin, true);
 		
 		this.plugin = plugin;
 	}

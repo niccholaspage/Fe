@@ -9,7 +9,7 @@ public class SQLiteDB extends SQLDB {
 	private final Fe plugin;
 	
 	public SQLiteDB(Fe plugin){
-		super(plugin);
+		super(plugin, false);
 		
 		this.plugin = plugin;
 	}

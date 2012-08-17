@@ -15,16 +15,20 @@ import org.melonbrew.fe.database.LogType;
 public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	private final Fe plugin;
 	
+	private final boolean supportsModification;
+	
 	private Database database;
 	
 	private final String accounts;
 	
 	private final String logging;
 	
-	public SQLDB(Fe plugin){
+	public SQLDB(Fe plugin, boolean supportsModification){
 		super(plugin);
 		
 		this.plugin = plugin;
+		
+		this.supportsModification = supportsModification;
 		
 		accounts = "fe_accounts";
 		
@@ -49,7 +53,9 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 			return false;
 		}
 		
-		database.query("ALTER TABLE " + accounts + " MODIFY name varchar(64)");
+		if (supportsModification){
+			database.query("ALTER TABLE " + accounts + " MODIFY name varchar(64)");
+		}
 		
 		return true;
 	}
