@@ -32,7 +32,7 @@ public class Fe extends JavaPlugin {
 	
 	private Database database;
 	
-	private Map<String, Class<? extends Database>> databases;
+	private Map<String, Database> databases;
 	
 	public void onEnable(){
 		log = getServer().getLogger();
@@ -41,10 +41,10 @@ public class Fe extends JavaPlugin {
 		
 		new FePlayerListener(this);
 		
-		databases = new HashMap<String, Class<? extends Database>>();
+		databases = new HashMap<String, Database>();
 		
-		databases.put("mysql", MySQLDB.class);
-		databases.put("sqlite", SQLiteDB.class);
+		databases.put("mysql", new MySQLDB(this));
+		databases.put("sqlite", new SQLiteDB(this));
 		
 		getConfig().options().copyDefaults(true);
 		
@@ -147,7 +147,7 @@ public class Fe extends JavaPlugin {
 		for (String name : databases.keySet()){
 			if (type.equalsIgnoreCase(name)){
 				try {
-					database = databases.get(name).getDeclaredConstructor(Fe.class).newInstance(this);
+					database = databases.get(name);
 					
 					break;
 				} catch (Exception e){
