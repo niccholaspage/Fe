@@ -2,7 +2,7 @@ package org.melonbrew.fe.database;
 
 import java.util.List;
 
-import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.melonbrew.fe.Fe;
 
 public abstract class Database {
@@ -24,7 +24,7 @@ public abstract class Database {
 	
 	public abstract void log(String name, double money, LogType type);
 	
-	public abstract void getConfigDefaults(Configuration config);
+	public abstract void getConfigDefaults(ConfigurationSection section);
 	
 	public abstract void clean();
 	

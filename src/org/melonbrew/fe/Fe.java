@@ -48,8 +48,16 @@ public class Fe extends JavaPlugin {
 		
 		getConfig().options().copyDefaults(true);
 		
-		for (Database database : databases.values()){
-			database.getConfigDefaults(getConfig());
+		for (String name : databases.keySet()){
+			ConfigurationSection section = getConfig().getConfigurationSection(name);
+			
+			if (section == null){
+				getConfig().createSection(name);
+			}
+			
+			Database database = databases.get(name);
+			
+			database.getConfigDefaults(section);
 		}
 		
 		getConfig().options().header("Fe Config - melonbrew.org\n" +
