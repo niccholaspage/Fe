@@ -48,6 +48,10 @@ public class Fe extends JavaPlugin {
 		
 		getConfig().options().copyDefaults(true);
 		
+		for (Database database : databases.values()){
+			database.getConfigDefaults(getConfig());
+		}
+		
 		getConfig().options().header("Fe Config - melonbrew.org\n" +
 				"holdings - The amount of money that the player will start out with\n" +
 				"prefix - The message prefix\n" +
