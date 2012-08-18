@@ -25,14 +25,16 @@ public class MySQLDB extends SQLDB {
 	}
 	
 	public void getConfigDefaults(Configuration config){
-		config.addDefault("host", "localhost");
+		ConfigurationSection section = config.createSection("mysql");
 		
-		config.addDefault("port", 3306);
+		section.addDefault("host", "localhost");
 		
-		config.addDefault("user", "root");
+		section.addDefault("port", 3306);
 		
-		config.addDefault("password", "minecraft");
+		section.addDefault("user", "root");
 		
-		config.addDefault("database", "Fe");
+		section.addDefault("password", "minecraft");
+		
+		section.addDefault("database", "Fe");
 	}
 }
