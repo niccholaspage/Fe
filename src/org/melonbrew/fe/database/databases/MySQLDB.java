@@ -1,6 +1,7 @@
 package org.melonbrew.fe.database.databases;
 
 
+import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.SQLibrary.Database;
@@ -21,5 +22,17 @@ public class MySQLDB extends SQLDB {
 		MySQL mySQL = new MySQL(plugin.getLogger(), "Fe", config.getString("host"), config.getString("port"), config.getString("database"), config.getString("user"), config.getString("password"));
 		
 		return mySQL;
+	}
+	
+	public void getConfigDefaults(Configuration config){
+		config.addDefault("host", "localhost");
+		
+		config.addDefault("port", 3306);
+		
+		config.addDefault("user", "root");
+		
+		config.addDefault("password", "minecraft");
+		
+		config.addDefault("database", "Fe");
 	}
 }
