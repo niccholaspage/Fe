@@ -1,7 +1,5 @@
 package org.melonbrew.fe.database.databases;
 
-
-import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.SQLibrary.Database;
@@ -24,9 +22,7 @@ public class MySQLDB extends SQLDB {
 		return mySQL;
 	}
 	
-	public void getConfigDefaults(Configuration config){
-		ConfigurationSection section = config.createSection("mysql");
-		
+	public void getConfigDefaults(ConfigurationSection section){
 		section.addDefault("host", "localhost");
 		
 		section.addDefault("port", 3306);

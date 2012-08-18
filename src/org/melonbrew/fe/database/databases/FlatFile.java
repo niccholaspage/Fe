@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.database.Account;
 import org.melonbrew.fe.database.Database;
@@ -112,7 +112,7 @@ public class FlatFile extends Database {
 		}
 	}
 	
-	public void getConfigDefaults(Configuration config){
+	public void getConfigDefaults(ConfigurationSection section){
 		
 	}
 }

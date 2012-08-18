@@ -1,7 +1,6 @@
 package org.melonbrew.fe.database.databases;
 
-
-import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.SQLibrary.Database;
 import org.melonbrew.fe.SQLibrary.SQLite;
@@ -19,7 +18,7 @@ public class SQLiteDB extends SQLDB {
 		return new SQLite(plugin.getLogger(), "Fe", "database", plugin.getDataFolder().getPath());
 	}
 	
-	public void getConfigDefaults(Configuration config){
+	public void getConfigDefaults(ConfigurationSection section){
 		
 	}
 }
