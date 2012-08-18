@@ -52,7 +52,7 @@ public class Fe extends JavaPlugin {
 			ConfigurationSection section = getConfig().getConfigurationSection(name);
 			
 			if (section == null){
-				getConfig().createSection(name);
+				section = getConfig().createSection(name);
 			}
 			
 			Database database = databases.get(name);
