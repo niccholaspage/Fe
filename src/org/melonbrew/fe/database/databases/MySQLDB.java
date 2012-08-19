@@ -19,6 +19,10 @@ public class MySQLDB extends SQLDB {
 
 		MySQL mySQL = new MySQL(plugin.getLogger(), "Fe", config.getString("host"), config.getString("port"), config.getString("database"), config.getString("user"), config.getString("password"));
 		
+		setAccountTable(config.getString("accounts"));
+		
+		setLoggingTable(config.getString("logging"));
+		
 		return mySQL;
 	}
 	
@@ -32,5 +36,15 @@ public class MySQLDB extends SQLDB {
 		section.addDefault("password", "minecraft");
 		
 		section.addDefault("database", "Fe");
+		
+		ConfigurationSection tables = section.getConfigurationSection("tables");
+		
+		if (tables == null){
+			tables = section.createSection("tables");
+		}
+		
+		tables.addDefault("accounts", "fe_accounts");
+		
+		tables.addDefault("logging", "fe_logging");
 	}
 }
