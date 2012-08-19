@@ -2,9 +2,8 @@ package org.melonbrew.fe;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -18,6 +17,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.melonbrew.fe.Metrics.Graph;
 import org.melonbrew.fe.database.Account;
 import org.melonbrew.fe.database.Database;
 import org.melonbrew.fe.database.databases.FlatFile;
@@ -32,7 +32,7 @@ public class Fe extends JavaPlugin {
 	
 	private Database database;
 	
-	private Map<String, Database> databases;
+	private Set<Database> databases;
 	
 	private String latestVersion;
 	
@@ -43,21 +43,21 @@ public class Fe extends JavaPlugin {
 		
 		new FePlayerListener(this);
 		
-		databases = new HashMap<String, Database>();
+		databases = new HashSet<Database>();
 		
-		databases.put("mysql", new MySQLDB(this));
-		databases.put("sqlite", new SQLiteDB(this));
+		databases.add(new MySQLDB(this));
+		databases.add(new SQLiteDB(this));
 		
 		getConfig().options().copyDefaults(true);
 		
-		for (String name : databases.keySet()){
+		for (Database database : databases){
+			String name = database.getConfigName();
+			
 			ConfigurationSection section = getConfig().getConfigurationSection(name);
 			
 			if (section == null){
 				section = getConfig().createSection(name);
 			}
-			
-			Database database = databases.get(name);
 			
 			database.getConfigDefaults(section);
 		}
@@ -78,17 +78,31 @@ public class Fe extends JavaPlugin {
 		
 		setupVault();
 		
-		try {
-			new Metrics(this).start();
-		} catch (IOException e){
-			
-		}
-		
 		setLatestVersion(getDescription().getVersion());
 		
 		getCommand("fe").setExecutor(new FeCommand(this));
 		
 		getServer().getScheduler().scheduleAsyncDelayedTask(this, new UpdateCheck(this));
+		
+		loadMetrics();
+	}
+	
+	private void loadMetrics(){
+		try {
+			Metrics metrics = new Metrics(this);
+			
+			Graph graph = metrics.createGraph("Database Engine");
+			
+            graph.addPlotter(new Metrics.Plotter(database.getName()){
+                public int getValue(){
+                    return 1;
+                }
+            });
+            
+            metrics.start();
+		} catch (IOException e){
+			
+		}
 	}
 	
 	protected void setLatestVersion(String latestVersion){
@@ -176,10 +190,10 @@ public class Fe extends JavaPlugin {
 			}
 		}
 		
-		for (String name : databases.keySet()){
-			if (type.equalsIgnoreCase(name)){
+		for (Database database : databases){
+			if (type.equalsIgnoreCase(database.getConfigName())){
 				try {
-					database = databases.get(name);
+					this.database = database;
 					
 					break;
 				} catch (Exception e){

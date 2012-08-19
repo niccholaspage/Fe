@@ -21,4 +21,8 @@ public class SQLiteDB extends SQLDB {
 	public void getConfigDefaults(ConfigurationSection section){
 		
 	}
+	
+	public String getName(){
+		return "SQLite";
+	}
 }
