@@ -19,9 +19,9 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	
 	private Database database;
 	
-	private final String accounts;
+	private String accounts;
 	
-	private final String logging;
+	private String logging;
 	
 	public SQLDB(Fe plugin, boolean supportsModification){
 		super(plugin);
@@ -33,6 +33,14 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 		accounts = "fe_accounts";
 		
 		logging = "fe_logging";
+	}
+	
+	public void setAccountTable(String accounts){
+		this.accounts = accounts;
+	}
+	
+	public void setLoggingTable(String logging){
+		this.logging = logging;
 	}
 	
 	public boolean init(){
