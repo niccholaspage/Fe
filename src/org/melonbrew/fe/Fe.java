@@ -103,7 +103,9 @@ public class Fe extends JavaPlugin {
                 }
             });
 			
-		    metrics.addCustomData(new Plotter("Default Holdings"){
+			Graph defaultHoldings = metrics.createGraph("Default Holdings");
+			
+			defaultHoldings.addPlotter(new Plotter("Default Holdings"){
 		        public int getValue(){
 		            return (int) getConfig().getDouble("holdings");
 		        }
