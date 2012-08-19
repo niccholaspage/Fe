@@ -178,10 +178,6 @@ public class Fe extends JavaPlugin {
 			if (database.init()){
 				log("Converting flat file into SQLite...");
 				
-				getConfig().set("type", "sqlite");
-				
-				saveConfig();
-				
 				convert = true;
 			}
 			
