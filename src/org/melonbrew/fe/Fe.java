@@ -17,6 +17,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.melonbrew.fe.Metrics.Graph;
+import org.melonbrew.fe.Metrics.Plotter;
 import org.melonbrew.fe.database.Account;
 import org.melonbrew.fe.database.Database;
 import org.melonbrew.fe.database.databases.MySQLDB;
@@ -84,8 +85,9 @@ public class Fe extends JavaPlugin {
 		
 		getCommand("fe").setExecutor(new FeCommand(this));
 		
-		getServer().getScheduler().scheduleAsyncDelayedTask(this, new UpdateCheck(this));
-		
+		if (getConfig().getBoolean("updatecheck")){
+			getServer().getScheduler().scheduleAsyncDelayedTask(this, new UpdateCheck(this));
+		}		
 		loadMetrics();
 	}
 	
@@ -93,13 +95,20 @@ public class Fe extends JavaPlugin {
 		try {
 			Metrics metrics = new Metrics(this);
 			
-			Graph graph = metrics.createGraph("Database Engine");
+			Graph databaseGraph = metrics.createGraph("Database Engine");
 			
-            graph.addPlotter(new Metrics.Plotter(database.getName()){
+			databaseGraph.addPlotter(new Plotter(database.getName()){
                 public int getValue(){
                     return 1;
                 }
             });
+			
+		    metrics.addCustomData(new Plotter("Default Holdings"){
+		        public int getValue(){
+		            return (int) getConfig().getDouble("holdings");
+		        }
+
+		    });
             
             metrics.start();
 		} catch (IOException e){
