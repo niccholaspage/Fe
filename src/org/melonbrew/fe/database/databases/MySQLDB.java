@@ -19,9 +19,9 @@ public class MySQLDB extends SQLDB {
 
 		MySQL mySQL = new MySQL(plugin.getLogger(), "Fe", config.getString("host"), config.getString("port"), config.getString("database"), config.getString("user"), config.getString("password"));
 		
-		setAccountTable(config.getString("accounts"));
+		setAccountTable(config.getString("tables.accounts"));
 		
-		setLoggingTable(config.getString("logging"));
+		setLoggingTable(config.getString("tables.logging"));
 		
 		return mySQL;
 	}
