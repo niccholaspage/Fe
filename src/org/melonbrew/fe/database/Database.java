@@ -30,6 +30,12 @@ public abstract class Database {
 	
 	public abstract void close();
 	
+	public abstract String getName();
+	
+	public String getConfigName(){
+		return getName().toLowerCase().replace(" ", "");
+	}
+	
 	public Account getAccount(String name){
 		double money = loadAccountMoney(name);
 		

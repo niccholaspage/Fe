@@ -47,4 +47,8 @@ public class MySQLDB extends SQLDB {
 		
 		tables.addDefault("logging", "fe_logging");
 	}
+	
+	public String getName(){
+		return "MySQL";
+	}
 }

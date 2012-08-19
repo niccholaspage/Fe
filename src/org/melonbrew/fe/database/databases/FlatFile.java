@@ -115,4 +115,8 @@ public class FlatFile extends Database {
 	public void getConfigDefaults(ConfigurationSection section){
 		
 	}
+	
+	public String getName(){
+		return "Flat File";
+	}
 }
