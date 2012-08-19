@@ -36,6 +36,10 @@ public abstract class Database {
 		return getName().toLowerCase().replace(" ", "");
 	}
 	
+	public ConfigurationSection getConfigSection(){
+		return plugin.getConfig().getConfigurationSection(getConfigName());
+	}
+	
 	public Account getAccount(String name){
 		double money = loadAccountMoney(name);
 		
