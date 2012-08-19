@@ -6,4 +6,4 @@ currency:
   single: Fe
   multiple: Fe
 
-type: flatfile
+type: sqlite
