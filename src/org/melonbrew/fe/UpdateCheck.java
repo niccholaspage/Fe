@@ -41,8 +41,10 @@ public class UpdateCheck implements Runnable {
 
 				String version = firstNodes.item(0).getNodeValue().trim();
 				
-				plugin.setLatestVersion(version);
-
+				double latestVersion = plugin.versionToDouble(version);
+				
+				plugin.setLatestVersion(latestVersion);
+				
 				if (!plugin.isUpdated()){
 					plugin.log(Phrase.FE_OUTDATED, version);
 				}
