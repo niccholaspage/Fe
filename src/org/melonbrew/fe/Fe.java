@@ -33,7 +33,9 @@ public class Fe extends JavaPlugin {
 	
 	private Set<Database> databases;
 	
-	private String latestVersion;
+	private double currentVersion;
+	
+	private double latestVersion;
 	
 	public void onEnable(){
 		log = getServer().getLogger();
@@ -81,14 +83,45 @@ public class Fe extends JavaPlugin {
 		
 		setupVault();
 		
-		setLatestVersion(getDescription().getVersion());
+		currentVersion = versionToDouble(getDescription().getVersion());
+		
+		setLatestVersion(currentVersion);
 		
 		getCommand("fe").setExecutor(new FeCommand(this));
 		
 		if (getConfig().getBoolean("updatecheck")){
 			getServer().getScheduler().scheduleAsyncDelayedTask(this, new UpdateCheck(this));
-		}		
+		}
+		
 		loadMetrics();
+	}
+	
+	public double versionToDouble(String version){
+		version = version.replace("-SNAPSHOT", "");
+		
+		String fixed = "";
+		
+		boolean doneFirst = false;
+		
+		for (int i = 0; i < version.length(); i++){
+			char c = version.charAt(i);
+			
+			if (c == '.'){
+				if (doneFirst){
+					continue;
+				}else {
+					doneFirst = true;
+				}
+			}
+			
+			fixed += c;
+		}
+		
+		try {
+			return Double.parseDouble(fixed);
+		}catch (NumberFormatException e){
+			return -1;
+		}
 	}
 	
 	private void loadMetrics(){
@@ -118,18 +151,16 @@ public class Fe extends JavaPlugin {
 		}
 	}
 	
-	protected void setLatestVersion(String latestVersion){
+	protected void setLatestVersion(double latestVersion){
 		this.latestVersion = latestVersion;
 	}
 	
-	public String getLatestVersion(){
+	public double getLatestVersion(){
 		return latestVersion;
 	}
 	
 	public boolean isUpdated(){
-		String version = getDescription().getVersion();
-		
-		return latestVersion.equalsIgnoreCase(version) || version.endsWith("-SNAPSHOT");
+		return currentVersion >= latestVersion;
 	}
 	
 	private void setupVault(){
