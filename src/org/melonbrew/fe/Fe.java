@@ -191,8 +191,6 @@ public class Fe extends JavaPlugin {
 		}
 		
 		for (Database database : databases){
-			System.out.println(type + "," + database.getConfigName());
-			
 			if (type.equalsIgnoreCase(database.getConfigName())){
 				try {
 					this.database = database;
