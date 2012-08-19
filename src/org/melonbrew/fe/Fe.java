@@ -34,6 +34,8 @@ public class Fe extends JavaPlugin {
 	
 	private Map<String, Database> databases;
 	
+	private String latestVersion;
+	
 	public void onEnable(){
 		log = getServer().getLogger();
 		
@@ -82,7 +84,25 @@ public class Fe extends JavaPlugin {
 			
 		}
 		
+		setLatestVersion(getDescription().getVersion());
+		
 		getCommand("fe").setExecutor(new FeCommand(this));
+		
+		getServer().getScheduler().scheduleAsyncDelayedTask(this, new UpdateCheck(this));
+	}
+	
+	protected void setLatestVersion(String latestVersion){
+		this.latestVersion = latestVersion;
+	}
+	
+	public String getLatestVersion(){
+		return latestVersion;
+	}
+	
+	public boolean isUpdated(){
+		String version = getDescription().getVersion();
+		
+		return latestVersion.equalsIgnoreCase(version) && !version.endsWith("-SNAPSHOT");
 	}
 	
 	private void setupVault(){
@@ -111,8 +131,8 @@ public class Fe extends JavaPlugin {
 		log.info("[Fe] " + message);
 	}
 	
-	public void log(Phrase phrase){
-		log(phrase.parse());
+	public void log(Phrase phrase, String... args){
+		log(phrase.parse(args));
 	}
 	
 	public Database getFeDatabase(){
