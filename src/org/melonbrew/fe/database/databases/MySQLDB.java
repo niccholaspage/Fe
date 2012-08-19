@@ -15,7 +15,7 @@ public class MySQLDB extends SQLDB {
 	}
 	
 	protected Database getNewDatabase(){
-		ConfigurationSection config = plugin.getMySQLConfig();
+		ConfigurationSection config = getConfigSection();
 
 		MySQL mySQL = new MySQL(plugin.getLogger(), "Fe", config.getString("host"), config.getString("port"), config.getString("database"), config.getString("user"), config.getString("password"));
 		

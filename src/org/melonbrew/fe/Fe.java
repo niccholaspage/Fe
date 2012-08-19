@@ -259,10 +259,6 @@ public class Fe extends JavaPlugin {
 		setupPhrases();
 	}
 	
-	public ConfigurationSection getMySQLConfig(){
-		return getConfig().getConfigurationSection("mysql");
-	}
-	
 	public String getReadName(Account account){
 		return getReadName(account.getName());
 	}
