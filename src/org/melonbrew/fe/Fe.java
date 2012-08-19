@@ -60,6 +60,10 @@ public class Fe extends JavaPlugin {
 			}
 			
 			database.getConfigDefaults(section);
+			
+			if (section.getKeys(false).isEmpty()){
+				getConfig().set(name, null);
+			}
 		}
 		
 		getConfig().options().header("Fe Config - melonbrew.org\n" +
@@ -191,6 +195,8 @@ public class Fe extends JavaPlugin {
 		}
 		
 		for (Database database : databases){
+			System.out.println(type + "," + database.getConfigName());
+			
 			if (type.equalsIgnoreCase(database.getConfigName())){
 				try {
 					this.database = database;
