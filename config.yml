@@ -7,3 +7,5 @@ currency:
   multiple: Fe
 
 type: sqlite
+
+updatecheck: true
