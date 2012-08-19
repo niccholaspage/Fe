@@ -3,7 +3,6 @@ package org.melonbrew.fe;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -20,7 +19,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.melonbrew.fe.Metrics.Graph;
 import org.melonbrew.fe.database.Account;
 import org.melonbrew.fe.database.Database;
-import org.melonbrew.fe.database.databases.FlatFile;
 import org.melonbrew.fe.database.databases.MySQLDB;
 import org.melonbrew.fe.database.databases.SQLiteDB;
 import org.melonbrew.fe.listeners.FePlayerListener;
@@ -162,33 +160,9 @@ public class Fe extends JavaPlugin {
 	}
 	
 	private boolean setupDatabase(){
-		return setupDatabase(null);
-	}
-	
-	private boolean setupDatabase(List<Account> accounts){
 		String type = getConfig().getString("type");
 		
 		database = null;
-		
-		if (type.equalsIgnoreCase("flatfile")){
-			database = new FlatFile(this);
-			
-			boolean convert = false;
-			
-			if (database.init()){
-				log("Converting flat file into SQLite...");
-				
-				convert = true;
-			}
-			
-			getConfig().set("type", "sqlite");
-			
-			saveConfig();
-			
-			if (convert){
-				return setupDatabase(database.getTopAccounts());
-			}
-		}
 		
 		for (Database database : databases){
 			if (type.equalsIgnoreCase(database.getConfigName())){
@@ -214,14 +188,6 @@ public class Fe extends JavaPlugin {
 			getServer().getPluginManager().disablePlugin(this);
 			
 			return false;
-		}
-		
-		if (accounts != null){
-			for (Account account : accounts){
-				database.createAccount(account.getName()).setMoney(account.getMoney());
-			}
-			
-			log("Finished conversion.");
 		}
 		
 		return true;
