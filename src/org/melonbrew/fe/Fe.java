@@ -142,7 +142,6 @@ public class Fe extends JavaPlugin {
 		        public int getValue(){
 		            return 1;
 		        }
-
 		    });
             
             metrics.start();
