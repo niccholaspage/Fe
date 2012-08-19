@@ -102,7 +102,7 @@ public class Fe extends JavaPlugin {
 	public boolean isUpdated(){
 		String version = getDescription().getVersion();
 		
-		return latestVersion.equalsIgnoreCase(version) && !version.endsWith("-SNAPSHOT");
+		return latestVersion.equalsIgnoreCase(version) || version.endsWith("-SNAPSHOT");
 	}
 	
 	private void setupVault(){
