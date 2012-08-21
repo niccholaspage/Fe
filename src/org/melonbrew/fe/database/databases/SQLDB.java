@@ -57,14 +57,18 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 			return false;
 		}
 		
-		if (!database.createTable("CREATE TABLE IF NOT EXISTS " + logging + "(name varchar(129), money double, type int, time long);")){
-			return false;
+		if (isLoggingEnabled()){
+			if (!database.createTable("CREATE TABLE IF NOT EXISTS " + logging + "(name varchar(129), money double, type int, time long);")){
+				return false;
+			}
 		}
 		
 		if (supportsModification){
 			database.query("ALTER TABLE " + accounts + " MODIFY name varchar(64)");
 			
-			database.query("ALTER TABLE " + logging + " MODIFY name varchar(129)");
+			if (isLoggingEnabled()){
+				database.query("ALTER TABLE " + logging + " MODIFY name varchar(129)");
+			}
 		}
 		
 		return true;
