@@ -35,7 +35,7 @@ public class SendCommand extends SubCommand {
 			return false;
 		}
 		
-		Account reciever = plugin.getAPI().getAccount(args[0]);
+		Account reciever = plugin.getShortenedAccount(args[0]);
 		
 		String messagePrefix = plugin.getMessagePrefix();
 		
