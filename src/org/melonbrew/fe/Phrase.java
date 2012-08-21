@@ -14,6 +14,7 @@ public enum Phrase {
 	CONFIG_RELOADED("The config has been reloaded."),
 	NOT_ENOUGH_MONEY("You don't have enough money."),
 	ACCOUNT_DOES_NOT_EXIST("Sorry, that account does not exist."),
+	YOUR_ACCOUNT_DOES_NOT_EXIST("You don't have an account."),
 	ACCOUNT_EXISTS("That account already exists."),
 	ACCOUNT_CREATED("An account for $1 has been created."),
 	ACCOUNT_REMOVED("An account for $1 has been removed."),

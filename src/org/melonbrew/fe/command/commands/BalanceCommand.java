@@ -23,7 +23,7 @@ public class BalanceCommand extends SubCommand {
 		String prefix = plugin.getMessagePrefix();
 		
 		if (args.length > 0 && sender.hasPermission("fe.balance.other")){
-			account = plugin.getAPI().getAccount(args[0]);
+			account = plugin.getShortenedAccount(args[0]);
 			
 			if (account == null){
 				sender.sendMessage(prefix + Phrase.ACCOUNT_DOES_NOT_EXIST.parse());
@@ -34,6 +34,12 @@ public class BalanceCommand extends SubCommand {
 			sender.sendMessage(prefix + Phrase.ACCOUNT_HAS.parse(plugin.getReadName(account), plugin.getAPI().format(account)));
 		}else {
 			account = plugin.getAPI().getAccount(sender.getName());
+			
+			if (account == null){
+				sender.sendMessage(prefix + Phrase.YOUR_ACCOUNT_DOES_NOT_EXIST.parse());
+				
+				return true;
+			}
 			
 			sender.sendMessage(prefix + Phrase.YOU_HAVE.parse(plugin.getAPI().format(account)));
 		}
