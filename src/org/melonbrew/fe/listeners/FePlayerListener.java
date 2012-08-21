@@ -1,10 +1,13 @@
 package org.melonbrew.fe.listeners;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.melonbrew.fe.Fe;
+import org.melonbrew.fe.Phrase;
 
 public class FePlayerListener implements Listener {
 	private final Fe plugin;
@@ -18,5 +21,14 @@ public class FePlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerLogin(PlayerLoginEvent event){
 		plugin.getAPI().createAccount(event.getPlayer().getName());
+	}
+	
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent event){
+		Player player = event.getPlayer();
+		
+		if (player.hasPermission("fe.notify")){
+			sender.sendMessage(plugin.getMessagePrefix() + Phrase.FE_OUTDATED.parse(plugin.getLatestVersionText()));
+		}
 	}
 }

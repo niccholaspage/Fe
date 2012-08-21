@@ -45,6 +45,8 @@ public class UpdateCheck implements Runnable {
 				
 				plugin.setLatestVersion(latestVersion);
 				
+				plugin.setLatestVersionString(version);
+				
 				if (!plugin.isUpdated()){
 					plugin.log(Phrase.FE_OUTDATED, version);
 				}
