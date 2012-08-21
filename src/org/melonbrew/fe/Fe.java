@@ -38,7 +38,7 @@ public class Fe extends JavaPlugin {
 	
 	private double latestVersion;
 	
-	private String latestVersionText;
+	private String latestVersionString;
 	
 	public void onEnable(){
 		log = getServer().getLogger();
@@ -161,16 +161,16 @@ public class Fe extends JavaPlugin {
 		this.latestVersion = latestVersion;
 	}
 	
-	protected void setLatestVersionString(String latestVersionText){
-		this.latestVersionText = latestVersionText;
+	protected void setLatestVersionString(String latestVersionString){
+		this.latestVersionString = latestVersionString;
 	}
 	
 	public double getLatestVersion(){
 		return latestVersion;
 	}
 	
-	public String getLatestVersionText(){
-		return latestVersionText;
+	public String getLatestVersionString(){
+		return latestVersionString;
 	}
 	
 	public boolean isUpdated(){
