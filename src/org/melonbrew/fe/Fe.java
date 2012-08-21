@@ -38,6 +38,8 @@ public class Fe extends JavaPlugin {
 	
 	private double latestVersion;
 	
+	private String latestVersionText;
+	
 	public void onEnable(){
 		log = getServer().getLogger();
 		
@@ -84,9 +86,13 @@ public class Fe extends JavaPlugin {
 		
 		setupVault();
 		
-		currentVersion = versionToDouble(getDescription().getVersion());
+		String currentVersionString = getDescription().getVersion();
+		
+		currentVersion = versionToDouble(currentVersionString);
 		
 		setLatestVersion(currentVersion);
+		
+		setLatestVersionString(currentVersionString);
 		
 		getCommand("fe").setExecutor(new FeCommand(this));
 		
@@ -155,8 +161,16 @@ public class Fe extends JavaPlugin {
 		this.latestVersion = latestVersion;
 	}
 	
+	protected void setLatestVersionString(String latestVersionText){
+		this.latestVersionText = latestVersionText;
+	}
+	
 	public double getLatestVersion(){
 		return latestVersion;
+	}
+	
+	public String getLatestVersionText(){
+		return latestVersionText;
 	}
 	
 	public boolean isUpdated(){

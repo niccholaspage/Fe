@@ -44,6 +44,8 @@ permissions:
     description: Allows you to clean all accounts with the default balance with the /fe clean command
   fe.reload:
     description: Allows you to reload the configuration with the /fe reload command
+  fe.notify:
+    description: Allows you to recieve a notification when Fe is out of date
   fe.member:
     children:
       fe.balance: true
@@ -59,6 +61,7 @@ permissions:
       fe.grant: true
       fe.clean: true
       fe.reload: true
+      fe.notify: true
   fe.*:
     children:
       fe.member: true
