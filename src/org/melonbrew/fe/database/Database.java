@@ -71,4 +71,8 @@ public abstract class Database {
 	public boolean accountExists(String name){
 		return getAccount(name) != null;
 	}
+	
+	protected boolean isLoggingEnabled(){
+		return plugin.getConfig().getBoolean("logging");
+	}
 }
