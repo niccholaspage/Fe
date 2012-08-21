@@ -28,7 +28,7 @@ public class FePlayerListener implements Listener {
 		Player player = event.getPlayer();
 		
 		if (player.hasPermission("fe.notify")){
-			sender.sendMessage(plugin.getMessagePrefix() + Phrase.FE_OUTDATED.parse(plugin.getLatestVersionText()));
+			player.sendMessage(plugin.getMessagePrefix() + Phrase.FE_OUTDATED.parse(plugin.getLatestVersionText()));
 		}
 	}
 }
