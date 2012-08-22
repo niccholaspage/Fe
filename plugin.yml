@@ -2,7 +2,7 @@ name: Fe
 
 main: org.melonbrew.fe.Fe
 
-version: 0.4-SNAPSHOT
+version: 0.4
 
 load: startup
 
@@ -45,7 +45,7 @@ permissions:
   fe.reload:
     description: Allows you to reload the configuration with the /fe reload command
   fe.notify:
-    description: Allows you to recieve a notification when Fe is out of date
+    description: Allows you to receive a notification when Fe is out of date
   fe.member:
     children:
       fe.balance: true
