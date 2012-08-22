@@ -309,7 +309,9 @@ public class Fe extends JavaPlugin {
 		if (account == null){
 			Player player = getServer().getPlayer(name);
 			
-			account = getAPI().getAccount(player.getName());
+			if (player != null){
+				account = getAPI().getAccount(player.getName());
+			}
 		}
 		
 		return account;
