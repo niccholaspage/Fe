@@ -22,8 +22,6 @@ public abstract class Database {
 	
 	public abstract void removeAccount(String name);
 	
-	public abstract void log(String name, double money, LogType type);
-	
 	public abstract void getConfigDefaults(ConfigurationSection section);
 	
 	public abstract void clean();
@@ -70,9 +68,5 @@ public abstract class Database {
 	
 	public boolean accountExists(String name){
 		return getAccount(name) != null;
-	}
-	
-	protected boolean isLoggingEnabled(){
-		return plugin.getConfig().getBoolean("logging");
 	}
 }

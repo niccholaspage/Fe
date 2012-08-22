@@ -21,8 +21,6 @@ public class MySQLDB extends SQLDB {
 		
 		setAccountTable(config.getString("tables.accounts"));
 		
-		setLoggingTable(config.getString("tables.logging"));
-		
 		return mySQL;
 	}
 	
@@ -44,8 +42,6 @@ public class MySQLDB extends SQLDB {
 		}
 		
 		tables.addDefault("accounts", "fe_accounts");
-		
-		tables.addDefault("logging", "fe_logging");
 	}
 	
 	public String getName(){

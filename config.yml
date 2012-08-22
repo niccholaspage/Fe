@@ -8,6 +8,4 @@ currency:
 
 type: sqlite
 
-logging: false
-
 updatecheck: true
