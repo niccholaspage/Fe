@@ -104,6 +104,8 @@ public class Fe extends JavaPlugin {
 	}
 	
 	public double versionToDouble(String version){
+		boolean isSnapshot = version.endsWith("-SNAPSHOT");
+		
 		version = version.replace("-SNAPSHOT", "");
 		
 		String fixed = "";
@@ -125,7 +127,13 @@ public class Fe extends JavaPlugin {
 		}
 		
 		try {
-			return Double.parseDouble(fixed);
+			double ret = Double.parseDouble(fixed);
+			
+			if (isSnapshot){
+				ret -= 0.001;
+			}
+			
+			return ret;
 		}catch (NumberFormatException e){
 			return -1;
 		}
