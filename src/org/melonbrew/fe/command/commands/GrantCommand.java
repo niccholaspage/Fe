@@ -38,7 +38,7 @@ public class GrantCommand extends SubCommand {
 			return true;
 		}
 		
-		victim.setMoney(victim.getMoney() + money);
+		victim.deposit(money);
 		
 		String message = plugin.getMessagePrefix() + Phrase.PLAYER_GRANT_MONEY.parse(plugin.getAPI().format(money), plugin.getReadName(victim));
 		

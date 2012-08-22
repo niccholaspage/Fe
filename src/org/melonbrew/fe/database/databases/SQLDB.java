@@ -10,7 +10,6 @@ import java.util.List;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.SQLibrary.Database;
 import org.melonbrew.fe.database.Account;
-import org.melonbrew.fe.database.LogType;
 
 public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	private final Fe plugin;
@@ -21,8 +20,6 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	
 	private String accounts;
 	
-	private String logging;
-	
 	public SQLDB(Fe plugin, boolean supportsModification){
 		super(plugin);
 		
@@ -31,16 +28,10 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 		this.supportsModification = supportsModification;
 		
 		accounts = "fe_accounts";
-		
-		logging = "fe_logging";
 	}
 	
 	public void setAccountTable(String accounts){
 		this.accounts = accounts;
-	}
-	
-	public void setLoggingTable(String logging){
-		this.logging = logging;
 	}
 	
 	public boolean init(){
@@ -57,18 +48,8 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 			return false;
 		}
 		
-		if (isLoggingEnabled()){
-			if (!database.createTable("CREATE TABLE IF NOT EXISTS " + logging + "(name varchar(129), money double, type int, time long);")){
-				return false;
-			}
-		}
-		
 		if (supportsModification){
 			database.query("ALTER TABLE " + accounts + " MODIFY name varchar(64)");
-			
-			if (isLoggingEnabled()){
-				database.query("ALTER TABLE " + logging + " MODIFY name varchar(129)");
-			}
 		}
 		
 		return true;
@@ -173,30 +154,6 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 			}catch (SQLException e){
 				
 			}
-		}
-	}
-	
-	public void log(String name, double money, LogType type){
-		long time = System.currentTimeMillis();
-		
-		String sql = "INSERT INTO " + logging + " (name, money, type, time) VALUES (?, ?, ?, ?)";
-		
-		try {
-			PreparedStatement prest = database.prepare(sql);
-			
-			prest.setString(1, name);
-			
-			prest.setDouble(2, money);
-			
-			prest.setInt(3, type.getID());
-			
-			prest.setLong(4, time);
-			
-			prest.executeUpdate();
-			
-			prest.close();
-		}catch (SQLException e){
-			
 		}
 	}
 	
