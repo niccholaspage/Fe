@@ -12,6 +12,14 @@ public class Converter_iConomy extends Converter {
 		return "iConomy";
 	}
 	
+	public boolean isFlatFile(){
+		return false;
+	}
+	
+	public boolean isMySQL(){
+		return true;
+	}
+	
 	public Response convertFlatFile(Fe plugin){
 		return new Response(ResponseType.NOT_SUPPORTED);
 	}
