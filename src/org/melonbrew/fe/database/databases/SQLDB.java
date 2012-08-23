@@ -57,6 +57,10 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	
 	protected abstract Database getNewDatabase();
 	
+	public Database getDatabase(){
+		return database;
+	}
+	
 	public void close(){
 		database.close();
 	}
