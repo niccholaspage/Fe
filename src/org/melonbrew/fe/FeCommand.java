@@ -23,15 +23,15 @@ public class FeCommand implements CommandExecutor {
 		commands = new ArrayList<SubCommand>();
 		
 		commands.add(new BalanceCommand(plugin));
-		commands.add(new ReloadCommand(plugin));
 		commands.add(new SendCommand(plugin));
 		commands.add(new TopCommand(plugin));
+		commands.add(new HelpCommand(plugin, this));
 		commands.add(new CreateCommand(plugin));
 		commands.add(new RemoveCommand(plugin));
 		commands.add(new SetCommand(plugin));
 		commands.add(new GrantCommand(plugin)); 
 		commands.add(new CleanCommand(plugin));
-		commands.add(new HelpCommand(plugin, this));
+		commands.add(new ReloadCommand(plugin));
 	}
 	
 	public List<SubCommand> getCommands(){

@@ -28,15 +28,15 @@ public enum Phrase {
 	TRY_COMMAND("Try $1"),
 	FE_OUTDATED("Fe is outdated! The latest version is $1."),
 	COMMAND_BALANCE("Checks your balance", true),
-	COMMAND_CLEAN("Cleans the accounts with default balance"),
-	COMMAND_CREATE("Creates an account"),
-	COMMAND_GRANT("Grants a player more Fe"),
-	COMMAND_HELP("Gives you help"),
-	COMMAND_RELOAD("Reloads the config"),
-	COMMAND_REMOVE("Removes an account"),
-	COMMAND_SEND("Sends another player Fe"),
-	COMMAND_SET("Set a player's balance"),
-	COMMAND_TOP("Checks the top 5 richest players");
+	COMMAND_SEND("Sends another player Fe", true),
+	COMMAND_TOP("Checks the top 5 richest players", true),
+	COMMAND_HELP("Gives you help", true),
+	COMMAND_CREATE("Creates an account", true),
+	COMMAND_REMOVE("Removes an account", true),
+	COMMAND_SET("Set a player's balance", true),
+	COMMAND_GRANT("Grants a player more Fe", true),
+	COMMAND_CLEAN("Cleans the accounts with default balance", true),
+	COMMAND_RELOAD("Reloads the config", true);
 
 	private final String defaultMessage;
 	
