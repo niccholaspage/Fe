@@ -43,7 +43,11 @@ public class ConvertCommand extends SubCommand {
 			}
 			
 			if (converter.isMySQL()){
-				message += ", " + Phrase.MYSQL.parse();
+				if (converter.isFlatFile()){
+					message += ", ";
+				}
+				
+				message += Phrase.MYSQL.parse();
 			}
 			
 			message += ChatColor.DARK_GRAY + ")";
