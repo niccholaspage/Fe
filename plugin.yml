@@ -42,6 +42,8 @@ permissions:
     description: Allows you grant players money with the /fe grant name amount command
   fe.clean:
     description: Allows you to clean all accounts with the default balance with the /fe clean command
+  fe.convert:
+    description: Allows you converts data from a previous economy plugin to Fe
   fe.reload:
     description: Allows you to reload the configuration with the /fe reload command
   fe.notify:
