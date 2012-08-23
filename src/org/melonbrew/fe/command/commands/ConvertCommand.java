@@ -84,7 +84,7 @@ public class ConvertCommand extends SubCommand {
 		
 		String type = args[1];
 		
-		if (!type.equalsIgnoreCase(Phrase.FLAT_FILE.parse()) || type.equalsIgnoreCase(Phrase.MYSQL.parse())){
+		if (!type.equalsIgnoreCase(Phrase.FLAT_FILE.parse().replace(" ", "")) || !type.equalsIgnoreCase(Phrase.MYSQL.parse().replace(" ", ""))){
 			return false;
 		}
 		
