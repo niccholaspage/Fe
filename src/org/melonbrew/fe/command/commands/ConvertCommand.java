@@ -11,7 +11,10 @@ import org.melonbrew.fe.Phrase;
 import org.melonbrew.fe.command.CommandType;
 import org.melonbrew.fe.command.SubCommand;
 import org.melonbrew.fe.database.converter.Converter;
+import org.melonbrew.fe.database.converter.Response;
+import org.melonbrew.fe.database.converter.ResponseType;
 import org.melonbrew.fe.database.converter.converters.Converter_iConomy;
+import org.melonbrew.fe.database.databases.MySQLDB;
 
 public class ConvertCommand extends SubCommand {
 	private final Fe plugin;
@@ -58,11 +61,73 @@ public class ConvertCommand extends SubCommand {
 		sender.sendMessage(plugin.getEndEqualMessage(message.length()));
 	}
 	
+	private Converter getConverter(String name){
+		for (Converter converter : converters){
+			if (converter.getName().equalsIgnoreCase(name)){
+				return converter;
+			}
+		}
+		
+		return null;
+	}
+	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		if (args.length < 1){
 			sendConversionList(sender);
 			
 			return true;
+		}
+		
+		if (args.length < 2){
+			return false;
+		}
+		
+		String type = args[1];
+		
+		if (!type.equalsIgnoreCase(Phrase.FLAT_FILE.parse()) || type.equalsIgnoreCase(Phrase.MYSQL.parse())){
+			return false;
+		}
+		
+		Converter converter = getConverter(args[0]);
+		
+		if (converter == null){
+			sender.sendMessage(plugin.getMessagePrefix() + Phrase.CONVERTER_DOES_NOT_EXIST.parse());
+			
+			return true;
+		}
+		
+		String supported = null;
+		
+		if (type.equalsIgnoreCase(Phrase.FLAT_FILE.parse()) && !converter.isFlatFile()){
+			supported = Phrase.FLAT_FILE.parse();
+		}else if (type.equalsIgnoreCase(Phrase.MYSQL.parse())){
+			if (!converter.mySQLtoFlatFile() && !(plugin.getFeDatabase() instanceof MySQLDB)){
+				sender.sendMessage(Phrase.CONVERTER_DOES_NOT_SUPPORT.parse(Phrase.MYSQL_TO_FLAT_FILE.parse()));
+				
+				return true;
+			}
+			
+			if (!converter.isMySQL()){
+				supported = Phrase.MYSQL.parse();
+			}
+		}
+		
+		if (supported != null){
+			sender.sendMessage(plugin.getMessagePrefix() + Phrase.CONVERTER_DOES_NOT_SUPPORT.parse(supported));
+			
+			return true;
+		}
+		
+		Response response;
+		
+		if (type.equalsIgnoreCase(Phrase.FLAT_FILE.parse())){
+			response = converter.convertFlatFile(plugin);
+		}else {
+			response = converter.convertMySQL(plugin);
+		}
+		
+		if (response.getType() == ResponseType.FAILED){
+			sender.sendMessage(plugin.getMessagePrefix() + Phrase.CONVERSION_FAILED.parse());
 		}
 		
 		return true;
