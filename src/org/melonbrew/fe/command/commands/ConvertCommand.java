@@ -11,7 +11,7 @@ import org.melonbrew.fe.Phrase;
 import org.melonbrew.fe.command.CommandType;
 import org.melonbrew.fe.command.SubCommand;
 import org.melonbrew.fe.database.converter.Converter;
-import org.melonbrew.fe.database.converter.converterss.Converter_iConomy;
+import org.melonbrew.fe.database.converter.converters.Converter_iConomy;
 
 public class ConvertCommand extends SubCommand {
 	private final Fe plugin;
