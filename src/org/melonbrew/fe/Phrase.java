@@ -36,6 +36,7 @@ public enum Phrase {
 	COMMAND_SET("Set a player's balance", true),
 	COMMAND_GRANT("Grants a player more Fe", true),
 	COMMAND_CLEAN("Cleans the accounts with default balance", true),
+	COMMAND_CONVERT("Converts data from a previous economy plugin to Fe", true),
 	COMMAND_RELOAD("Reloads the config", true);
 
 	private final String defaultMessage;
