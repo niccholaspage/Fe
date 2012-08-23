@@ -11,7 +11,7 @@ public class ReloadCommand extends SubCommand {
 	private final Fe plugin;
 	
 	public ReloadCommand(Fe plugin){
-		super("reload", "fe.reload", "reload", "Reloads the config", CommandType.CONSOLE);
+		super("reload", "fe.reload", "reload", Phrase.COMMAND_RELOAD, CommandType.CONSOLE);
 		
 		this.plugin = plugin;
 	}

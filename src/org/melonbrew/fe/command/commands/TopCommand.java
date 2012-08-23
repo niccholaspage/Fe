@@ -15,7 +15,7 @@ public class TopCommand extends SubCommand {
 	private final Fe plugin;
 	
 	public TopCommand(Fe plugin){
-		super("top", "fe.top", "top", "Checks the top 5 richest players", CommandType.CONSOLE);
+		super("top", "fe.top", "top", Phrase.COMMAND_TOP, CommandType.CONSOLE);
 		
 		this.plugin = plugin;
 	}

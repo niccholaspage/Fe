@@ -16,7 +16,7 @@ public class HelpCommand extends SubCommand {
 	private final FeCommand command;
 	
 	public HelpCommand(Fe plugin, FeCommand command){
-		super("help,?", "fe.?", "help", "Gives you help", CommandType.CONSOLE);
+		super("help,?", "fe.?", "help", Phrase.COMMAND_HELP, CommandType.CONSOLE);
 		
 		this.plugin = plugin;
 		
@@ -45,7 +45,7 @@ public class HelpCommand extends SubCommand {
 				continue;
 			}
 			
-			sender.sendMessage(this.command.parse(commandLabel, command) + textColor + " - " + command.getDescription());
+			sender.sendMessage(this.command.parse(commandLabel, command) + textColor + " - " + command.getDescription().parse());
 		}
 		
 		sender.sendMessage(plugin.getEndEqualMessage(27));

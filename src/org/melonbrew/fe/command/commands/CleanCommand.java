@@ -11,7 +11,7 @@ public class CleanCommand extends SubCommand {
 	private final Fe plugin;
 	
 	public CleanCommand(Fe plugin){
-		super("clean", "fe.clean", "clean", "Cleans the accounts with default balance", CommandType.CONSOLE);
+		super("clean", "fe.clean", "clean", Phrase.COMMAND_CLEAN, CommandType.CONSOLE);
 		
 		this.plugin = plugin;
 	}

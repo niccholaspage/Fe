@@ -12,7 +12,7 @@ public class GrantCommand extends SubCommand {
 	private final Fe plugin;
 	
 	public GrantCommand(Fe plugin){
-		super("grant", "fe.grant", "grant [name] [amount]", "Grants a player more Fe", CommandType.CONSOLE);
+		super("grant", "fe.grant", "grant [name] [amount]", Phrase.COMMAND_GRANT, CommandType.CONSOLE);
 		
 		this.plugin = plugin;
 	}
