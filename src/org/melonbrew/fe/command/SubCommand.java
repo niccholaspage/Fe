@@ -2,6 +2,7 @@ package org.melonbrew.fe.command;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.melonbrew.fe.Phrase;
 
 public abstract class SubCommand {
 	private final String name;
@@ -10,11 +11,11 @@ public abstract class SubCommand {
 	
 	private final String usage;
 	
-	private final String description;
+	private final Phrase description;
 	
 	private final CommandType commandType;
 	
-	public SubCommand(String name, String permission, String usage, String description, CommandType commandType){
+	public SubCommand(String name, String permission, String usage, Phrase description, CommandType commandType){
 		this.name = name;
 		
 		this.permission = permission;
@@ -42,7 +43,7 @@ public abstract class SubCommand {
 		return usage;
 	}
 	
-	public String getDescription(){
+	public Phrase getDescription(){
 		return description;
 	}
 	

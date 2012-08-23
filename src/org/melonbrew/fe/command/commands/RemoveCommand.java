@@ -12,7 +12,7 @@ public class RemoveCommand extends SubCommand {
 	private final Fe plugin;
 	
 	public RemoveCommand(Fe plugin){
-		super("remove", "fe.remove", "remove [name]", "Removes an account", CommandType.CONSOLE);
+		super("remove", "fe.remove", "remove [name]", Phrase.COMMAND_REMOVE, CommandType.CONSOLE);
 		
 		this.plugin = plugin;
 	}

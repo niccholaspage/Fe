@@ -13,7 +13,7 @@ public class SendCommand extends SubCommand {
 	private final Fe plugin;
 	
 	public SendCommand(Fe plugin){
-		super("send,pay,give", "fe.send", "send [name] [amount]", "Sends another player Fe", CommandType.PLAYER);
+		super("send,pay,give", "fe.send", "send [name] [amount]", Phrase.COMMAND_SEND, CommandType.PLAYER);
 		
 		this.plugin = plugin;
 	}

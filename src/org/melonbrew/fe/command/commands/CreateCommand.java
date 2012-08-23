@@ -12,7 +12,7 @@ public class CreateCommand extends SubCommand {
 	private final Fe plugin;
 	
 	public CreateCommand(Fe plugin){
-		super("create", "fe.create", "create [name]", "Creates an account", CommandType.CONSOLE);
+		super("create", "fe.create", "create [name]", Phrase.COMMAND_CREATE, CommandType.CONSOLE);
 		
 		this.plugin = plugin;
 	}

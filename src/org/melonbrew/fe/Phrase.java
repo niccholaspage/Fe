@@ -26,14 +26,32 @@ public enum Phrase {
 	NAME_TOO_LONG("Sorry that name is too long."),
 	ACCOUNT_CLEANED("All accounts with the default balance have been removed."),
 	TRY_COMMAND("Try $1"),
-	FE_OUTDATED("Fe is outdated! The latest version is $1.");
+	FE_OUTDATED("Fe is outdated! The latest version is $1."),
+	COMMAND_BALANCE("Checks your balance", true),
+	COMMAND_CLEAN("Cleans the accounts with default balance"),
+	COMMAND_CREATE("Creates an account"),
+	COMMAND_GRANT("Grants a player more Fe"),
+	COMMAND_HELP("Gives you help"),
+	COMMAND_RELOAD("Reloads the config"),
+	COMMAND_REMOVE("Removes an account"),
+	COMMAND_SEND("Sends another player Fe"),
+	COMMAND_SET("Set a player's balance"),
+	COMMAND_TOP("Checks the top 5 richest players");
 
-	private String defaultMessage;
+	private final String defaultMessage;
+	
+	private final boolean categorized;
 
 	private String message;
-
+	
 	private Phrase(String defaultMessage){
+		this(defaultMessage, false);
+	}
+
+	private Phrase(String defaultMessage, boolean categorized){
 		this.defaultMessage = defaultMessage;
+		
+		this.categorized = categorized;
 
 		message = defaultMessage + "";
 	}
@@ -51,6 +69,12 @@ public enum Phrase {
 	}
 
 	public String getConfigName(){
+		String name = name();
+		
+		if (categorized){
+			name = name.replaceFirst("_", ".");
+		}
+		
 		return name().toLowerCase();
 	}
 

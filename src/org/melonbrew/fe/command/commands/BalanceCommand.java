@@ -12,7 +12,7 @@ public class BalanceCommand extends SubCommand {
 	private final Fe plugin;
 	
 	public BalanceCommand(Fe plugin){
-		super("balance,bal", "fe.balance", "(name)", "Checks your balance", CommandType.CONSOLE_WITH_ARGUMENTS);
+		super("balance,bal", "fe.balance", "(name)", Phrase.COMMAND_BALANCE, CommandType.CONSOLE_WITH_ARGUMENTS);
 		
 		this.plugin = plugin;
 	}
