@@ -27,6 +27,8 @@ public class Converter_BOSEconomy extends Converter {
 			String name = null;
 			
 			while ((line = reader.readLine()) != null){
+				line = line.trim();
+				
 				if (line.endsWith(" {")){
 					name = line.replace(" {", "");
 				}else if (line.equalsIgnoreCase("}")){
