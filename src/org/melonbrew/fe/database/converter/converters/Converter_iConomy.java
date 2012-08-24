@@ -40,6 +40,6 @@ public class Converter_iConomy extends Converter {
 	}
 	
 	public boolean mySQLtoFlatFile(){
-		return true;
+		return false;
 	}
 }
