@@ -56,7 +56,7 @@ public class ConvertCommand extends SubCommand {
 			sender.sendMessage(message);
 		}
 		
-		sender.sendMessage(plugin.getEndEqualMessage(message.length()));
+		sender.sendMessage(plugin.getEndEqualMessage(31));
 	}
 	
 	private Converter getConverter(String name){
