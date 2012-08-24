@@ -1,5 +1,9 @@
 package org.melonbrew.fe.database.converter.converters;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.SQLibrary.Database;
 import org.melonbrew.fe.database.converter.Converter;
@@ -10,7 +14,39 @@ public class Converter_iConomy extends Converter {
 		return "iConomy";
 	}
 	
+	public boolean isFlatFile(){
+		return true;
+	}
+	
 	public boolean isMySQL(){
+		return true;
+	}
+	
+	public boolean convertFlatFile(Fe plugin){
+		File accountsFile = new File("iConomy/accounts.mini");
+		
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(accountsFile));
+			
+			String line = null;
+			
+			while ((line = reader.readLine()) != null){
+				line = line.replace("balance:", "");
+				
+				String[] args = line.split(" ");
+				
+				String name = args[0];
+				
+				double money = Double.parseDouble(args[1]);
+				
+				plugin.getAPI().createAccount(name).setMoney(money);
+			}
+			
+			reader.close();
+		} catch (Exception e){
+			return false;
+		}
+		
 		return true;
 	}
 	
