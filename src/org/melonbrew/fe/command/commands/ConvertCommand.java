@@ -11,7 +11,7 @@ import org.melonbrew.fe.Phrase;
 import org.melonbrew.fe.command.CommandType;
 import org.melonbrew.fe.command.SubCommand;
 import org.melonbrew.fe.database.converter.Converter;
-import org.melonbrew.fe.database.converter.converters.Converter_iConomy;
+import org.melonbrew.fe.database.converter.converters.*;
 import org.melonbrew.fe.database.databases.MySQLDB;
 
 public class ConvertCommand extends SubCommand {
@@ -27,6 +27,7 @@ public class ConvertCommand extends SubCommand {
 		converters = new ArrayList<Converter>();
 		
 		converters.add(new Converter_iConomy());
+		converters.add(new Converter_Essentials());
 	}
 	
 	private void sendConversionList(CommandSender sender){
