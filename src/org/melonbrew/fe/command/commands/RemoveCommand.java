@@ -25,14 +25,14 @@ public class RemoveCommand extends SubCommand {
 		String name = args[0];
 		
 		if (!plugin.getAPI().accountExists(name)){
-			sender.sendMessage(plugin.getMessagePrefix() + Phrase.ACCOUNT_DOES_NOT_EXIST.parse());
+			sender.sendMessage(Phrase.ACCOUNT_DOES_NOT_EXIST.parseWithPrefix());
 			
 			return true;
 		}
 		
 		plugin.getAPI().removeAccount(name);
 		
-		sender.sendMessage(plugin.getMessagePrefix() + Phrase.ACCOUNT_REMOVED.parse(ChatColor.GOLD + plugin.getReadName(name) + ChatColor.GRAY));
+		sender.sendMessage(Phrase.ACCOUNT_REMOVED.parseWithPrefix(ChatColor.GOLD + plugin.getReadName(name) + ChatColor.GRAY));
 		
 		return true;
 	}

@@ -47,6 +47,8 @@ public class Fe extends JavaPlugin {
 		
 		new FePlayerListener(this);
 		
+		Phrase.init(this);
+		
 		databases = new HashSet<Database>();
 		
 		databases.add(new MySQLDB(this));

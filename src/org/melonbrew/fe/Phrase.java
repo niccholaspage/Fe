@@ -46,6 +46,8 @@ public enum Phrase {
 	COMMAND_CLEAN("Cleans the accounts with default balance", true),
 	COMMAND_CONVERT("Converts data from a previous economy plugin to Fe", true),
 	COMMAND_RELOAD("Reloads the config", true);
+	
+	private static Fe plugin;
 
 	private final String defaultMessage;
 	
@@ -100,6 +102,14 @@ public enum Phrase {
 	}
 	
 	public String parseWithoutSpaces(String... params){
-		return parse().replace(" ", "");
+		return parse(params).replace(" ", "");
+	}
+	
+	public String parseWithPrefix(String... params){
+		return plugin.getMessagePrefix() + parse(params);
+	}
+	
+	public static void init(Fe instance){
+		plugin = instance;
 	}
 }

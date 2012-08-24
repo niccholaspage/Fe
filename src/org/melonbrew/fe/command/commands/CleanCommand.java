@@ -19,7 +19,7 @@ public class CleanCommand extends SubCommand {
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		plugin.getAPI().clean();
 		
-		sender.sendMessage(plugin.getMessagePrefix() + Phrase.ACCOUNT_CLEANED.parse());
+		sender.sendMessage(Phrase.ACCOUNT_CLEANED.parseWithPrefix());
 		
 		return true;
 	}

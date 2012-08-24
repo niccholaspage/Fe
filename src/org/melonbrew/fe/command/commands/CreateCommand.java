@@ -25,20 +25,20 @@ public class CreateCommand extends SubCommand {
 		String name = args[0];
 		
 		if (plugin.getAPI().accountExists(name)){
-			sender.sendMessage(plugin.getMessagePrefix() + Phrase.ACCOUNT_EXISTS.parse());
+			sender.sendMessage(Phrase.ACCOUNT_EXISTS.parseWithPrefix());
 			
 			return true;
 		}
 		
 		if (name.length() > 16){
-			sender.sendMessage(plugin.getMessagePrefix() + Phrase.NAME_TOO_LONG.parse());
+			sender.sendMessage(Phrase.NAME_TOO_LONG.parseWithPrefix());
 			
 			return true;
 		}
 		
 		plugin.getAPI().createAccount(name);
 		
-		sender.sendMessage(plugin.getMessagePrefix() + Phrase.ACCOUNT_CREATED.parse(ChatColor.GOLD + plugin.getReadName(name) + ChatColor.GRAY));
+		sender.sendMessage(Phrase.ACCOUNT_CREATED.parseWithPrefix(ChatColor.GOLD + plugin.getReadName(name) + ChatColor.GRAY));
 		
 		return true;
 	}
