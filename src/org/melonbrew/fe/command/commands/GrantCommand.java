@@ -33,14 +33,14 @@ public class GrantCommand extends SubCommand {
 		Account victim = plugin.getAPI().getAccount(args[0]);
 		
 		if (victim == null){
-			sender.sendMessage(plugin.getMessagePrefix() + Phrase.ACCOUNT_DOES_NOT_EXIST.parse());
+			sender.sendMessage(Phrase.ACCOUNT_DOES_NOT_EXIST.parseWithPrefix());
 			
 			return true;
 		}
 		
 		victim.deposit(money);
 		
-		String message = plugin.getMessagePrefix() + Phrase.PLAYER_GRANT_MONEY.parse(plugin.getAPI().format(money), plugin.getReadName(victim));
+		String message = Phrase.PLAYER_GRANT_MONEY.parseWithPrefix(plugin.getAPI().format(money), plugin.getReadName(victim));
 		
 		sender.sendMessage(message);
 		

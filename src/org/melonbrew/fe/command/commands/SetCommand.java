@@ -33,14 +33,14 @@ public class SetCommand extends SubCommand {
 		Account victim = plugin.getAPI().getAccount(args[0]);
 		
 		if (victim == null){
-			sender.sendMessage(plugin.getMessagePrefix() + Phrase.ACCOUNT_DOES_NOT_EXIST.parse());
+			sender.sendMessage(Phrase.ACCOUNT_DOES_NOT_EXIST.parseWithPrefix());
 			
 			return true;
 		}
 		
 		victim.setMoney(money);
 		
-		sender.sendMessage(plugin.getMessagePrefix() + Phrase.PLAYER_SET_MONEY.parse(plugin.getReadName(victim), plugin.getAPI().format(victim)));
+		sender.sendMessage(Phrase.PLAYER_SET_MONEY.parseWithPrefix(plugin.getReadName(victim), plugin.getAPI().format(victim)));
 		
 		return true;
 	}

@@ -40,7 +40,7 @@ public class SendCommand extends SubCommand {
 		String messagePrefix = plugin.getMessagePrefix();
 		
 		if (reciever == null){
-			sender.sendMessage(messagePrefix + Phrase.ACCOUNT_DOES_NOT_EXIST.parse());
+			sender.sendMessage(Phrase.ACCOUNT_DOES_NOT_EXIST.parseWithPrefix());
 			
 			return true;
 		}
@@ -48,7 +48,7 @@ public class SendCommand extends SubCommand {
 		Account account = plugin.getAPI().getAccount(sender.getName());
 		
 		if (!account.has(money)){
-			sender.sendMessage(messagePrefix + Phrase.NOT_ENOUGH_MONEY.parse());
+			sender.sendMessage(Phrase.NOT_ENOUGH_MONEY.parseWithPrefix());
 			
 			return true;
 		}
@@ -64,7 +64,7 @@ public class SendCommand extends SubCommand {
 		Player recieverPlayer = plugin.getServer().getPlayerExact(reciever.getName());
 		
 		if (recieverPlayer != null){
-			recieverPlayer.sendMessage(messagePrefix + Phrase.MONEY_RECIEVE.parse(formattedMoney, sender.getName()));
+			recieverPlayer.sendMessage(Phrase.MONEY_RECIEVE.parseWithPrefix(formattedMoney, sender.getName()));
 		}
 		
 		return true;
