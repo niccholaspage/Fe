@@ -8,6 +8,10 @@ import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.database.converter.Converter;
 
 public class Converter_Essentials extends Converter {
+	public String getName(){
+		return "Essentials";
+	}
+	
 	public boolean isFlatFile(){
 		return true;
 	}
