@@ -82,7 +82,11 @@ public class ConvertCommand extends SubCommand {
 		
 		String type = args[1];
 		
-		if (!type.equalsIgnoreCase(Phrase.FLAT_FILE.parse().replace(" ", "")) && !type.equalsIgnoreCase(Phrase.MYSQL.parse().replace(" ", ""))){
+		String flatfile = Phrase.FLAT_FILE.parseWithoutSpaces();
+		
+		String mysql = Phrase.MYSQL.parseWithoutSpaces();
+		
+		if (!type.equalsIgnoreCase(flatfile) && !type.equalsIgnoreCase(mysql)){
 			return false;
 		}
 		
@@ -96,9 +100,9 @@ public class ConvertCommand extends SubCommand {
 		
 		String supported = null;
 		
-		if (type.equalsIgnoreCase(Phrase.FLAT_FILE.parse()) && !converter.isFlatFile()){
+		if (type.equalsIgnoreCase(flatfile) && !converter.isFlatFile()){
 			supported = Phrase.FLAT_FILE.parse();
-		}else if (type.equalsIgnoreCase(Phrase.MYSQL.parse())){
+		}else if (type.equalsIgnoreCase(mysql)){
 			if (!converter.mySQLtoFlatFile() && !(plugin.getFeDatabase() instanceof MySQLDB)){
 				sender.sendMessage(plugin.getMessagePrefix() + Phrase.CONVERTER_DOES_NOT_SUPPORT.parse(Phrase.MYSQL_TO_FLAT_FILE.parse()));
 				
@@ -118,7 +122,7 @@ public class ConvertCommand extends SubCommand {
 		
 		boolean success;
 		
-		if (type.equalsIgnoreCase(Phrase.FLAT_FILE.parse())){
+		if (type.equalsIgnoreCase(flatfile)){
 			success = converter.convertFlatFile(plugin);
 		}else {
 			success = converter.convertMySQL(plugin);
