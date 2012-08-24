@@ -23,7 +23,7 @@ public class Converter_iConomy extends Converter {
 	}
 	
 	public boolean convertFlatFile(Fe plugin){
-		File accountsFile = new File("iConomy/accounts.mini");
+		File accountsFile = new File("plugins/iConomy/accounts.mini");
 		
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(accountsFile));
