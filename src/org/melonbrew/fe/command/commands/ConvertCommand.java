@@ -11,8 +11,6 @@ import org.melonbrew.fe.Phrase;
 import org.melonbrew.fe.command.CommandType;
 import org.melonbrew.fe.command.SubCommand;
 import org.melonbrew.fe.database.converter.Converter;
-import org.melonbrew.fe.database.converter.Response;
-import org.melonbrew.fe.database.converter.ResponseType;
 import org.melonbrew.fe.database.converter.converters.Converter_iConomy;
 import org.melonbrew.fe.database.databases.MySQLDB;
 
@@ -84,7 +82,7 @@ public class ConvertCommand extends SubCommand {
 		
 		String type = args[1];
 		
-		if (!type.equalsIgnoreCase(Phrase.FLAT_FILE.parse().replace(" ", "")) || !type.equalsIgnoreCase(Phrase.MYSQL.parse().replace(" ", ""))){
+		if (!type.equalsIgnoreCase(Phrase.FLAT_FILE.parse().replace(" ", "")) && !type.equalsIgnoreCase(Phrase.MYSQL.parse().replace(" ", ""))){
 			return false;
 		}
 		
@@ -102,7 +100,7 @@ public class ConvertCommand extends SubCommand {
 			supported = Phrase.FLAT_FILE.parse();
 		}else if (type.equalsIgnoreCase(Phrase.MYSQL.parse())){
 			if (!converter.mySQLtoFlatFile() && !(plugin.getFeDatabase() instanceof MySQLDB)){
-				sender.sendMessage(Phrase.CONVERTER_DOES_NOT_SUPPORT.parse(Phrase.MYSQL_TO_FLAT_FILE.parse()));
+				sender.sendMessage(plugin.getMessagePrefix() + Phrase.CONVERTER_DOES_NOT_SUPPORT.parse(Phrase.MYSQL_TO_FLAT_FILE.parse()));
 				
 				return true;
 			}
@@ -118,15 +116,17 @@ public class ConvertCommand extends SubCommand {
 			return true;
 		}
 		
-		Response response;
+		boolean success;
 		
 		if (type.equalsIgnoreCase(Phrase.FLAT_FILE.parse())){
-			response = converter.convertFlatFile(plugin);
+			success = converter.convertFlatFile(plugin);
 		}else {
-			response = converter.convertMySQL(plugin);
+			success = converter.convertMySQL(plugin);
 		}
 		
-		if (response.getType() == ResponseType.FAILED){
+		if (success){
+			sender.sendMessage(plugin.getMessagePrefix() + Phrase.CONVERSION_SUCCEEDED.parse());
+		}else {
 			sender.sendMessage(plugin.getMessagePrefix() + Phrase.CONVERSION_FAILED.parse());
 		}
 		

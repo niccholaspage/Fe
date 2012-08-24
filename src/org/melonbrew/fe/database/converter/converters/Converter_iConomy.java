@@ -3,8 +3,6 @@ package org.melonbrew.fe.database.converter.converters;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.SQLibrary.Database;
 import org.melonbrew.fe.database.converter.Converter;
-import org.melonbrew.fe.database.converter.Response;
-import org.melonbrew.fe.database.converter.ResponseType;
 import org.melonbrew.fe.database.databases.SQLDB;
 
 public class Converter_iConomy extends Converter {
@@ -20,11 +18,11 @@ public class Converter_iConomy extends Converter {
 		return true;
 	}
 	
-	public Response convertFlatFile(Fe plugin){
-		return new Response(ResponseType.NOT_SUPPORTED);
+	public boolean convertFlatFile(Fe plugin){
+		return true;
 	}
 	
-	public Response convertMySQL(Fe plugin){
+	public boolean convertMySQL(Fe plugin){
 		Database database = ((SQLDB) plugin.getFeDatabase()).getDatabase();
 		
 		try {
@@ -35,10 +33,10 @@ public class Converter_iConomy extends Converter {
 
 			database.query("RENAME TABLE iconomy TO fe_accounts;");
 		}catch (Exception e){
-			return new Response(ResponseType.FAILED);
+			return false;
 		}
 		
-		return new Response(ResponseType.SUCCESS);
+		return true;
 	}
 	
 	public boolean mySQLtoFlatFile(){
