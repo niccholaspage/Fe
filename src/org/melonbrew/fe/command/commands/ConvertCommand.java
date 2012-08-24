@@ -28,6 +28,7 @@ public class ConvertCommand extends SubCommand {
 		
 		converters.add(new Converter_iConomy());
 		converters.add(new Converter_Essentials());
+		converters.add(new Converter_BOSEconomy());
 	}
 	
 	private void sendConversionList(CommandSender sender){
