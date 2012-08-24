@@ -98,4 +98,8 @@ public enum Phrase {
 
 		return parsedMessage;
 	}
+	
+	public String parseWithoutSpaces(String... params){
+		return parse().replace(" ", "");
+	}
 }
