@@ -26,6 +26,8 @@ public class Converter_BOSEconomy extends Converter {
 			
 			String name = null;
 			
+			String type = null;
+			
 			while ((line = reader.readLine()) != null){
 				line = line.trim();
 				
@@ -33,12 +35,20 @@ public class Converter_BOSEconomy extends Converter {
 					name = line.replace(" {", "");
 				}else if (line.equalsIgnoreCase("}")){
 					name = null;
+					
+					type = null;
 				}
 				
-				if (name != null && line.startsWith("money ")){
-					double money = Double.parseDouble(line.replace("money ", ""));
+				if (name != null){
+					if (line.startsWith("type ")){
+						type = line.replace("type ", "");
+					}
 					
-					plugin.getAPI().createAccount(name).setMoney(money);
+					 if (line.startsWith("money ") && type != null && type.equalsIgnoreCase("player")){
+							double money = Double.parseDouble(line.replace("money ", ""));
+							
+							plugin.getAPI().createAccount(name).setMoney(money);
+					 }
 				}
 			}
 			
