@@ -15,12 +15,12 @@ public class Converter {
 		return false;
 	}
 	
-	public Response convertFlatFile(Fe plugin){
-		return null;
+	public boolean convertFlatFile(Fe plugin){
+		return false;
 	}
 	
-	public Response convertMySQL(Fe plugin){
-		return null;
+	public boolean convertMySQL(Fe plugin){
+		return false;
 	}
 	
 	public boolean mySQLtoFlatFile(){
