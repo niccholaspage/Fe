@@ -25,6 +25,18 @@ public class API {
 		return plugin.getConfig().getDouble("holdings");
 	}
 	
+	public double getMaxHoldings(){
+		return plugin.getConfig().getDouble("maxholdings");
+	}
+	
+	public String getCurrencySingle(){
+		return plugin.getConfig().getString("currency.single");
+	}
+	
+	public String getCurrencyMultiple(){
+		return plugin.getConfig().getString("currency.multiple");
+	}
+	
 	public Account createAccount(String name){
 		return plugin.getFeDatabase().createAccount(name.toLowerCase());
 	}
@@ -71,14 +83,6 @@ public class API {
 	
 	public String format(Account account){
 		return format(account.getMoney());
-	}
-	
-	public String getCurrencySingle(){
-		return plugin.getCurrencySingle();
-	}
-	
-	public String getCurrencyMultiple(){
-		return plugin.getCurrencyMultiple();
 	}
 	
 	public void clean(){
