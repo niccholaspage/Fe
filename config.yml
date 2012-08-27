@@ -1,5 +1,7 @@
 holdings: 10.00
 
+maxholdings: -1
+
 prefix: Fe
 
 currency:

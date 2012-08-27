@@ -323,14 +323,6 @@ public class Fe extends JavaPlugin {
 		return ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + getConfig().getString("prefix") + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY;
 	}
 	
-	public String getCurrencySingle(){
-		return getConfig().getString("currency.single");
-	}
-	
-	public String getCurrencyMultiple(){
-		return getConfig().getString("currency.multiple");
-	}
-	
 	public String getEqualMessage(String inBetween, int length){
 		return getEqualMessage(inBetween, length, length);
 	}

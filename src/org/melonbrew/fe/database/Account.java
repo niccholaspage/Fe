@@ -2,15 +2,22 @@ package org.melonbrew.fe.database;
 
 import java.text.DecimalFormat;
 
+import org.melonbrew.fe.API;
+import org.melonbrew.fe.Fe;
+
 public class Account {
 	private final String name;
 	
+	private final API api;
+	
 	private final Database database;
 	
-	public Account(String name, Database database){
+	public Account(String name, Fe plugin){
 		this.name = name;
 		
-		this.database = database;
+		this.api = plugin.getAPI();
+		
+		this.database = plugin.getFeDatabase();
 	}
 	
 	public String getName(){
@@ -47,6 +54,10 @@ public class Account {
 		}
 		
 		currentMoney = getMoneyRounded(money);
+		
+		if (api.getMaxHoldings() != -1 && currentMoney > api.getMaxHoldings()){
+			currentMoney = getMoneyRounded(api.getMaxHoldings());
+		}
 		
 		save(currentMoney);
 	}
