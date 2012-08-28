@@ -53,6 +53,12 @@ public class SendCommand extends SubCommand {
 			return true;
 		}
 		
+		if (!account.canRecieve(money)){
+			sender.sendMessage(Phrase.MAX_BALANCE_REACHED.parseWithPrefix());
+			
+			return true;
+		}
+		
 		String formattedMoney = plugin.getAPI().format(money);
 		
 		account.withdraw(money);

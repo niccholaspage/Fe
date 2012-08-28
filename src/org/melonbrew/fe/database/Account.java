@@ -1,7 +1,5 @@
 package org.melonbrew.fe.database;
 
-import java.text.DecimalFormat;
-
 import org.melonbrew.fe.API;
 import org.melonbrew.fe.Fe;
 
@@ -36,10 +34,8 @@ public class Account {
 		setMoney(getMoney() + amount);
 	}
 	
-	public double getMoneyRounded(double amount){
-		DecimalFormat twoDForm = new DecimalFormat("#.##");
-
-		return Double.valueOf(twoDForm.format(amount));
+	public boolean canRecieve(double amount){
+		return amount + getMoney() < api.getMaxHoldings();
 	}
 	
 	public void setMoney(double money){
@@ -53,10 +49,10 @@ public class Account {
 			money = 0;
 		}
 		
-		currentMoney = getMoneyRounded(money);
+		currentMoney = api.getMoneyRounded(money);
 		
 		if (api.getMaxHoldings() != -1 && currentMoney > api.getMaxHoldings()){
-			currentMoney = getMoneyRounded(api.getMaxHoldings());
+			currentMoney = api.getMoneyRounded(api.getMaxHoldings());
 		}
 		
 		save(currentMoney);
