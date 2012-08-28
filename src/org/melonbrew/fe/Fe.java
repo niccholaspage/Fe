@@ -272,14 +272,10 @@ public class Fe extends JavaPlugin {
 
 		YamlConfiguration phrasesConfig = YamlConfiguration.loadConfiguration(phrasesFile);
 
-		Set<String> keys = phrasesConfig.getKeys(false);
-
 		for (Phrase phrase : Phrase.values()){
 			String phraseConfigName = phrase.getConfigName();
-
-			if (keys.contains(phraseConfigName)){
-				phrase.setMessage(phrasesConfig.getString(phraseConfigName));
-			}
+			
+			phrase.setMessage(phrasesConfig.getString(phraseConfigName, phrase.parse()));
 		}
 	}
 	

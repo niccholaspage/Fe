@@ -71,7 +71,7 @@ public class API {
 		return ChatColor.GOLD.toString() + moneyFormat.format(amount) + ChatColor.GRAY  + suffix;
 	}
 	
-	private double getMoneyRounded(double amount){
+	public double getMoneyRounded(double amount){
 		DecimalFormat twoDForm = new DecimalFormat("#.##");
 
 		return Double.valueOf(twoDForm.format(amount));
