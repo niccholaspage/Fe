@@ -42,6 +42,8 @@ public class MySQLDB extends SQLDB {
 		}
 		
 		tables.addDefault("accounts", "fe_accounts");
+		tables.addDefault("pname", "name");
+		tables.addDefault("pbalance", "money");
 	}
 	
 	public String getName(){
