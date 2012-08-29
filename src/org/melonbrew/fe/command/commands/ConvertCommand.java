@@ -20,7 +20,7 @@ public class ConvertCommand extends SubCommand {
 	private final List<Converter> converters;
 	
 	public ConvertCommand(Fe plugin){
-		super("convert", "fe.convert", "convert (plugin) (database)", Phrase.COMMAND_CONVERT, CommandType.CONSOLE);
+		super("convert", "fe.convert", "convert (plugin) (flatfile|mysql)", Phrase.COMMAND_CONVERT, CommandType.CONSOLE);
 		
 		this.plugin = plugin;
 		
