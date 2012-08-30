@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.SQLibrary.Database;
 import org.melonbrew.fe.database.Account;
@@ -20,6 +21,10 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	
 	private String accounts;
 	
+	private String pname;
+	
+	private String pbalance;
+	
 	public SQLDB(Fe plugin, boolean supportsModification){
 		super(plugin);
 		
@@ -27,7 +32,13 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 		
 		this.supportsModification = supportsModification;
 		
-		accounts = "fe_accounts";
+		ConfigurationSection config = getConfigSection();
+		
+		accounts = config.getString("accounts");
+		
+		pname = config.getString("pname");
+		
+		pbalance = config.getString("pbalance");
 	}
 	
 	public void setAccountTable(String accounts){
@@ -44,12 +55,12 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 		}
 		
 		
-		if (!database.createTable("CREATE TABLE IF NOT EXISTS " + accounts + "(name varchar(64), money double);")){
+		if (!database.createTable("CREATE TABLE IF NOT EXISTS " + accounts + "(" + pname + "  varchar(64), " + pbalance + " double);")){
 			return false;
 		}
 		
 		if (supportsModification){
-			database.query("ALTER TABLE " + accounts + " MODIFY name varchar(64)");
+			database.query("ALTER TABLE " + accounts + " MODIFY " + pname + " varchar(64)");
 		}
 		
 		return true;
@@ -66,7 +77,7 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	}
 	
 	public List<Account> getTopAccounts(){
-		String sql = "SELECT name FROM " + accounts + " ORDER BY money DESC limit 5";
+		String sql = "SELECT " + pname + " FROM " + accounts + " ORDER BY " + pbalance + " DESC limit 5";
 		
 		List<Account> topAccounts = new ArrayList<Account>();
 		
@@ -74,7 +85,7 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 		
 		try {
 			while (set.next()){
-				topAccounts.add(getAccount(set.getString("name")));
+				topAccounts.add(getAccount(set.getString(pname)));
 			}
 		} catch (SQLException e){
 
@@ -84,7 +95,7 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	}
 	
 	public double loadAccountMoney(String name){
-		String sql = "SELECT * FROM " + accounts + " WHERE name=?";
+		String sql = "SELECT * FROM " + accounts + " WHERE " + pname + "=?";
 		
 		double money = -1;
 		
@@ -96,7 +107,7 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 			ResultSet set = prest.executeQuery();
 			
 			while (set.next()){
-				money = set.getDouble("money");
+				money = set.getDouble(pbalance);
 			}
 			
 			prest.close();
@@ -110,7 +121,7 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	}
 	
 	public void removeAccount(String name){
-		String sql = "DELETE FROM " + accounts + " WHERE name=?";
+		String sql = "DELETE FROM " + accounts + " WHERE " + pname + "=?";
 		
 		try {
 			PreparedStatement prest = database.prepare(sql);
@@ -127,7 +138,7 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	
 	protected void saveAccount(String name, double money){
 		if (accountExists(name)){
-			String sql = "UPDATE " + accounts + " SET money=? WHERE name=?";
+			String sql = "UPDATE " + accounts + " SET " + pbalance + "=? WHERE " + pname + "=?";
 			
 			try {
 				PreparedStatement prest = database.prepare(sql);
@@ -143,7 +154,7 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 				
 			}
 		}else {
-			String sql = "INSERT INTO " + accounts + " (name, money) VALUES (?, ?)";
+			String sql = "INSERT INTO " + accounts + " (" + pname + ", " + pbalance + ") VALUES (?, ?)";
 			
 			try {
 				PreparedStatement prest = database.prepare(sql);
@@ -162,7 +173,7 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	}
 	
 	public void clean(){
-		String sql = "SELECT * FROM " + accounts + " WHERE money=?";
+		String sql = "SELECT * FROM " + accounts + " WHERE " + pbalance + "=?";
 		
 		try {
 			PreparedStatement prest = database.prepare(sql);
@@ -173,10 +184,10 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 			
 			boolean executeQuery = false;
 			
-			String deleteQuery = "DELETE FROM " + accounts + " WHERE name IN (";
+			String deleteQuery = "DELETE FROM " + accounts + " WHERE " + pname + " IN (";
 			
 			while (set.next()){
-				String name = set.getString("name");
+				String name = set.getString(pname);
 				
 				if (plugin.getServer().getPlayerExact(name) != null){
 					continue;

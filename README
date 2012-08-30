@@ -1,0 +1,6 @@
+This is fork of Fe - Economy bukkit plugin
+All credits goes to the authors:  Niccholaspage and Melonking 
+Original repo is here: http://github.com/niccholaspage/Fe
+Bukkit plugin page here: http://dev.bukkit.org/server-mods/fe-economy/
+
+Idea behind this fork is to enhance Fe-economy with option that make DB table fields configurable trough config.yml
