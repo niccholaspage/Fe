@@ -53,8 +53,10 @@ public class SendCommand extends SubCommand {
 			return true;
 		}
 		
-		if (!account.canRecieve(money)){
-			sender.sendMessage(Phrase.MAX_BALANCE_REACHED.parseWithPrefix());
+		String recieverName = plugin.getReadName(reciever);
+		
+		if (!reciever.canRecieve(money)){
+			sender.sendMessage(Phrase.MAX_BALANCE_REACHED.parseWithPrefix(recieverName));
 			
 			return true;
 		}
@@ -65,7 +67,7 @@ public class SendCommand extends SubCommand {
 		
 		reciever.deposit(money);
 		
-		sender.sendMessage(messagePrefix + "You've sent " + formattedMoney + " to " + plugin.getReadName(reciever));
+		sender.sendMessage(messagePrefix + "You've sent " + formattedMoney + " to " + recieverName);
 		
 		Player recieverPlayer = plugin.getServer().getPlayerExact(reciever.getName());
 		
