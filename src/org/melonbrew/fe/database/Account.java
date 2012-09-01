@@ -35,6 +35,10 @@ public class Account {
 	}
 	
 	public boolean canRecieve(double amount){
+		if (api.getMaxHoldings() == -1){
+			return true;
+		}
+		
 		return amount + getMoney() < api.getMaxHoldings();
 	}
 	
