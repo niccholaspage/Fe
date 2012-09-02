@@ -37,8 +37,6 @@ public class SendCommand extends SubCommand {
 		
 		Account reciever = plugin.getShortenedAccount(args[0]);
 		
-		String messagePrefix = plugin.getMessagePrefix();
-		
 		if (reciever == null){
 			sender.sendMessage(Phrase.ACCOUNT_DOES_NOT_EXIST.parseWithPrefix());
 			
@@ -67,7 +65,7 @@ public class SendCommand extends SubCommand {
 		
 		reciever.deposit(money);
 		
-		sender.sendMessage(messagePrefix + "You've sent " + formattedMoney + " to " + recieverName);
+		sender.sendMessage(Phrase.MONEY_SENT.parseWithPrefix(formattedMoney, recieverName));
 		
 		Player recieverPlayer = plugin.getServer().getPlayerExact(reciever.getName());
 		

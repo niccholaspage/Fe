@@ -13,13 +13,9 @@ import org.melonbrew.fe.command.SubCommand;
 import org.melonbrew.fe.command.commands.*;
 
 public class FeCommand implements CommandExecutor {
-	private final Fe plugin;
-	
 	private final List<SubCommand> commands;
 	
 	public FeCommand(Fe plugin){
-		this.plugin = plugin;
-		
 		commands = new ArrayList<SubCommand>();
 		
 		commands.add(new BalanceCommand(plugin));
@@ -127,7 +123,7 @@ public class FeCommand implements CommandExecutor {
         }
         
 		if (!command.onCommand(sender, cmd, commandLabel, realArgs)){
-			sender.sendMessage(plugin.getMessagePrefix() + Phrase.TRY_COMMAND.parse(parse(commandLabel, command)));
+			sender.sendMessage(Phrase.TRY_COMMAND.parseWithPrefix(parse(commandLabel, command)));
 		}
 		
 		return true;
