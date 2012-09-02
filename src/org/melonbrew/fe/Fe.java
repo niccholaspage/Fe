@@ -315,10 +315,6 @@ public class Fe extends JavaPlugin {
 		return account;
 	}
 	
-	public String getMessagePrefix(){
-		return ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + getConfig().getString("prefix") + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY;
-	}
-	
 	public String getEqualMessage(String inBetween, int length){
 		return getEqualMessage(inBetween, length, length);
 	}

@@ -1,6 +1,9 @@
 package org.melonbrew.fe;
 
+import org.bukkit.ChatColor;
+
 public enum Phrase {
+	MESSAGE_PREFIX(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + "$1" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY),
 	DATABASE_TYPE_DOES_NOT_EXIST("That database type doesn't exist."),
 	DATABASE_FAILURE_DISABLE("Database initialization has failed, disabling Fe."),
 	COMMAND_NEEDS_ARGUMENTS("That command needs arguments."),
@@ -27,6 +30,7 @@ public enum Phrase {
 	ACCOUNT_CREATED("An account for $1 has been created."),
 	ACCOUNT_REMOVED("An account for $1 has been removed."),
 	MONEY_RECIEVE("You've recieved $1 from $2."),
+	MONEY_SENT("You've sent $1 to $2"),
 	MAX_BALANCE_REACHED("$1 has reached the maximum balance."),
 	PLAYER_SET_MONEY("You've set $1's balance to $2."),
 	PLAYER_GRANT_MONEY("You've granted $1 to $2."),
@@ -107,7 +111,7 @@ public enum Phrase {
 	}
 	
 	public String parseWithPrefix(String... params){
-		return plugin.getMessagePrefix() + parse(params);
+		return MESSAGE_PREFIX.parse(plugin.getConfig().getString("prefix")) + parse(params);
 	}
 	
 	public static void init(Fe instance){
