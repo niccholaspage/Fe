@@ -19,7 +19,7 @@ public class ReloadCommand extends SubCommand {
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		plugin.reloadConfig();
 		
-		sender.sendMessage(Phrase.CONFIG_RELOADED.parseWithPrefix());
+		Phrase.CONFIG_RELOADED.sendWithPrefix(sender);
 		
 		return true;
 	}

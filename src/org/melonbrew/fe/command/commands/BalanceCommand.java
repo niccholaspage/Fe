@@ -24,22 +24,22 @@ public class BalanceCommand extends SubCommand {
 			account = plugin.getShortenedAccount(args[0]);
 			
 			if (account == null){
-				sender.sendMessage(Phrase.ACCOUNT_DOES_NOT_EXIST.parseWithPrefix());
+				Phrase.ACCOUNT_DOES_NOT_EXIST.sendWithPrefix(sender);
 				
 				return true;
 			}
 			
-			sender.sendMessage(Phrase.ACCOUNT_HAS.parseWithPrefix(plugin.getReadName(account), plugin.getAPI().format(account)));
+			Phrase.ACCOUNT_HAS.sendWithPrefix(sender, plugin.getReadName(account), plugin.getAPI().format(account));
 		}else {
 			account = plugin.getAPI().getAccount(sender.getName());
 			
 			if (account == null){
-				sender.sendMessage(Phrase.YOUR_ACCOUNT_DOES_NOT_EXIST.parseWithPrefix());
+				Phrase.YOUR_ACCOUNT_DOES_NOT_EXIST.sendWithPrefix(sender);
 				
 				return true;
 			}
 			
-			sender.sendMessage(Phrase.YOU_HAVE.parseWithPrefix(plugin.getAPI().format(account)));
+			Phrase.YOU_HAVE.sendWithPrefix(sender, plugin.getAPI().format(account));
 		}
 		
 		return true;

@@ -123,7 +123,7 @@ public class FeCommand implements CommandExecutor {
         }
         
 		if (!command.onCommand(sender, cmd, commandLabel, realArgs)){
-			sender.sendMessage(Phrase.TRY_COMMAND.parseWithPrefix(parse(commandLabel, command)));
+			Phrase.TRY_COMMAND.sendWithPrefix(sender, parse(commandLabel, command));
 		}
 		
 		return true;
