@@ -1,6 +1,7 @@
 package org.melonbrew.fe;
 
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 
 public enum Phrase {
 	MESSAGE_PREFIX(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + "$1" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY),
@@ -110,8 +111,16 @@ public enum Phrase {
 		return parse(params).replace(" ", "");
 	}
 	
-	public String parseWithPrefix(String... params){
+	private String parseWithPrefix(String... params){
 		return MESSAGE_PREFIX.parse(plugin.getConfig().getString("prefix")) + parse(params);
+	}
+	
+	public void send(CommandSender sender, String... params){
+		sender.sendMessage(parse(params));
+	}
+	
+	public void sendWithPrefix(CommandSender sender, String... params){
+		sender.sendMessage(parseWithPrefix(params));
 	}
 	
 	public static void init(Fe instance){

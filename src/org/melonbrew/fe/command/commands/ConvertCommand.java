@@ -95,7 +95,7 @@ public class ConvertCommand extends SubCommand {
 		Converter converter = getConverter(args[0]);
 		
 		if (converter == null){
-			sender.sendMessage(Phrase.CONVERTER_DOES_NOT_EXIST.parseWithPrefix());
+			Phrase.CONVERTER_DOES_NOT_EXIST.sendWithPrefix(sender);
 			
 			return true;
 		}
@@ -106,7 +106,7 @@ public class ConvertCommand extends SubCommand {
 			supported = Phrase.FLAT_FILE.parse();
 		}else if (type.equalsIgnoreCase(mysql)){
 			if (!converter.mySQLtoFlatFile() && !(plugin.getFeDatabase() instanceof MySQLDB)){
-				sender.sendMessage(Phrase.CONVERTER_DOES_NOT_SUPPORT.parseWithPrefix(Phrase.MYSQL_TO_FLAT_FILE.parse()));
+				Phrase.CONVERTER_DOES_NOT_SUPPORT.sendWithPrefix(sender, Phrase.MYSQL_TO_FLAT_FILE.parse());
 				
 				return true;
 			}
@@ -117,7 +117,7 @@ public class ConvertCommand extends SubCommand {
 		}
 		
 		if (supported != null){
-			sender.sendMessage(Phrase.CONVERTER_DOES_NOT_SUPPORT.parseWithPrefix(supported));
+			Phrase.CONVERTER_DOES_NOT_SUPPORT.sendWithPrefix(sender, supported);
 			
 			return true;
 		}
@@ -131,9 +131,9 @@ public class ConvertCommand extends SubCommand {
 		}
 		
 		if (success){
-			sender.sendMessage(Phrase.CONVERSION_SUCCEEDED.parseWithPrefix());
+			Phrase.CONVERSION_SUCCEEDED.sendWithPrefix(sender);
 		}else {
-			sender.sendMessage(Phrase.CONVERSION_FAILED.parseWithPrefix());
+			Phrase.CONVERSION_FAILED.sendWithPrefix(sender);
 		}
 		
 		return true;
