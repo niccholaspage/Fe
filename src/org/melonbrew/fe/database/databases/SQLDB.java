@@ -55,9 +55,19 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 		return true;
 	}
 	
+	public boolean checkConnection(){
+		if (!database.checkConnection()){
+			database.open();
+		}
+		
+		return database.checkConnection();
+	}
+	
 	protected abstract Database getNewDatabase();
 	
 	public Database getDatabase(){
+		checkConnection();
+		
 		return database;
 	}
 	
@@ -66,6 +76,8 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	}
 	
 	public List<Account> getTopAccounts(){
+		checkConnection();
+		
 		String sql = "SELECT name FROM " + accounts + " ORDER BY money DESC limit 5";
 		
 		List<Account> topAccounts = new ArrayList<Account>();
@@ -84,6 +96,8 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	}
 	
 	public double loadAccountMoney(String name){
+		checkConnection();
+		
 		String sql = "SELECT * FROM " + accounts + " WHERE name=?";
 		
 		double money = -1;
@@ -110,6 +124,8 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	}
 	
 	public void removeAccount(String name){
+		checkConnection();
+		
 		String sql = "DELETE FROM " + accounts + " WHERE name=?";
 		
 		try {
@@ -126,6 +142,8 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	}
 	
 	protected void saveAccount(String name, double money){
+		checkConnection();
+		
 		if (accountExists(name)){
 			String sql = "UPDATE " + accounts + " SET money=? WHERE name=?";
 			
@@ -162,6 +180,8 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	}
 	
 	public void clean(){
+		checkConnection();
+		
 		String sql = "SELECT * FROM " + accounts + " WHERE money=?";
 		
 		try {
