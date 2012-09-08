@@ -37,6 +37,14 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	public boolean init(){
 		database = getNewDatabase();
 		
+		if (!openConnection()){
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean openConnection(){
 		database.open();
 		
 		if (!database.checkConnection()){
@@ -55,18 +63,10 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 		return true;
 	}
 	
-	public boolean checkConnection(){
-		if (!database.checkConnection()){
-			database.open();
-		}
-		
-		return database.checkConnection();
-	}
-	
 	protected abstract Database getNewDatabase();
 	
 	public Database getDatabase(){
-		checkConnection();
+		openConnection();
 		
 		return database;
 	}
@@ -76,7 +76,7 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	}
 	
 	public List<Account> getTopAccounts(){
-		checkConnection();
+		openConnection();
 		
 		String sql = "SELECT name FROM " + accounts + " ORDER BY money DESC limit 5";
 		
@@ -96,7 +96,7 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	}
 	
 	public double loadAccountMoney(String name){
-		checkConnection();
+		openConnection();
 		
 		String sql = "SELECT * FROM " + accounts + " WHERE name=?";
 		
@@ -124,7 +124,7 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	}
 	
 	public void removeAccount(String name){
-		checkConnection();
+		openConnection();
 		
 		String sql = "DELETE FROM " + accounts + " WHERE name=?";
 		
@@ -142,7 +142,7 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	}
 	
 	protected void saveAccount(String name, double money){
-		checkConnection();
+		openConnection();
 		
 		if (accountExists(name)){
 			String sql = "UPDATE " + accounts + " SET money=? WHERE name=?";
@@ -180,7 +180,7 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	}
 	
 	public void clean(){
-		checkConnection();
+		openConnection();
 		
 		String sql = "SELECT * FROM " + accounts + " WHERE money=?";
 		
