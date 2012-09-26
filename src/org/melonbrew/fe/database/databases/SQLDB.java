@@ -45,10 +45,12 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	}
 	
 	public boolean openConnection(){
-		database.open();
-		
 		if (!database.checkConnection()){
-			return false;
+			database.open();
+			
+			if (!database.checkConnection()){
+				return false;
+			}
 		}
 		
 		
