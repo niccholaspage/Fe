@@ -2,7 +2,6 @@ package org.melonbrew.fe.command.commands;
 
 import java.util.List;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.melonbrew.fe.Fe;
