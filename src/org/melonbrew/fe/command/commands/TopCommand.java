@@ -24,7 +24,7 @@ public class TopCommand extends SubCommand {
 		List<Account> topAccounts = plugin.getAPI().getTopAccounts();
 		
 		if (topAccounts.size() < 1){
-			sender.sendMessage(ChatColor.RED + Phrase.NO_ACCOUNTS_EXIST.parse());
+			Phrase.NO_ACCOUNTS_EXIST.sendWithPrefix(sender);
 			
 			return true;
 		}
@@ -34,7 +34,9 @@ public class TopCommand extends SubCommand {
 		for (int i = 0; i < topAccounts.size(); i++){
 			Account account = topAccounts.get(i);
 			
-			sender.sendMessage(ChatColor.GRAY.toString() + (i + 1) + ". " + ChatColor.GOLD + plugin.getReadName(account) + ChatColor.GRAY + " - " + plugin.getAPI().format(account));
+			String two = Phrase.SECONDARY_COLOR.parse();
+			
+			sender.sendMessage(two + (i + 1) + ". " + Phrase.PRIMARY_COLOR.parse() + plugin.getReadName(account) + two + " - " + plugin.getAPI().format(account));
 		}
 		
 		sender.sendMessage(plugin.getEndEqualMessage(31));
