@@ -4,7 +4,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public enum Phrase {
-	MESSAGE_PREFIX(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + "$1" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY),
 	DATABASE_TYPE_DOES_NOT_EXIST("That database type doesn't exist."),
 	DATABASE_FAILURE_DISABLE("Database initialization has failed, disabling Fe."),
 	COMMAND_NEEDS_ARGUMENTS("That command needs arguments."),
@@ -41,6 +40,9 @@ public enum Phrase {
 	ACCOUNT_CLEANED("All accounts with the default balance have been removed."),
 	TRY_COMMAND("Try $1"),
 	FE_OUTDATED("Fe is outdated! The latest version is $1."),
+	PRIMARY_COLOR(ChatColor.GOLD.toString()),
+	SECONDARY_COLOR(ChatColor.GRAY.toString()),
+	TERTIARY_COLOR(ChatColor.DARK_GRAY.toString()),
 	COMMAND_BALANCE("Checks your balance", true),
 	COMMAND_SEND("Sends another player Fe", true),
 	COMMAND_TOP("Checks the top 5 richest players", true),
@@ -112,7 +114,7 @@ public enum Phrase {
 	}
 	
 	private String parseWithPrefix(String... params){
-		return MESSAGE_PREFIX.parse(plugin.getConfig().getString("prefix")) + parse(params);
+		return plugin.getMessagePrefix().replace("$1", plugin.getConfig().getString("prefix")) + parse(params);
 	}
 	
 	public void send(CommandSender sender, String... params){
