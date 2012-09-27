@@ -8,7 +8,7 @@ public enum Phrase {
 	DATABASE_FAILURE_DISABLE("Database initialization has failed, disabling Fe."),
 	COMMAND_NEEDS_ARGUMENTS("That command needs arguments."),
 	COMMAND_NOT_CONSOLE("The command '$1' cannot be used in the console."),
-	NO_PERMISSION_FOR_COMMAND("You do not have permission to use that command."),
+	NO_PERMISSION_FOR_COMMAND("Sorry, you do not have permission to use that command."),
 	ACCOUNT_HAS("$1 has $2"),
 	YOU_HAVE("You have $1"),
 	HELP("Fe Help"),

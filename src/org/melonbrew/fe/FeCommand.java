@@ -99,19 +99,19 @@ public class FeCommand implements CommandExecutor {
 		boolean console = !(sender instanceof Player);
 		
 		if (console && args.length < 2 && command.getCommandType() == CommandType.CONSOLE_WITH_ARGUMENTS){
-			sender.sendMessage(ChatColor.RED + "That command needs arguments.");
+			Phrase.COMMAND_NEEDS_ARGUMENTS.sendWithPrefix(sender);
 			
 			return true;
 		}
 		
 		if (console && command.getCommandType() == CommandType.PLAYER){
-			sender.sendMessage(ChatColor.RED + Phrase.COMMAND_NOT_CONSOLE.parse(command.getFirstName()));
+			Phrase.COMMAND_NOT_CONSOLE.sendWithPrefix(sender);
 			
 			return true;
 		}
 		
 		if (!sender.hasPermission(command.getPermission())){
-			sender.sendMessage(ChatColor.RED + Phrase.NO_PERMISSION_FOR_COMMAND.parse());
+			Phrase.NO_PERMISSION_FOR_COMMAND.sendWithPrefix(sender);
 			
 			return true;
 		}
@@ -130,11 +130,11 @@ public class FeCommand implements CommandExecutor {
 	}
 	
 	public String parse(String label, SubCommand command){
-		ChatColor commandColor = ChatColor.GOLD;
+		String commandColor = Phrase.PRIMARY_COLOR.parse();
 		
-		ChatColor operatorsColor = ChatColor.DARK_GRAY;
+		String operatorsColor = Phrase.PRIMARY_COLOR.parse();
 		
-		ChatColor argumentColor = ChatColor.YELLOW;
+		String argumentColor = ChatColor.YELLOW.toString();
 		
 		String finalMessage = commandColor + "/" + label;
 		
@@ -159,7 +159,7 @@ public class FeCommand implements CommandExecutor {
 		return finalMessage;
 	}
 	
-	private String parseArg(String argument, ChatColor operatorsColor, ChatColor argumentColor){
+	private String parseArg(String argument, String operatorsColor, String argumentColor){
 		String operator = argument.substring(0, 1);
 		
 		argument = argument.substring(1, argument.length());

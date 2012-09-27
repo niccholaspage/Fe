@@ -68,7 +68,7 @@ public class API {
 			suffix += getCurrencyMultiple();
 		}
 		
-		return ChatColor.GOLD.toString() + moneyFormat.format(amount) + ChatColor.GRAY  + suffix;
+		return Phrase.PRIMARY_COLOR.parse() + moneyFormat.format(amount) + Phrase.SECONDARY_COLOR.parse() + suffix;
 	}
 	
 	public double getMoneyRounded(double amount){

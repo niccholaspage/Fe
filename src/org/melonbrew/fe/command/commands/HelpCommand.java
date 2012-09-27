@@ -1,6 +1,5 @@
 package org.melonbrew.fe.command.commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -26,9 +25,9 @@ public class HelpCommand extends SubCommand {
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		sender.sendMessage(plugin.getEqualMessage(Phrase.HELP.parse(), 10));
 		
-		ChatColor operatorColor = ChatColor.DARK_GRAY;
+		String operatorColor = Phrase.TERTIARY_COLOR.parse();
 		
-		ChatColor textColor = ChatColor.GRAY;
+		String textColor = Phrase.SECONDARY_COLOR.parse();
 		
 		sender.sendMessage(textColor + Phrase.HELP_ARGUMENTS.parse(operatorColor + "[]" + textColor, operatorColor + "()" + textColor));
 		
