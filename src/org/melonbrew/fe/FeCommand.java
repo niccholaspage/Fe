@@ -3,7 +3,6 @@ package org.melonbrew.fe;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -134,7 +133,7 @@ public class FeCommand implements CommandExecutor {
 		
 		String operatorsColor = Phrase.PRIMARY_COLOR.parse();
 		
-		String argumentColor = ChatColor.YELLOW.toString();
+		String argumentColor = Phrase.ARGUMENT_COLOR.parse();
 		
 		String finalMessage = commandColor + "/" + label;
 		

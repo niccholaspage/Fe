@@ -43,6 +43,7 @@ public enum Phrase {
 	PRIMARY_COLOR(ChatColor.GOLD.toString()),
 	SECONDARY_COLOR(ChatColor.GRAY.toString()),
 	TERTIARY_COLOR(ChatColor.DARK_GRAY.toString()),
+	ARGUMENT_COLOR(ChatColor.YELLOW.toString()),
 	COMMAND_BALANCE("Checks your balance", true),
 	COMMAND_SEND("Sends another player Fe", true),
 	COMMAND_TOP("Checks the top 5 richest players", true),
