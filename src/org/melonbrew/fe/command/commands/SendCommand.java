@@ -70,7 +70,7 @@ public class SendCommand extends SubCommand {
 		Player recieverPlayer = plugin.getServer().getPlayerExact(reciever.getName());
 		
 		if (recieverPlayer != null){
-			Phrase.MONEY_RECIEVE.sendWithPrefix(sender, formattedMoney, sender.getName());
+			Phrase.MONEY_RECIEVE.sendWithPrefix(recieverPlayer, formattedMoney, sender.getName());
 		}
 		
 		return true;
