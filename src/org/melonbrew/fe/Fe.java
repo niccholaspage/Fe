@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
 
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -330,11 +329,13 @@ public class Fe extends JavaPlugin {
 		
 		String end = getEndEqualMessage(length2);
 		
-		return equals + ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + inBetween + ChatColor.DARK_GRAY + "]" + end;
+		String third = Phrase.TERTIARY_COLOR.parse();
+		
+		return equals + third + "[" + Phrase.PRIMARY_COLOR.parse() + inBetween + third + "]" + end;
 	}
 	
 	public String getEndEqualMessage(int length){
-		String message = ChatColor.GRAY + "";
+		String message = Phrase.SECONDARY_COLOR.parse() + "";
 		
 		for (int i = 0; i < length; i++){
 			message += "=";
