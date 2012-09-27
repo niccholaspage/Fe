@@ -315,6 +315,12 @@ public class Fe extends JavaPlugin {
 		return account;
 	}
 	
+	public String getMessagePrefix(){
+		String third = Phrase.TERTIARY_COLOR.parse();
+		
+		return third  + "[" + Phrase.PRIMARY_COLOR.parse() + "$1" + third + "] " + Phrase.SECONDARY_COLOR.parse();
+	}
+	
 	public String getEqualMessage(String inBetween, int length){
 		return getEqualMessage(inBetween, length, length);
 	}
