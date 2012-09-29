@@ -90,9 +90,15 @@ public class SQLite extends Database {
 	
 	@Override
 	public boolean checkConnection() {
-		if (connection != null)
-			return true;
-		return false;
+		if (connection == null){
+			return false;
+		}
+		
+		try {
+			return !connection.isClosed();
+		} catch (SQLException e){
+			return false;
+		}
 	}
 	
 	@Override

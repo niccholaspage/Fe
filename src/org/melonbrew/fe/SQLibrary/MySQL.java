@@ -83,11 +83,16 @@ public class MySQL extends Database {
 	}
 	
 	@Override
-	public boolean checkConnection() { // http://forums.bukkit.org/threads/lib-tut-mysql-sqlite-bukkit-drivers.33849/page-4#post-701550
-		//Connection connection = this.open();
-		if (connection != null)
-			return true;
-		return false;
+	public boolean checkConnection() {
+		if (connection == null){
+			return false;
+		}
+		
+		try {
+			return !connection.isClosed();
+		} catch (SQLException e){
+			return false;
+		}
 	}
 	
 	@Override
