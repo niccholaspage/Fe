@@ -8,11 +8,11 @@ import org.melonbrew.fe.command.CommandType;
 import org.melonbrew.fe.command.SubCommand;
 import org.melonbrew.fe.database.Account;
 
-public class GrantCommand extends SubCommand {
+public class DeductCommand extends SubCommand {
 	private final Fe plugin;
 
-	public GrantCommand(Fe plugin){
-		super("grant", "fe.grant", "grant [name] [amount]", Phrase.COMMAND_GRANT, CommandType.CONSOLE);
+	public DeductCommand(Fe plugin){
+		super("deduct", "fe.deduct", "deduct [name] [amount]", Phrase.COMMAND_DEDUCT, CommandType.CONSOLE);
 
 		this.plugin = plugin;
 	}
@@ -45,8 +45,8 @@ public class GrantCommand extends SubCommand {
 		}
 
 		String formattedMoney = plugin.getAPI().format(money);
-		victim.deposit(money);
-		Phrase.PLAYER_GRANT_MONEY.sendWithPrefix(sender, formattedMoney, plugin.getReadName(victim));
+		victim.withdraw(money);
+		Phrase.PLAYER_DEDUCT_MONEY.sendWithPrefix(sender, formattedMoney, plugin.getReadName(victim));
 
 		return true;
 	}

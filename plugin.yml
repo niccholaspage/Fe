@@ -37,9 +37,11 @@ permissions:
   fe.remove:
     description: Allows you to remove an account
   fe.set:
-    description: Allows you to set other player's balance with the /fe set name amount command
+    description: Allows you to set other players balance with the /fe set name amount command
   fe.grant:
-    description: Allows you grant players money with the /fe grant name amount command
+    description: Allows you to grant players money with the /fe grant name amount command
+  fe.deduct:
+    description: Allows you to deduct players money with the /fe deduct name amount command
   fe.clean:
     description: Allows you to clean all accounts with the default balance with the /fe clean command
   fe.convert:
@@ -61,6 +63,7 @@ permissions:
       fe.remove: true
       fe.set: true
       fe.grant: true
+      fe.deduct: true
       fe.clean: true
       fe.reload: true
       fe.notify: true
