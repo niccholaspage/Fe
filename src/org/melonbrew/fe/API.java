@@ -73,8 +73,12 @@ public class API {
 	
 	public double getMoneyRounded(double amount){
 		DecimalFormat twoDForm = new DecimalFormat("#.##");
-
-		return Double.valueOf(twoDForm.format(amount));
+		
+		String formattedAmount = twoDForm.format(amount);
+		
+		formattedAmount = formattedAmount.replace(",", ".");
+		
+		return Double.valueOf(formattedAmount);
 	}
 	
 	public String formatNoColor(Account account){
