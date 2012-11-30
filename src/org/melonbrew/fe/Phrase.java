@@ -21,7 +21,7 @@ public enum Phrase {
 	CONVERTER_DOES_NOT_SUPPORT("That converter does not support $1."),
 	MYSQL_TO_FLAT_FILE("MySQL to Flat File"),
 	CONVERSION_SUCCEEDED("Conversion succeeded!"),
-	CONVERSION_FAILED("Conversion failed, nothing has been modified."),
+	CONVERSION_FAILED("Conversion failed."),
 	CONFIG_RELOADED("The config has been reloaded."),
 	NOT_ENOUGH_MONEY("You don't have enough money."),
 	ACCOUNT_DOES_NOT_EXIST("Sorry, that account does not exist."),
