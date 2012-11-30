@@ -27,7 +27,7 @@ public class FePlayerListener implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event){
 		Player player = event.getPlayer();
 		
-		if (player.hasPermission("fe.notify") && !plugin.isUpdated()){
+		if (!plugin.isUpdated() && player.hasPermission("fe.notify")){
 			Phrase.FE_OUTDATED.sendWithPrefix(player, plugin.getLatestVersionString());
 		}
 	}
