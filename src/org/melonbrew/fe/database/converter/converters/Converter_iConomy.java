@@ -31,13 +31,23 @@ public class Converter_iConomy extends Converter {
 			String line = null;
 			
 			while ((line = reader.readLine()) != null){
-				line = line.replace("balance:", "");
-				
 				String[] args = line.split(" ");
 				
-				String name = args[0];
+				String name = "";
 				
-				double money = Double.parseDouble(args[1]);
+				double money = -1;
+				
+				for (int i = 0; i < args.length; i++){
+					if (args[i].startsWith("balance:")){
+						money = Double.parseDouble(args[i].replace("balance:", ""));
+						
+						break;
+					}
+					
+					name += args[i] + " ";
+				}
+				
+				name = name.substring(0, name.length() - 1);
 				
 				plugin.getAPI().createAccount(name).setMoney(money);
 			}
