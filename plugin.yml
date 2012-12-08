@@ -2,7 +2,7 @@ name: Fe
 
 main: org.melonbrew.fe.Fe
 
-version: 0.5-SNAPSHOT
+version: 0.5
 
 load: startup
 
