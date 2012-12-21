@@ -45,7 +45,9 @@ public class SetCommand extends SubCommand {
 		}
 
 		String formattedMoney = plugin.getAPI().format(money);
-		victim.setMoney(money);		
+
+		victim.setMoney(money);
+
 		Phrase.PLAYER_SET_MONEY.sendWithPrefix(sender, plugin.getReadName(victim), formattedMoney);
 
 		return true;
