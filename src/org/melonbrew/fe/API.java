@@ -29,6 +29,10 @@ public class API {
 		return plugin.getConfig().getDouble("maxholdings");
 	}
 
+        public String getCurrencyPrefix(){
+		return plugin.getConfig().getString("currency.prefix");
+	}
+        
 	public String getCurrencySingle(){
 		return plugin.getConfig().getString("currency.single");
 	}
@@ -61,20 +65,13 @@ public class API {
 		amount = getMoneyRounded(amount);
 		
                 String prefix = "";
-		String suffix = " ";
+		String suffix = "";
 		
-                if (plugin.getConfig().getBoolean("currency.isprefix")){
-                    	if (amount == 1.0){
-                            prefix += getCurrencySingle();
-                        }else {
-                            prefix += getCurrencyMultiple();
-                        }
-                }else{
-                    	if (amount == 1.0){
-                            suffix += getCurrencySingle();
-                        }else {
-                            suffix += getCurrencyMultiple();
-                        }
+                prefix += getCurrencyPrefix();
+                if (amount == 1.0){
+                        suffix = " " + getCurrencySingle();
+                }else {
+                        suffix = " " + getCurrencyMultiple();
                 }
 		
 		return Phrase.SECONDARY_COLOR.parse() + prefix + Phrase.PRIMARY_COLOR.parse() + moneyFormat.format(amount) + Phrase.SECONDARY_COLOR.parse() + suffix;

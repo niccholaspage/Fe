@@ -7,7 +7,7 @@ prefix: Fe
 currency:
   single: Fe
   multiple: Fe
-  isprefix: false
+  prefix: ""
 
 type: sqlite
 
