@@ -67,9 +67,9 @@ public class API {
 		String suffix = " ";
 		
 		if (amount == 1.0){
-			suffix = getCurrencySingle();
+			suffix += getCurrencySingle();
 		}else {
-			suffix = getCurrencyMultiple();
+			suffix += getCurrencyMultiple();
 		}
 		
 		if (suffix.equalsIgnoreCase(" ")){
