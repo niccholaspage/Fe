@@ -64,12 +64,12 @@ public class API {
 	public String format(double amount){
 		amount = getMoneyRounded(amount);
 		
-		String suffix = "";
+		String suffix = " ";
 		
 		if (amount == 1.0){
-			suffix = " " + getCurrencySingle();
+			suffix = getCurrencySingle();
 		}else {
-			suffix = " " + getCurrencyMultiple();
+			suffix = getCurrencyMultiple();
 		}
 		
 		if (suffix.equalsIgnoreCase(" ")){
