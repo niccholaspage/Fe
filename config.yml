@@ -9,6 +9,7 @@ currency:
     single: Fe
     multiple: Fe
   minor:
+    enabled: false
     single: Fe
     multiple: Fe
   prefix: ""

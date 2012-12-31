@@ -40,6 +40,18 @@ public class API {
 	public String getCurrencyMajorMultiple(){
 		return plugin.getConfig().getString("currency.major.multiple");
 	}
+	
+	public boolean isMinorCurrencyEnabled(){
+		return plugin.getConfig().getBoolean("currency.minor.enabled");
+	}
+	
+	public String getCurrencyMinorSingle(){
+		return plugin.getConfig().getString("currency.minor.single");
+	}
+
+	public String getCurrencyMinorMultiple(){
+		return plugin.getConfig().getString("currency.minor.multiple");
+	}
 
 	public Account createAccount(String name){
 		return plugin.getFeDatabase().createAccount(name.toLowerCase());
@@ -66,7 +78,13 @@ public class API {
 		
 		String suffix = " ";
 		
-		if (amount == 1.0){
+		if (isMinorCurrencyEnabled() && amount < 1.0){
+			if (amount == 0.01){
+				suffix += getCurrencyMinorSingle();
+			}else if (amount < 1.0){
+				suffix += getCurrencyMinorMultiple();
+			}
+		}else if (amount == 1.0){
 			suffix += getCurrencyMajorSingle();
 		}else {
 			suffix += getCurrencyMajorMultiple();
