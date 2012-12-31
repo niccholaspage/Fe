@@ -5,8 +5,12 @@ maxholdings: -1
 prefix: Fe
 
 currency:
-  single: Fe
-  multiple: Fe
+  major:
+    single: Fe
+    multiple: Fe
+  minor:
+    single: Fe
+    multiple: Fe
   prefix: ""
 
 type: sqlite
