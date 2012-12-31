@@ -96,6 +96,8 @@ public class API {
 			}else if (amount < 1.0){
 				suffix += getCurrencyMinorMultiple();
 			}
+			
+			amount *= 100;
 		}else if (amount == 1.0){
 			suffix += getCurrencyMajorSingle();
 		}else {
