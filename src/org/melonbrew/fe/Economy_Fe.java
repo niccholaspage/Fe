@@ -90,12 +90,12 @@ public class Economy_Fe implements Economy {
 
 	@Override
 	public String currencyNameSingular() {
-		return api.getCurrencySingle();
+		return api.getCurrencyMajorSingle();
 	}
 
 	@Override
 	public String currencyNamePlural() {
-		return api.getCurrencyMultiple();
+		return api.getCurrencyMajorMultiple();
 	}
 
 	@Override

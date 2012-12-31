@@ -72,7 +72,7 @@ public class Fe extends JavaPlugin {
 		}
 		
 		getConfig().options().header("Fe Config - melonbrew.org\n" +
-				"holdings - The amount of money that the player will start out with\n" +
+				"holdings - The amount of money that players will start out with\n" +
 				"prefix - The message prefix\n" +
 				"currency - The single and multiple names for the currency\n" +
 				"type - The type of database used (sqlite or mysql)\n");
@@ -283,7 +283,21 @@ public class Fe extends JavaPlugin {
 	public void reloadConfig(){
 		super.reloadConfig();
 		
+		String oldCurrencySingle = getConfig().getString("currency.single");
+		
+		String oldCurrencyMultiple = getConfig().getString("currency.multiple");
+		
+		if (oldCurrencySingle != null){
+			getConfig().set("currency.major.single", oldCurrencySingle);
+		}
+		
+		if (oldCurrencyMultiple != null){
+			getConfig().set("currency.major.multiple", oldCurrencyMultiple);
+		}
+		
 		setupPhrases();
+		
+		saveConfig();
 	}
 	
 	public String getReadName(Account account){
