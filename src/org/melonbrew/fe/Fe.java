@@ -289,10 +289,14 @@ public class Fe extends JavaPlugin {
 		
 		if (oldCurrencySingle != null){
 			getConfig().set("currency.major.single", oldCurrencySingle);
+			
+			getConfig().set("currency.single", null);
 		}
 		
 		if (oldCurrencyMultiple != null){
 			getConfig().set("currency.major.multiple", oldCurrencyMultiple);
+			
+			getConfig().set("currency.multiple", null);
 		}
 		
 		setupPhrases();
