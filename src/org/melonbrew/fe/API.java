@@ -33,12 +33,12 @@ public class API {
 		return plugin.getConfig().getString("currency.prefix");
 	}
 
-	public String getCurrencySingle(){
-		return plugin.getConfig().getString("currency.single");
+	public String getCurrencyMajorSingle(){
+		return plugin.getConfig().getString("currency.major.single");
 	}
 
-	public String getCurrencyMultiple(){
-		return plugin.getConfig().getString("currency.multiple");
+	public String getCurrencyMajorMultiple(){
+		return plugin.getConfig().getString("currency.major.multiple");
 	}
 
 	public Account createAccount(String name){
@@ -67,9 +67,9 @@ public class API {
 		String suffix = " ";
 		
 		if (amount == 1.0){
-			suffix += getCurrencySingle();
+			suffix += getCurrencyMajorSingle();
 		}else {
-			suffix += getCurrencyMultiple();
+			suffix += getCurrencyMajorMultiple();
 		}
 		
 		if (suffix.equalsIgnoreCase(" ")){
