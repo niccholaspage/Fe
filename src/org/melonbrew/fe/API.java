@@ -1,7 +1,9 @@
 package org.melonbrew.fe;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
+import java.util.Locale;
 
 import org.bukkit.ChatColor;
 import org.melonbrew.fe.database.Account;
@@ -9,12 +11,8 @@ import org.melonbrew.fe.database.Account;
 public class API {
 	private final Fe plugin;
 
-	private final DecimalFormat moneyFormat;
-
 	public API(Fe plugin){
 		this.plugin = plugin;
-
-		moneyFormat = new DecimalFormat("###,###.###");
 	}
 
 	public List<Account> getTopAccounts(){
@@ -40,11 +38,11 @@ public class API {
 	public String getCurrencyMajorMultiple(){
 		return plugin.getConfig().getString("currency.major.multiple");
 	}
-	
+
 	public boolean isMinorCurrencyEnabled(){
 		return plugin.getConfig().getBoolean("currency.minor.enabled");
 	}
-	
+
 	public String getCurrencyMinorSingle(){
 		return plugin.getConfig().getString("currency.minor.single");
 	}
@@ -73,11 +71,25 @@ public class API {
 		return ChatColor.stripColor(format(amount));
 	}
 
+	private String formatValue(double value){
+		boolean isWholeNumber = value == Math.round(value);
+
+		DecimalFormatSymbols formatSymbols = new DecimalFormatSymbols(Locale.ENGLISH);
+
+		formatSymbols.setDecimalSeparator('.');
+
+		String pattern = isWholeNumber ? "#.##" : "0.00";
+
+		DecimalFormat df = new DecimalFormat(pattern, formatSymbols);
+
+		return df.format(value);
+	}
+
 	public String format(double amount){
 		amount = getMoneyRounded(amount);
-		
+
 		String suffix = " ";
-		
+
 		if (isMinorCurrencyEnabled() && amount < 1.0){
 			if (amount == 0.01){
 				suffix += getCurrencyMinorSingle();
@@ -89,12 +101,12 @@ public class API {
 		}else {
 			suffix += getCurrencyMajorMultiple();
 		}
-		
+
 		if (suffix.equalsIgnoreCase(" ")){
 			suffix = "";
 		}
 
-		return Phrase.SECONDARY_COLOR.parse() + getCurrencyPrefix() + Phrase.PRIMARY_COLOR.parse() + moneyFormat.format(amount) + Phrase.SECONDARY_COLOR.parse() + suffix;
+		return Phrase.SECONDARY_COLOR.parse() + getCurrencyPrefix() + Phrase.PRIMARY_COLOR.parse() + formatValue(amount) + Phrase.SECONDARY_COLOR.parse() + suffix;
 	}
 
 	public double getMoneyRounded(double amount){
