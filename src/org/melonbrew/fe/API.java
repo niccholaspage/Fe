@@ -78,7 +78,7 @@ public class API {
 
 		formatSymbols.setDecimalSeparator('.');
 
-		String pattern = isWholeNumber ? "#.##" : "0.00";
+		String pattern = isWholeNumber ? "###,###.###" : "###,##0.00";
 
 		DecimalFormat df = new DecimalFormat(pattern, formatSymbols);
 
