@@ -107,7 +107,6 @@ public class SQLite extends Database {
 		ResultSet result = null;
 		
 		try {
-			connection = this.open();
 			statement = connection.createStatement();
 			
 			switch (this.getStatement(query)) {
@@ -134,7 +133,6 @@ public class SQLite extends Database {
 	public PreparedStatement prepare(String query) {
 		try
 	    {
-	        connection = open();
 	        PreparedStatement ps = connection.prepareStatement(query);
 	        return ps;
 	    } catch(SQLException e) {
