@@ -164,7 +164,7 @@ public class SQLite extends Database {
 	public boolean checkTable(String table) {
 		DatabaseMetaData dbm = null;
 		try {
-			dbm = this.open().getMetaData();
+			dbm = connection.getMetaData();
 			ResultSet tables = dbm.getTables(null, null, table, null);
 			if (tables.next())
 			  return true;
