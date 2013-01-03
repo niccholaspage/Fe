@@ -1,7 +1,9 @@
 package org.melonbrew.fe.command.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.Phrase;
 import org.melonbrew.fe.command.CommandType;
@@ -49,6 +51,12 @@ public class GrantCommand extends SubCommand {
 		victim.deposit(money);
 
 		Phrase.PLAYER_GRANT_MONEY.sendWithPrefix(sender, formattedMoney, plugin.getReadName(victim));
+
+
+		Player recieverPlayer = Bukkit.getPlayer(victimName);
+		if (recieverPlayer != null) {
+			Phrase.PLAYER_GRANTED_MONEY.sendWithPrefixToTarget(recieverPlayer, formattedMoney, sender.getName());
+		}
 
 		return true;
 	}
