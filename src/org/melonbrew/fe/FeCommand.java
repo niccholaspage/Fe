@@ -80,7 +80,19 @@ public class FeCommand implements CommandExecutor {
 		onCommand(sender, cmd, commandLabel, merge(new String[]{command}, args));
 	}
 	
+	public String[] parseArgs(String[] args){
+		for (int i = 0; i < args.length; i++){
+			if (args[i].startsWith("'")){
+				
+			}
+		}
+		
+		return args;
+	}
+	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
+		args = parseArgs(args);
+		
 		if (args.length < 1){
 			sendDefaultCommand(sender, cmd, commandLabel, args);
 			
