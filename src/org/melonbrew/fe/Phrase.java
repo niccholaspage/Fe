@@ -2,6 +2,7 @@ package org.melonbrew.fe;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public enum Phrase {
 	DATABASE_TYPE_DOES_NOT_EXIST("That database type doesn't exist."),
@@ -34,6 +35,7 @@ public enum Phrase {
 	MAX_BALANCE_REACHED("$1 has reached the maximum balance."),
 	PLAYER_SET_MONEY("You've set $1's balance to $2."),
 	PLAYER_GRANT_MONEY("You've granted $1 to $2."),
+	PLAYER_GRANTED_MONEY("$2 granted you $1."),
 	ACCOUNT_CREATED_GRANT("Created an account for $1 and granted it $2"),
 	NO_ACCOUNTS_EXIST("No accounts exist."),
 	NAME_TOO_LONG("Sorry that name is too long."),
@@ -125,6 +127,12 @@ public enum Phrase {
 	public void sendWithPrefix(CommandSender sender, String... params){
 		sender.sendMessage(parseWithPrefix(params));
 	}
+	
+	public void sendWithPrefixToTarget(Player target, String... params){
+ 	        target.sendMessage(parseWithPrefix(params));	 
+        }
+
+
 	
 	public static void init(Fe instance){
 		plugin = instance;
