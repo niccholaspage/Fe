@@ -33,7 +33,6 @@ public abstract class Database {
 	protected Logger log;
 	protected final String PREFIX;
 	protected final String DATABASE_PREFIX;
-	protected boolean connected;
 	protected Connection connection;
 	protected enum Statements {
 		SELECT, INSERT, UPDATE, DELETE, DO, REPLACE, LOAD, HANDLER, CALL, // Data manipulation statements
@@ -47,7 +46,6 @@ public abstract class Database {
 		this.log = log;
 		this.PREFIX = prefix;
 		this.DATABASE_PREFIX = dp;
-		this.connected = false;
 		this.connection = null;
 	}
 	
