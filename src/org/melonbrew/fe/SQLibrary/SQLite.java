@@ -146,7 +146,7 @@ public class SQLite extends Database {
 	public boolean createTable(String query) {
 		Statement statement = null;
 		try {
-			if (query.equals("") || query == null) {
+			if (query == null || query.equals("")) {
 				this.writeError("SQL Create Table query empty.", true);
 				return false;
 			}
@@ -187,7 +187,7 @@ public class SQLite extends Database {
 			}
 			statement = connection.createStatement();
 			query = "DELETE FROM " + table + ";";
-			statement.executeQuery(query);
+			statement.executeUpdate(query);
 			return true;
 		} catch (SQLException ex) {
 			if (!(ex.getMessage().toLowerCase().contains("locking") ||

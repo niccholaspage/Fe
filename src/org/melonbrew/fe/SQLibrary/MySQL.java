@@ -143,7 +143,7 @@ public class MySQL extends Database {
 		Statement statement = null;
 		try {
 			//this.connection = this.open();
-			if (query.equals("") || query == null) {
+			if (query == null || query.equals("")) {
 				this.writeError("SQL query empty: createTable(" + query + ")", true);
 				return false;
 			}
@@ -167,12 +167,9 @@ public class MySQL extends Database {
 			//this.connection = this.open();
 		    Statement statement = connection.createStatement();
 		    
-		    ResultSet result = statement.executeQuery("SELECT * FROM " + table);
+		    statement.executeQuery("SELECT * FROM " + table);
 		    
-		    if (result == null)
-		    	return false;
-		    if (result != null)
-		    	return true;
+		    return true;
 		} catch (SQLException e) {
 			if (e.getMessage().contains("exist")) {
 				return false;
