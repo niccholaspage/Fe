@@ -135,27 +135,27 @@ public class FeCommand implements CommandExecutor {
 		
 		String argumentColor = Phrase.ARGUMENT_COLOR.parse();
 		
-		String finalMessage = commandColor + "/" + label;
+		StringBuilder builder = new StringBuilder(commandColor).append("/").append(label);
 		
 		if (!command.getFirstName().equalsIgnoreCase("balance")){
-			 finalMessage += " " + command.getFirstName() + " ";
+			builder.append(" ").append(command.getFirstName()).append(" ");
 		}
 		
 		String[] split = command.getUsage().split(" ");
 		
 		if (split[0].equalsIgnoreCase(command.getFirstName())){
 			for (int i = 1; i < split.length; i++){
-				finalMessage += parseArg(split[i], operatorsColor, argumentColor) + " ";
+				builder.append(parseArg(split[i], operatorsColor, argumentColor)).append(" ");
 			}
 			
-			finalMessage = finalMessage.substring(0, finalMessage.length() - 1);
+			builder.delete(0, builder.length() - 1);
 		}else {
-			finalMessage += " " + parseArg(split[0], operatorsColor, argumentColor) + " ";
+			builder.append(" ").append(parseArg(split[0], operatorsColor, argumentColor)).append(" ");
 			
-			finalMessage = finalMessage.substring(0, finalMessage.length() - 1);
+			builder.delete(0, builder.length() - 1);
 		}
 		
-		return finalMessage;
+		return builder.toString();
 	}
 	
 	private String parseArg(String argument, String operatorsColor, String argumentColor){
