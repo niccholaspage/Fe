@@ -182,7 +182,7 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 			
 			boolean executeQuery = false;
 			
-			String deleteQuery = "DELETE FROM " + accounts + " WHERE name IN (";
+			StringBuilder builder = new StringBuilder("DELETE FROM " + accounts + " WHERE name IN (");
 			
 			while (set.next()){
 				String name = set.getString("name");
@@ -193,15 +193,15 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 				
 				executeQuery = true;
 				
-				deleteQuery += "'" + name + "', ";
+				builder.append("'").append(name).append("', ");
 			}
 			
 			prest.close();
 			
-			deleteQuery = deleteQuery.substring(0, deleteQuery.length() - 2) + ")";
+			builder.delete(0, builder.length() - 2).append(")");
 			
 			if (executeQuery){
-				database.query(deleteQuery);
+				database.query(builder.toString());
 			}
 		} catch (SQLException e){
 			

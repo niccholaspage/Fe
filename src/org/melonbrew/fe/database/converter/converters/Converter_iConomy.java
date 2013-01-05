@@ -33,7 +33,7 @@ public class Converter_iConomy extends Converter {
 			while ((line = reader.readLine()) != null){
 				String[] args = line.split(" ");
 				
-				String name = "";
+				StringBuilder builder = new StringBuilder();
 				
 				double money = -1;
 				
@@ -44,12 +44,12 @@ public class Converter_iConomy extends Converter {
 						break;
 					}
 					
-					name += args[i] + " ";
+					builder.append(args[i]).append(" ");
 				}
 				
-				name = name.substring(0, name.length() - 1);
+				builder.delete(0, builder.length() - 1);
 				
-				plugin.getAPI().createAccount(name).setMoney(money);
+				plugin.getAPI().createAccount(builder.toString()).setMoney(money);
 			}
 			
 			reader.close();
