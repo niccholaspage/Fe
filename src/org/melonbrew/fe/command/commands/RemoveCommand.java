@@ -1,6 +1,5 @@
 package org.melonbrew.fe.command.commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.melonbrew.fe.Fe;
@@ -32,7 +31,7 @@ public class RemoveCommand extends SubCommand {
 		
 		plugin.getAPI().removeAccount(name);
 		
-		Phrase.ACCOUNT_REMOVED.sendWithPrefix(sender, ChatColor.GOLD + plugin.getReadName(name) + ChatColor.GRAY);
+		Phrase.ACCOUNT_REMOVED.sendWithPrefix(sender, Phrase.PRIMARY_COLOR.parse() + plugin.getReadName(name) + Phrase.SECONDARY_COLOR.parse());
 		
 		return true;
 	}
