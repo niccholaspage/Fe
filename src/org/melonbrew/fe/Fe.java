@@ -101,8 +101,6 @@ public class Fe extends JavaPlugin {
 			getServer().getScheduler().runTaskAsynchronously(this, new UpdateCheck(this));
 		}
 		
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, new FeCheckDatabaseTask(this), 0L, 20 * 60 * 60);
-		
 		loadMetrics();
 	}
 	
