@@ -148,11 +148,11 @@ public class FeCommand implements CommandExecutor {
 				builder.append(parseArg(split[i], operatorsColor, argumentColor)).append(" ");
 			}
 			
-			builder.delete(builder.length() - 2, builder.length() - 1);
+			builder.deleteCharAt(builder.length() - 1);
 		}else {
 			builder.append(" ").append(parseArg(split[0], operatorsColor, argumentColor)).append(" ");
 			
-			builder.delete(builder.length() - 2, builder.length() - 1);
+			builder.deleteCharAt(builder.length() - 1);
 		}
 		
 		return builder.toString();
