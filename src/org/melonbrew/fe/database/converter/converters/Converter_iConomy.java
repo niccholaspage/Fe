@@ -47,7 +47,7 @@ public class Converter_iConomy extends Converter {
 					builder.append(args[i]).append(" ");
 				}
 				
-				builder.delete(0, builder.length() - 1);
+				builder.deleteCharAt(builder.length() - 1);
 				
 				plugin.getAPI().createAccount(builder.toString()).setMoney(money);
 			}
