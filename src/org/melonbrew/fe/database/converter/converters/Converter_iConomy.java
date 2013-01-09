@@ -13,56 +13,60 @@ public class Converter_iConomy extends Converter {
 	public String getName(){
 		return "iConomy";
 	}
-	
+
 	public boolean isFlatFile(){
 		return true;
 	}
-	
+
 	public boolean isMySQL(){
 		return true;
 	}
-	
+
 	public boolean convertFlatFile(Fe plugin){
 		File accountsFile = new File("plugins/iConomy/accounts.mini");
-		
+
+		if (!accountsFile.exists()){
+			return false;
+		}
+
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(accountsFile));
-			
+
 			String line = null;
-			
+
 			while ((line = reader.readLine()) != null){
 				String[] args = line.split(" ");
-				
+
 				StringBuilder builder = new StringBuilder();
-				
+
 				double money = -1;
-				
+
 				for (int i = 0; i < args.length; i++){
 					if (args[i].startsWith("balance:")){
 						money = Double.parseDouble(args[i].replace("balance:", ""));
-						
+
 						break;
 					}
-					
+
 					builder.append(args[i]).append(" ");
 				}
-				
+
 				builder.deleteCharAt(builder.length() - 1);
-				
+
 				plugin.getAPI().createAccount(builder.toString()).setMoney(money);
 			}
-			
+
 			reader.close();
 		} catch (Exception e){
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	public boolean convertMySQL(Fe plugin){
 		Database database = ((SQLDB) plugin.getFeDatabase()).getDatabase();
-		
+
 		try {
 			database.query("ALTER TABLE iconomy DROP COLUMN id;");
 			database.query("ALTER TABLE iconomy DROP COLUMN status;");
@@ -73,7 +77,7 @@ public class Converter_iConomy extends Converter {
 		}catch (Exception e){
 			return false;
 		}
-		
+
 		return true;
 	}
 }
