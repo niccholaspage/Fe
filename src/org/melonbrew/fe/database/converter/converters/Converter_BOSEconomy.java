@@ -19,6 +19,10 @@ public class Converter_BOSEconomy extends Converter {
 	public boolean convertFlatFile(Fe plugin){
 		File accountsFile = new File("plugins/BOSEconomy/accounts.txt");
 		
+		if (!accountsFile.exists()){
+			return false;
+		}
+		
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(accountsFile));
 			
