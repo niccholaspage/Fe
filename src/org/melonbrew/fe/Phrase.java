@@ -34,6 +34,7 @@ public enum Phrase {
 	MAX_BALANCE_REACHED("$1 has reached the maximum balance."),
 	PLAYER_SET_MONEY("You've set $1's balance to $2."),
 	PLAYER_GRANT_MONEY("You've granted $1 to $2."),
+	PLAYER_GRANTED_MONEY("$2 granted you $1."),
 	ACCOUNT_CREATED_GRANT("Created an account for $1 and granted it $2"),
 	NO_ACCOUNTS_EXIST("No accounts exist."),
 	NAME_TOO_LONG("Sorry that name is too long."),
