@@ -104,7 +104,7 @@ public class FeCommand implements CommandExecutor {
 		}
 		
 		if (console && command.getCommandType() == CommandType.PLAYER){
-			Phrase.COMMAND_NOT_CONSOLE.sendWithPrefix(sender);
+			Phrase.COMMAND_NOT_CONSOLE.sendWithPrefix(sender, commandLabel);
 			
 			return true;
 		}
