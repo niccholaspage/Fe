@@ -96,7 +96,7 @@ public enum Phrase {
 			name = name.replaceFirst("_", ".");
 		}
 		
-		return name().toLowerCase();
+		return name.toLowerCase();
 	}
 
 	public String parse(String... params){
