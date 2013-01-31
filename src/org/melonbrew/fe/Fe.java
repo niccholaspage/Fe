@@ -159,6 +159,20 @@ public class Fe extends JavaPlugin {
 		            return 1;
 		        }
 		    });
+			
+			Graph maxHoldings = metrics.createGraph("Max Holdings");
+			
+			String maxHolding = getAPI().getMaxHoldings() + "";
+			
+			if (maxHolding.equals("-1")){
+				maxHolding = "Unlimited";
+			}
+			
+			maxHoldings.addPlotter(new Plotter(maxHolding){
+		        public int getValue(){
+		            return 1;
+		        }
+		    });
             
             metrics.start();
 		} catch (IOException e){
