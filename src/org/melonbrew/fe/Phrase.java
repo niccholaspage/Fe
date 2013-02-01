@@ -48,7 +48,7 @@ public enum Phrase {
 	TERTIARY_COLOR(ChatColor.DARK_GRAY.toString()),
 	ARGUMENT_COLOR(ChatColor.YELLOW.toString()),
 	COMMAND_BALANCE("Checks your balance", true),
-	COMMAND_SEND("Sends another player Fe", true),
+	COMMAND_SEND("Sends another player money", true),
 	COMMAND_TOP("Checks the top 5 richest players", true),
 	COMMAND_HELP("Gives you help", true),
 	COMMAND_CREATE("Creates an account", true),
