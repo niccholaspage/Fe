@@ -40,11 +40,6 @@ public class DeductCommand extends SubCommand {
 
 		String victimName = plugin.getReadName(victim);
 
-		if (!victim.canRecieve(money)){
-			Phrase.MAX_BALANCE_REACHED.sendWithPrefix(sender, victimName);
-			return true;
-		}
-
 		String formattedMoney = plugin.getAPI().format(money);
 
 		victim.withdraw(money);
