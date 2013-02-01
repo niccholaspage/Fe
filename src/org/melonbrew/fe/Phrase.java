@@ -35,6 +35,8 @@ public enum Phrase {
 	PLAYER_SET_MONEY("You've set $1's balance to $2."),
 	PLAYER_GRANT_MONEY("You've granted $1 to $2."),
 	PLAYER_GRANTED_MONEY("$2 granted you $1."),
+	PLAYER_DEDUCT_MONEY("You've deducted $1 from $2."),
+	PLAYER_DEDUCTED_MONEY("$2 deducted $1 from your account."),
 	ACCOUNT_CREATED_GRANT("Created an account for $1 and granted it $2"),
 	NO_ACCOUNTS_EXIST("No accounts exist."),
 	NAME_TOO_LONG("Sorry that name is too long."),
@@ -53,6 +55,7 @@ public enum Phrase {
 	COMMAND_REMOVE("Removes an account", true),
 	COMMAND_SET("Set a player's balance", true),
 	COMMAND_GRANT("Grants a player more Fe", true),
+	COMMAND_DEDUCT("Deducts money from a player", true),
 	COMMAND_CLEAN("Cleans the accounts with default balance", true),
 	COMMAND_CONVERT("Converts data from a previous economy plugin to Fe", true),
 	COMMAND_RELOAD("Reloads the config", true);

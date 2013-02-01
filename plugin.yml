@@ -40,6 +40,8 @@ permissions:
     description: Allows you to set other player's balance with the /fe set name amount command
   fe.grant:
     description: Allows you grant players money with the /fe grant name amount command
+  fe.deduct:
+    description: Allows you to deduct money from a player with the /fe deduct name amount command
   fe.clean:
     description: Allows you to clean all accounts with the default balance with the /fe clean command
   fe.convert:
