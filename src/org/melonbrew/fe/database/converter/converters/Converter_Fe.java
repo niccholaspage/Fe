@@ -25,6 +25,10 @@ public class Converter_Fe extends Converter {
 		return true;
 	}
 	
+	public boolean mySQLtoFlatFile(){
+		return true;
+	}
+	
 	public boolean convert(Database database){
 		if (!database.init()){
 			return false;
