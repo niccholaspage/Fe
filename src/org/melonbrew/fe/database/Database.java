@@ -16,6 +16,8 @@ public abstract class Database {
 	
 	public abstract List<Account> getTopAccounts();
 	
+	public abstract List<Account> getAccounts();
+	
 	public abstract double loadAccountMoney(String name);
 	
 	protected abstract void saveAccount(String name, double money);
@@ -53,15 +55,13 @@ public abstract class Database {
 	}
 	
 	public Account createAccount(String name){
-		Account exists = getAccount(name);
+		Account account = getAccount(name);
 		
-		if (exists != null){
-			return exists;
+		if (account == null){
+			account = new Account(name, plugin);
+			
+			account.setMoney(plugin.getAPI().getDefaultHoldings());
 		}
-		
-		Account account = new Account(name, plugin);
-		
-		account.setMoney(plugin.getAPI().getDefaultHoldings());
 		
 		return account;
 	}

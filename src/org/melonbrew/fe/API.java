@@ -18,6 +18,10 @@ public class API {
 	public List<Account> getTopAccounts(){
 		return plugin.getFeDatabase().getTopAccounts();
 	}
+	
+	public List<Account> getAccounts(){
+		return plugin.getFeDatabase().getAccounts();
+	}
 
 	public double getDefaultHoldings(){
 		return plugin.getConfig().getDouble("holdings");

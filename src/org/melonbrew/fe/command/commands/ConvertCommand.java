@@ -26,9 +26,10 @@ public class ConvertCommand extends SubCommand {
 		
 		converters = new ArrayList<Converter>();
 		
-		converters.add(new Converter_iConomy());
-		converters.add(new Converter_Essentials());
-		converters.add(new Converter_BOSEconomy());
+		converters.add(new Converter_iConomy(plugin));
+		converters.add(new Converter_Essentials(plugin));
+		converters.add(new Converter_BOSEconomy(plugin));
+		converters.add(new Converter_Fe(plugin));
 	}
 	
 	private void sendConversionList(CommandSender sender){
@@ -125,9 +126,9 @@ public class ConvertCommand extends SubCommand {
 		boolean success;
 		
 		if (type.equalsIgnoreCase(flatfile)){
-			success = converter.convertFlatFile(plugin);
+			success = converter.convertFlatFile();
 		}else {
-			success = converter.convertMySQL(plugin);
+			success = converter.convertMySQL();
 		}
 		
 		if (success){

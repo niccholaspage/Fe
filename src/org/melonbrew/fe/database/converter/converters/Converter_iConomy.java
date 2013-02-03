@@ -10,6 +10,12 @@ import org.melonbrew.fe.database.converter.Converter;
 import org.melonbrew.fe.database.databases.SQLDB;
 
 public class Converter_iConomy extends Converter {
+	private final Fe plugin;
+	
+	public Converter_iConomy(Fe plugin){
+		this.plugin = plugin;
+	}
+	
 	public String getName(){
 		return "iConomy";
 	}
@@ -22,7 +28,7 @@ public class Converter_iConomy extends Converter {
 		return true;
 	}
 
-	public boolean convertFlatFile(Fe plugin){
+	public boolean convertFlatFile(){
 		File accountsFile = new File("plugins/iConomy/accounts.mini");
 
 		if (!accountsFile.exists()){
@@ -64,7 +70,7 @@ public class Converter_iConomy extends Converter {
 		return true;
 	}
 
-	public boolean convertMySQL(Fe plugin){
+	public boolean convertMySQL(){
 		Database database = ((SQLDB) plugin.getFeDatabase()).getDatabase();
 
 		try {
