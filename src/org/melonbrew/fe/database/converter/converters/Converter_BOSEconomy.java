@@ -8,6 +8,12 @@ import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.database.converter.Converter;
 
 public class Converter_BOSEconomy extends Converter {
+	private final Fe plugin;
+	
+	public Converter_BOSEconomy(Fe plugin){
+		this.plugin = plugin;
+	}
+	
 	public String getName(){
 		return "BOSEconomy";
 	}
@@ -16,7 +22,7 @@ public class Converter_BOSEconomy extends Converter {
 		return true;
 	}
 	
-	public boolean convertFlatFile(Fe plugin){
+	public boolean convertFlatFile(){
 		File accountsFile = new File("plugins/BOSEconomy/accounts.txt");
 		
 		if (!accountsFile.exists()){

@@ -1,7 +1,5 @@
 package org.melonbrew.fe.database.converter;
 
-import org.melonbrew.fe.Fe;
-
 public class Converter {
 	public String getName(){
 		return "Converter";
@@ -15,11 +13,11 @@ public class Converter {
 		return false;
 	}
 	
-	public boolean convertFlatFile(Fe plugin){
+	public boolean convertFlatFile(){
 		return false;
 	}
 	
-	public boolean convertMySQL(Fe plugin){
+	public boolean convertMySQL(){
 		return false;
 	}
 	

@@ -94,6 +94,26 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 		return topAccounts;
 	}
 	
+	public List<Account> getAccounts(){
+		checkConnection();
+		
+		String sql = "SELECT name FROM " + accounts;
+		
+		List<Account> accounts = new ArrayList<Account>();
+		
+		ResultSet set = database.query(sql);
+		
+		try {
+			while (set.next()){
+				accounts.add(getAccount(set.getString("name")));
+			}
+		} catch (SQLException e){
+
+		}
+		
+		return accounts;
+	}
+	
 	public double loadAccountMoney(String name){
 		checkConnection();
 		

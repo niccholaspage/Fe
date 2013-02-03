@@ -8,6 +8,12 @@ import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.database.converter.Converter;
 
 public class Converter_Essentials extends Converter {
+	private final Fe plugin;
+	
+	public Converter_Essentials(Fe plugin){
+		this.plugin = plugin;
+	}
+	
 	public String getName(){
 		return "Essentials";
 	}
@@ -16,7 +22,7 @@ public class Converter_Essentials extends Converter {
 		return true;
 	}
 	
-	public boolean convertFlatFile(Fe plugin){
+	public boolean convertFlatFile(){
 		File accountsFolder = new File("plugins/Essentials/userdata/");
 		
 		if (!accountsFolder.isDirectory()){
