@@ -71,7 +71,7 @@ public class Fe extends JavaPlugin {
 			}
 		}
 		
-		getConfig().options().header("Fe Config - melonbrew.org\n" +
+		getConfig().options().header("Fe Config - meloncraft.com\n" +
 				"holdings - The amount of money that players will start out with\n" +
 				"prefix - The message prefix\n" +
 				"currency - The single and multiple names for the currency\n" +
