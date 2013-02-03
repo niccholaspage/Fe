@@ -46,7 +46,7 @@ public class Converter_Fe extends Converter {
 			return false;
 		}
 		
-		return convert(new MySQLDB(plugin));
+		return convert(new SQLiteDB(plugin));
 	}
 	
 	public boolean convertMySQL(){
@@ -54,6 +54,6 @@ public class Converter_Fe extends Converter {
 			return false;
 		}
 		
-		return convert(new SQLiteDB(plugin));
+		return convert(new MySQLDB(plugin));
 	}
 }
