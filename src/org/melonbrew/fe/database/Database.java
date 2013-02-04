@@ -46,7 +46,7 @@ public abstract class Database {
 		if (money == -1){
 			return null;
 		}else {
-			Account account = new Account(name, plugin);
+			Account account = new Account(name, plugin, this);
 			
 			account.setMoney(money);
 			
@@ -58,7 +58,7 @@ public abstract class Database {
 		Account account = getAccount(name);
 		
 		if (account == null){
-			account = new Account(name, plugin);
+			account = new Account(name, plugin, this);
 			
 			account.setMoney(plugin.getAPI().getDefaultHoldings());
 		}
