@@ -164,7 +164,7 @@ public class Fe extends JavaPlugin {
 			
 			String maxHolding = getAPI().getMaxHoldings() + "";
 			
-			if (maxHolding.equals("-1.0")){
+			if (getAPI().getMaxHoldings() == -1){
 				maxHolding = "Unlimited";
 			}
 			
