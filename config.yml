@@ -5,6 +5,7 @@ maxholdings: -1
 prefix: Fe
 
 currency:
+  negative: false
   major:
     single: Fe
     multiple: Fe

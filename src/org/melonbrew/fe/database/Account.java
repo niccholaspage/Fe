@@ -49,7 +49,7 @@ public class Account {
 			return;
 		}
 		
-		if (money < 0){
+		if (money < 0 && !api.isCurrencyNegative()){
 			money = 0;
 		}
 		

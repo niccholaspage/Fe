@@ -34,6 +34,10 @@ public class API {
 	public String getCurrencyPrefix(){
 		return plugin.getConfig().getString("currency.prefix");
 	}
+	
+	public boolean isCurrencyNegative(){
+		return plugin.getConfig().getBoolean("currency.negative");
+	}
 
 	public String getCurrencyMajorSingle(){
 		return plugin.getConfig().getString("currency.major.single");
