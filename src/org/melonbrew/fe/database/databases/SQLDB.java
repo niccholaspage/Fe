@@ -111,8 +111,6 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 
 		}
 		
-		System.out.println(accounts.size());
-		
 		return accounts;
 	}
 	

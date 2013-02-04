@@ -10,12 +10,12 @@ public class Account {
 	
 	private final Database database;
 	
-	public Account(String name, Fe plugin){
+	public Account(String name, Fe plugin, Database database){
 		this.name = name;
 		
 		this.api = plugin.getAPI();
 		
-		this.database = plugin.getFeDatabase();
+		this.database = database;
 	}
 	
 	public String getName(){
