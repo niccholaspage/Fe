@@ -63,6 +63,7 @@ permissions:
       fe.remove: true
       fe.set: true
       fe.grant: true
+      fe.deduct: true
       fe.clean: true
       fe.reload: true
       fe.notify: true
