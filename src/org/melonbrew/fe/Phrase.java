@@ -54,7 +54,7 @@ public enum Phrase {
 	COMMAND_CREATE("Creates an account", true),
 	COMMAND_REMOVE("Removes an account", true),
 	COMMAND_SET("Set a player's balance", true),
-	COMMAND_GRANT("Grants a player more Fe", true),
+	COMMAND_GRANT("Grants a player money", true),
 	COMMAND_DEDUCT("Deducts money from a player", true),
 	COMMAND_CLEAN("Cleans the accounts with default balance", true),
 	COMMAND_CONVERT("Converts data from a previous economy plugin to Fe", true),
