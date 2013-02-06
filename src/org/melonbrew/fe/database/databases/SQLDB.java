@@ -201,7 +201,7 @@ public abstract class SQLDB extends Database {
 			
 			set.close();
 			
-			builder.delete(builder.length() - 3, builder.length() - 1).append(")");
+			builder.delete(builder.length() - 2, builder.length()).append(")");
 			
 			System.out.println(builder);
 			
