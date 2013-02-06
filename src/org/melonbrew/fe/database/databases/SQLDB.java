@@ -185,7 +185,7 @@ public abstract class SQLDB extends Database {
 			
 			boolean executeQuery = false;
 			
-			StringBuilder builder = new StringBuilder("DELETE FROM " + accounts + " WHERE name IN (");
+			StringBuilder builder = new StringBuilder("DELETE FROM " + accountsName + " WHERE name IN (");
 			
 			while (set.next()){
 				String name = set.getString("name");
