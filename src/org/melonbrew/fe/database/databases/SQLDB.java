@@ -54,6 +54,10 @@ public abstract class SQLDB extends Database {
 			if (connection == null || connection.isClosed()){
 				connection = getNewConnection();
 				
+				if (connection.isClosed()){
+					return false;
+				}
+				
 				accounts = new Table(connection, accountsName);
 				
 				accounts.create().create("name varchar(64)").create("money double").execute();
