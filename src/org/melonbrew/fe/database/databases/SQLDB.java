@@ -100,7 +100,7 @@ public abstract class SQLDB extends Database {
 	public List<Account> getTopAccounts(int size){
 		checkConnection();
 		
-		String sql = "SELECT name FROM " + accountsName + " ORDER BY money DESC limit " + size;
+		String sql = "SELECT * FROM " + accountsName + " ORDER BY money DESC limit " + size;
 		
 		List<Account> topAccounts = new ArrayList<Account>();
 		
