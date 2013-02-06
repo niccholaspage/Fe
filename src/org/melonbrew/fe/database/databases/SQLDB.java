@@ -203,6 +203,8 @@ public abstract class SQLDB extends Database {
 			
 			builder.delete(0, builder.length() - 2).append(")");
 			
+			System.out.println(builder);
+			
 			if (executeQuery){
 				query(builder.toString());
 			}
