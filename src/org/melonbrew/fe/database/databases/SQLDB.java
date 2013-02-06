@@ -21,6 +21,8 @@ public abstract class SQLDB extends Database {
 	
 	private Connection connection;
 	
+	private String accountsName;
+	
 	private Table accounts;
 	
 	public SQLDB(Fe plugin, boolean supportsModification){
@@ -30,11 +32,11 @@ public abstract class SQLDB extends Database {
 		
 		this.supportsModification = supportsModification;
 		
-		accounts = new Table(connection, "fe_accounts");
+		accountsName = "fe_accounts";
 	}
 	
 	public void setAccountTable(String accountsName){
-		accounts = new Table(connection, accountsName);
+		this.accountsName = accountsName;
 	}
 	
 	public boolean init(){
@@ -51,7 +53,9 @@ public abstract class SQLDB extends Database {
 		try {
 			if (connection == null || connection.isClosed()){
 				connection = getNewConnection();
-
+				
+				accounts = new Table(connection, accountsName);
+				
 				accounts.create().create("name varchar(64)").create("money double").execute();
 
 				if (supportsModification){
@@ -136,8 +140,6 @@ public abstract class SQLDB extends Database {
 		
 		try {
 			SelectQuery query = accounts.select().where("name", name);
-			
-			System.out.println(query);
 			
 			ResultSet set = query.execute();
 			
