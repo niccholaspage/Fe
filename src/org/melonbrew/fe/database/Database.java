@@ -14,7 +14,7 @@ public abstract class Database {
 	
 	public abstract boolean init();
 	
-	public abstract List<Account> getTopAccounts();
+	public abstract List<Account> getTopAccounts(int size);
 	
 	public abstract List<Account> getAccounts();
 	

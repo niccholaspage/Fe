@@ -74,10 +74,10 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 		database.close();
 	}
 	
-	public List<Account> getTopAccounts(){
+	public List<Account> getTopAccounts(int size){
 		checkConnection();
 		
-		String sql = "SELECT name FROM " + accounts + " ORDER BY money DESC limit 5";
+		String sql = "SELECT name FROM " + accounts + " ORDER BY money DESC limit " + size;
 		
 		List<Account> topAccounts = new ArrayList<Account>();
 		
