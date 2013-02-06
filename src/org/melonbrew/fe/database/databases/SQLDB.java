@@ -40,8 +40,6 @@ public abstract class SQLDB extends Database {
 	}
 	
 	public boolean init(){
-		connection = getNewConnection();
-		
 		if (!checkConnection()){
 			return false;
 		}
