@@ -18,7 +18,7 @@ public class SQLiteDB extends SQLDB {
 	}
 	
 	public Connection getNewConnection(){
-		return new SQLiteConnection(new File(plugin.getDataFolder(), "database.db")).getConnection();
+		return new SQLiteConnection(new File(plugin.getDataFolder().getPath(), "database.db")).getConnection();
 	}
 	
 	public void getConfigDefaults(ConfigurationSection section){
