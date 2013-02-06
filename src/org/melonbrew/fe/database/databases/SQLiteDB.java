@@ -1,9 +1,12 @@
 package org.melonbrew.fe.database.databases;
 
+import java.io.File;
+import java.sql.Connection;
+
 import org.bukkit.configuration.ConfigurationSection;
 import org.melonbrew.fe.Fe;
-import org.melonbrew.fe.SQLibrary.Database;
-import org.melonbrew.fe.SQLibrary.SQLite;
+
+import com.niccholaspage.nSQL.connection.SQLiteConnection;
 
 public class SQLiteDB extends SQLDB {
 	private final Fe plugin;
@@ -14,8 +17,8 @@ public class SQLiteDB extends SQLDB {
 		this.plugin = plugin;
 	}
 	
-	public Database getNewDatabase(){
-		return new SQLite(plugin.getLogger(), "Fe", "database", plugin.getDataFolder().getPath());
+	public Connection getNewConnection(){
+		return new SQLiteConnection(new File(plugin.getDataFolder(), "database.db")).getConnection();
 	}
 	
 	public void getConfigDefaults(ConfigurationSection section){
