@@ -31,6 +31,7 @@
   <target name="compress" description="Compression target">
 	<echo>Compressing</echo>
         <jar jarfile="Fe.jar" basedir="build" includes="org/**/*, plugin.yml, config.yml">
+        <zipgroupfileset dir="lib" includes="nSQL.jar" /> 
         </jar>
     	<delete dir="build" />
   </target>

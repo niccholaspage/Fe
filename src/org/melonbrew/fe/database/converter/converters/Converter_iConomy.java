@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 
 import org.melonbrew.fe.Fe;
-import org.melonbrew.fe.SQLibrary.Database;
 import org.melonbrew.fe.database.converter.Converter;
 import org.melonbrew.fe.database.databases.SQLDB;
 
@@ -71,8 +70,8 @@ public class Converter_iConomy extends Converter {
 	}
 
 	public boolean convertMySQL(){
-		Database database = ((SQLDB) plugin.getFeDatabase()).getDatabase();
-
+		SQLDB database = ((SQLDB) plugin.getFeDatabase());
+		
 		try {
 			database.query("ALTER TABLE iconomy DROP COLUMN id;");
 			database.query("ALTER TABLE iconomy DROP COLUMN status;");

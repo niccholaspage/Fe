@@ -1,6 +1,6 @@
 package org.melonbrew.fe.database.databases;
 
-import java.sql.PreparedStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -8,17 +8,20 @@ import java.util.List;
 
 
 import org.melonbrew.fe.Fe;
-import org.melonbrew.fe.SQLibrary.Database;
 import org.melonbrew.fe.database.Account;
+import org.melonbrew.fe.database.Database;
 
-public abstract class SQLDB extends org.melonbrew.fe.database.Database {
+import com.niccholaspage.nSQL.Table;
+import com.niccholaspage.nSQL.query.SelectQuery;
+
+public abstract class SQLDB extends Database {
 	private final Fe plugin;
 	
 	private final boolean supportsModification;
 	
-	private Database database;
+	private Connection connection;
 	
-	private String accounts;
+	private Table accounts;
 	
 	public SQLDB(Fe plugin, boolean supportsModification){
 		super(plugin);
@@ -27,15 +30,15 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 		
 		this.supportsModification = supportsModification;
 		
-		accounts = "fe_accounts";
+		accounts = new Table(connection, "fe_accounts");
 	}
 	
-	public void setAccountTable(String accounts){
-		this.accounts = accounts;
+	public void setAccountTable(String accountsName){
+		accounts = new Table(connection, accountsName);
 	}
 	
 	public boolean init(){
-		database = getNewDatabase();
+		connection = getNewConnection();
 		
 		if (!checkConnection()){
 			return false;
@@ -45,33 +48,47 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	}
 	
 	public boolean checkConnection(){
-		if (!database.checkConnection()){
-			database.open();
-			
-			if (!database.checkConnection()){
-				return false;
+		try {
+			if (connection == null || connection.isClosed()){
+				connection = getNewConnection();
+
+				accounts.create().create("name varchar(64)").create("money double").execute();
+
+				if (supportsModification){
+					query("ALTER TABLE " + accounts + " MODIFY name varchar(64)");
+				}
 			}
-			
-			if (!database.createTable("CREATE TABLE IF NOT EXISTS " + accounts + "(name varchar(64), money double);")){
-				return false;
-			}
-			
-			if (supportsModification){
-				database.query("ALTER TABLE " + accounts + " MODIFY name varchar(64)");
-			}
+		} catch (SQLException e){
+			e.printStackTrace();
+
+			return false;
 		}
 		
 		return true;
 	}
 	
-	protected abstract Database getNewDatabase();
+	protected abstract Connection getNewConnection();
 	
-	public Database getDatabase(){
-		return database;
+	public boolean query(String sql){
+		try {
+			return connection.createStatement().execute(sql);
+		} catch (SQLException e){
+			e.printStackTrace();
+			
+			return false;
+		}
+	}
+	
+	public Connection getConnection(){
+		return connection;
 	}
 	
 	public void close(){
-		database.close();
+		try {
+			connection.close();
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
 	}
 	
 	public List<Account> getTopAccounts(int size){
@@ -81,9 +98,9 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 		
 		List<Account> topAccounts = new ArrayList<Account>();
 		
-		ResultSet set = database.query(sql);
-		
 		try {
+			ResultSet set = connection.createStatement().executeQuery(sql);
+			
 			while (set.next()){
 				topAccounts.add(getAccount(set.getString("name")));
 			}
@@ -97,11 +114,9 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	public List<Account> getAccounts(){
 		checkConnection();
 		
-		String sql = "SELECT name FROM " + accounts;
-		
 		List<Account> accounts = new ArrayList<Account>();
 		
-		ResultSet set = database.query(sql);
+		ResultSet set = this.accounts.select("name").execute();
 		
 		try {
 			while (set.next()){
@@ -117,22 +132,18 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	public double loadAccountMoney(String name){
 		checkConnection();
 		
-		String sql = "SELECT * FROM " + accounts + " WHERE name=?";
-		
 		double money = -1;
 		
 		try {
-			PreparedStatement prest = database.prepare(sql);
+			SelectQuery query = accounts.select().where("name", name);
 			
-			prest.setString(1, name);
-			
-			ResultSet set = prest.executeQuery();
+			ResultSet set = query.execute();
 			
 			while (set.next()){
 				money = set.getDouble("money");
 			}
 			
-			prest.close();
+			query.close();
 		} catch (SQLException e){
 			e.printStackTrace();
 			
@@ -145,70 +156,26 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 	public void removeAccount(String name){
 		checkConnection();
 		
-		String sql = "DELETE FROM " + accounts + " WHERE name=?";
-		
-		try {
-			PreparedStatement prest = database.prepare(sql);
-			
-			prest.setString(1, name);
-			
-			prest.execute();
-			
-			prest.close();
-		}catch (SQLException e){
-			
-		}
+		accounts.delete().where("name", name);
 	}
 	
 	protected void saveAccount(String name, double money){
 		checkConnection();
 		
 		if (accountExists(name)){
-			String sql = "UPDATE " + accounts + " SET money=? WHERE name=?";
-			
-			try {
-				PreparedStatement prest = database.prepare(sql);
-				
-				prest.setDouble(1, money);
-				
-				prest.setString(2, name);
-				
-				prest.executeUpdate();
-				
-				prest.close();
-			}catch (SQLException e){
-				
-			}
+			accounts.update().set("money", money).where("name", name);
 		}else {
-			String sql = "INSERT INTO " + accounts + " (name, money) VALUES (?, ?)";
-			
-			try {
-				PreparedStatement prest = database.prepare(sql);
-				
-				prest.setString(1, name);
-				
-				prest.setDouble(2, money);
-				
-				prest.executeUpdate();
-				
-				prest.close();
-			}catch (SQLException e){
-				
-			}
+			accounts.insert().insert("name").insert("money").value(name).value(money);
 		}
 	}
 	
 	public void clean(){
 		checkConnection();
 		
-		String sql = "SELECT * FROM " + accounts + " WHERE money=?";
-		
 		try {
-			PreparedStatement prest = database.prepare(sql);
+			SelectQuery query = accounts.select().where("money", plugin.getAPI().getDefaultHoldings());
 			
-			prest.setDouble(1, plugin.getAPI().getDefaultHoldings());
-			
-			ResultSet set = prest.executeQuery();
+			ResultSet set = query.execute();
 			
 			boolean executeQuery = false;
 			
@@ -226,12 +193,12 @@ public abstract class SQLDB extends org.melonbrew.fe.database.Database {
 				builder.append("'").append(name).append("', ");
 			}
 			
-			prest.close();
+			set.close();
 			
 			builder.delete(0, builder.length() - 2).append(")");
 			
 			if (executeQuery){
-				database.query(builder.toString());
+				query(builder.toString());
 			}
 		} catch (SQLException e){
 			

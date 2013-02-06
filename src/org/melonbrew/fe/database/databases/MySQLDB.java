@@ -1,27 +1,25 @@
 package org.melonbrew.fe.database.databases;
 
+import java.sql.Connection;
+
 import org.bukkit.configuration.ConfigurationSection;
 import org.melonbrew.fe.Fe;
-import org.melonbrew.fe.SQLibrary.Database;
-import org.melonbrew.fe.SQLibrary.MySQL;
+
+import com.niccholaspage.nSQL.connection.MySQLConnection;
 
 public class MySQLDB extends SQLDB {
-	private final Fe plugin;
-	
 	public MySQLDB(Fe plugin){
 		super(plugin, true);
-		
-		this.plugin = plugin;
 	}
 	
-	protected Database getNewDatabase(){
+	protected Connection getNewConnection(){
 		ConfigurationSection config = getConfigSection();
-
-		MySQL mySQL = new MySQL(plugin.getLogger(), "Fe", config.getString("host"), config.getString("port"), config.getString("database"), config.getString("user"), config.getString("password"));
+		
+		MySQLConnection mySQL = new MySQLConnection(config.getString("host"), config.getString("port"), config.getString("database"), config.getString("user"), config.getString("password"));
 		
 		setAccountTable(config.getString("tables.accounts"));
 		
-		return mySQL;
+		return mySQL.getConnection();
 	}
 	
 	public void getConfigDefaults(ConfigurationSection section){
