@@ -169,9 +169,9 @@ public abstract class SQLDB extends Database {
 		checkConnection();
 		
 		if (accountExists(name)){
-			accounts.update().set("money", money).where("name", name);
+			accounts.update().set("money", money).where("name", name).execute();
 		}else {
-			accounts.insert().insert("name").insert("money").value(name).value(money);
+			accounts.insert().insert("name").insert("money").value(name).value(money).execute();
 		}
 	}
 	
