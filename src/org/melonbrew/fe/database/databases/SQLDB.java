@@ -137,6 +137,8 @@ public abstract class SQLDB extends Database {
 		try {
 			SelectQuery query = accounts.select().where("name", name);
 			
+			System.out.println(query);
+			
 			ResultSet set = query.execute();
 			
 			while (set.next()){
