@@ -107,11 +107,13 @@ public abstract class SQLDB extends Database {
 		try {
 			ResultSet set = connection.createStatement().executeQuery(sql);
 			
-			Account account = new Account(set.getString("name").toLowerCase(), plugin, this);
-			
-			account.setMoney(set.getDouble("money"));
-			
-			topAccounts.add(account);
+			while (set.next()){
+				Account account = new Account(set.getString("name").toLowerCase(), plugin, this);
+				
+				account.setMoney(set.getDouble("money"));
+				
+				topAccounts.add(account);	
+			}
 		} catch (SQLException e){
 			e.printStackTrace();
 		}
