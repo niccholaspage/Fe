@@ -107,11 +107,13 @@ public abstract class SQLDB extends Database {
 		try {
 			ResultSet set = connection.createStatement().executeQuery(sql);
 			
-			while (set.next()){
-				topAccounts.add(getAccount(set.getString("name")));
-			}
+			Account account = new Account(set.getString("name").toLowerCase(), plugin, this);
+			
+			account.setMoney(set.getDouble("money"));
+			
+			topAccounts.add(account);
 		} catch (SQLException e){
-
+			e.printStackTrace();
 		}
 		
 		return topAccounts;
@@ -122,14 +124,18 @@ public abstract class SQLDB extends Database {
 		
 		List<Account> accounts = new ArrayList<Account>();
 		
-		ResultSet set = this.accounts.select("name").execute();
+		ResultSet set = this.accounts.select().execute();
 		
 		try {
 			while (set.next()){
-				accounts.add(getAccount(set.getString("name")));
+				Account account = new Account(set.getString("name").toLowerCase(), plugin, this);
+				
+				account.setMoney(set.getDouble("money"));
+				
+				accounts.add(account);
 			}
 		} catch (SQLException e){
-
+			e.printStackTrace();
 		}
 		
 		return accounts;
@@ -162,7 +168,7 @@ public abstract class SQLDB extends Database {
 	public void removeAccount(String name){
 		checkConnection();
 		
-		accounts.delete().where("name", name);
+		accounts.delete().where("name", name).execute();
 	}
 	
 	protected void saveAccount(String name, double money){
