@@ -61,7 +61,9 @@ public abstract class SQLDB extends Database {
 				accounts.create().create("name varchar(64) NOT NULL").create("money double NOT NULL").execute();
 
 				if (supportsModification){
-					query("ALTER TABLE " + accountsName + " MODIFY (name varchar(64) NOT NULL, money double NOT NULL)");
+					query("ALTER TABLE " + accountsName + " MODIFY name varchar(64) NOT NULL");
+					
+					query("ALTER TABLE " + accountsName + " MODIFY money double NOT NULL");
 				}
 			}
 		} catch (SQLException e){
