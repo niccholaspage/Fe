@@ -4,6 +4,8 @@ maxholdings: -1
 
 prefix: Fe
 
+topsize: 5
+
 currency:
   negative: false
   major:

@@ -14,9 +14,13 @@ public class API {
 	public API(Fe plugin){
 		this.plugin = plugin;
 	}
-
+	
 	public List<Account> getTopAccounts(){
-		return plugin.getFeDatabase().getTopAccounts();
+		return plugin.getFeDatabase().getTopAccounts(plugin.getConfig().getInt("topsize"));
+	}
+
+	public List<Account> getTopAccounts(int size){
+		return plugin.getFeDatabase().getTopAccounts(size);
 	}
 	
 	public List<Account> getAccounts(){
