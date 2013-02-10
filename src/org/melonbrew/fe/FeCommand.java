@@ -3,13 +3,14 @@ package org.melonbrew.fe;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.melonbrew.fe.command.CommandType;
 import org.melonbrew.fe.command.SubCommand;
 import org.melonbrew.fe.command.commands.*;
+
+import com.niccholaspage.Metro.base.command.Command;
+import com.niccholaspage.Metro.base.command.CommandExecutor;
+import com.niccholaspage.Metro.base.command.CommandSender;
+import com.niccholaspage.Metro.base.player.Player;
 
 public class FeCommand implements CommandExecutor {
 	private final List<SubCommand> commands;

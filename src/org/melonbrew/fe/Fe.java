@@ -1,30 +1,22 @@
 package org.melonbrew.fe;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import net.milkbowl.vault.economy.Economy;
-
-import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.ServicePriority;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.melonbrew.fe.Metrics.Graph;
-import org.melonbrew.fe.Metrics.Plotter;
 import org.melonbrew.fe.database.Account;
 import org.melonbrew.fe.database.Database;
 import org.melonbrew.fe.database.databases.MySQLDB;
 import org.melonbrew.fe.database.databases.SQLiteDB;
-import org.melonbrew.fe.listeners.FePlayerListener;
 
-public class Fe extends JavaPlugin {
+import com.niccholaspage.Metro.base.MetroPlugin;
+import com.niccholaspage.Metro.base.config.Config;
+import com.niccholaspage.Metro.base.config.ConfigSection;
+import com.niccholaspage.Metro.base.player.OfflinePlayer;
+import com.niccholaspage.Metro.base.player.Player;
+
+public class Fe extends MetroPlugin {
 	private Logger log;
 	
 	private API api;
@@ -40,11 +32,9 @@ public class Fe extends JavaPlugin {
 	private String latestVersionString;
 	
 	public void onEnable(){
-		log = getServer().getLogger();
+		log = getLogger();
 		
 		getDataFolder().mkdirs();
-		
-		new FePlayerListener(this);
 		
 		Phrase.init(this);
 		
@@ -53,31 +43,29 @@ public class Fe extends JavaPlugin {
 		databases.add(new MySQLDB(this));
 		databases.add(new SQLiteDB(this));
 		
-		getConfig().options().copyDefaults(true);
-		
 		for (Database database : databases){
 			String name = database.getConfigName();
 			
-			ConfigurationSection section = getConfig().getConfigurationSection(name);
+			ConfigSection section = getConfig().getConfigSection(name);
 			
 			if (section == null){
-				section = getConfig().createSection(name);
+				section = getConfig().createConfigSection(name);
 			}
 			
 			database.getConfigDefaults(section);
 			
 			if (section.getKeys(false).isEmpty()){
-				getConfig().set(name, null);
+				getConfig().setValue(name, null);
 			}
 		}
 		
-		getConfig().options().header("Fe Config - meloncraft.com\n" +
+		getConfig().setHeader("Fe Config - meloncraft.com\n" +
 				"holdings - The amount of money that players will start out with\n" +
 				"prefix - The message prefix\n" +
 				"currency - The single and multiple names for the currency\n" +
 				"type - The type of database used (sqlite or mysql)\n");
 		
-		saveConfig();
+		getConfig().save();
 		
 		api = new API(this);
 		
@@ -85,9 +73,7 @@ public class Fe extends JavaPlugin {
 			return;
 		}
 		
-		setupVault();
-		
-		String currentVersionString = getDescription().getVersion();
+		String currentVersionString = getResources().getVersion();
 		
 		currentVersion = versionToDouble(currentVersionString);
 		
@@ -95,13 +81,11 @@ public class Fe extends JavaPlugin {
 		
 		setLatestVersionString(currentVersionString);
 		
-		getCommand("fe").setExecutor(new FeCommand(this));
+		getResources().registerCommand("fe", new FeCommand(this));
 		
-		if (getConfig().getBoolean("updatecheck")){
+		/*if (getConfig().getBoolean("updatecheck")){
 			getServer().getScheduler().runTaskAsynchronously(this, new UpdateCheck(this));
-		}
-		
-		loadMetrics();
+		}*/
 	}
 	
 	public double versionToDouble(String version){
@@ -140,46 +124,6 @@ public class Fe extends JavaPlugin {
 		}
 	}
 	
-	private void loadMetrics(){
-		try {
-			Metrics metrics = new Metrics(this);
-			
-			Graph databaseGraph = metrics.createGraph("Database Engine");
-			
-			databaseGraph.addPlotter(new Plotter(database.getName()){
-                public int getValue(){
-                    return 1;
-                }
-            });
-			
-			Graph defaultHoldings = metrics.createGraph("Default Holdings");
-			
-			defaultHoldings.addPlotter(new Plotter(getAPI().getDefaultHoldings() + ""){
-		        public int getValue(){
-		            return 1;
-		        }
-		    });
-			
-			Graph maxHoldings = metrics.createGraph("Max Holdings");
-			
-			String maxHolding = getAPI().getMaxHoldings() + "";
-			
-			if (getAPI().getMaxHoldings() == -1){
-				maxHolding = "Unlimited";
-			}
-			
-			maxHoldings.addPlotter(new Plotter(maxHolding){
-		        public int getValue(){
-		            return 1;
-		        }
-		    });
-            
-            metrics.start();
-		} catch (IOException e){
-			
-		}
-	}
-	
 	protected void setLatestVersion(double latestVersion){
 		this.latestVersion = latestVersion;
 	}
@@ -200,25 +144,7 @@ public class Fe extends JavaPlugin {
 		return currentVersion >= latestVersion;
 	}
 	
-	private void setupVault(){
-		Plugin vault = getServer().getPluginManager().getPlugin("Vault");
-		
-		if (vault == null){
-			return;
-		}
-		
-		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
-		
-		if (economyProvider != null){
-			getServer().getServicesManager().unregister(economyProvider.getProvider());
-		}
-		
-		getServer().getServicesManager().register(Economy.class, new Economy_Fe(this), this, ServicePriority.Highest);
-	}
-	
 	public void onDisable(){
-		getServer().getServicesManager().unregisterAll(this);
-		
 		getFeDatabase().close();
 	}
 	
@@ -264,7 +190,7 @@ public class Fe extends JavaPlugin {
 		if (!database.init()){
 			log(Phrase.DATABASE_FAILURE_DISABLE);
 			
-			getServer().getPluginManager().disablePlugin(this);
+			getServer().disablePlugin(this);
 			
 			return false;
 		}
@@ -283,37 +209,43 @@ public class Fe extends JavaPlugin {
 			return;
 		}
 
-		YamlConfiguration phrasesConfig = YamlConfiguration.loadConfiguration(phrasesFile);
+		Config phrasesConfig = getResources().newConfig(phrasesFile);
 
 		for (Phrase phrase : Phrase.values()){
 			String phraseConfigName = phrase.getConfigName();
 			
-			phrase.setMessage(phrasesConfig.getString(phraseConfigName, phrase.parse()));
+			String phraseMessage = phrasesConfig.getString(phraseConfigName);
+			
+			if (phraseMessage == null){
+				phraseMessage = phrase.parse();
+			}
+			
+			phrase.setMessage(phraseMessage);
 		}
 	}
 	
 	public void reloadConfig(){
-		super.reloadConfig();
+		getConfig().reload();
 		
 		String oldCurrencySingle = getConfig().getString("currency.single");
 		
 		String oldCurrencyMultiple = getConfig().getString("currency.multiple");
 		
 		if (oldCurrencySingle != null){
-			getConfig().set("currency.major.single", oldCurrencySingle);
+			getConfig().setValue("currency.major.single", oldCurrencySingle);
 			
-			getConfig().set("currency.single", null);
+			getConfig().setValue("currency.single", null);
 		}
 		
 		if (oldCurrencyMultiple != null){
-			getConfig().set("currency.major.multiple", oldCurrencyMultiple);
+			getConfig().setValue("currency.major.multiple", oldCurrencyMultiple);
 			
-			getConfig().set("currency.multiple", null);
+			getConfig().setValue("currency.multiple", null);
 		}
 		
 		setupPhrases();
 		
-		saveConfig();
+		getConfig().save();
 	}
 	
 	public String getReadName(Account account){
@@ -336,7 +268,7 @@ public class Fe extends JavaPlugin {
 		Account account = getAPI().getAccount(name);
 		
 		if (account == null){
-			Player player = getServer().getPlayer(name);
+			Player player = getServer().getOnlinePlayer(name, false);
 			
 			if (player != null){
 				account = getAPI().getAccount(player.getName());

@@ -1,13 +1,14 @@
 package org.melonbrew.fe.command.commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.Phrase;
 import org.melonbrew.fe.command.CommandType;
 import org.melonbrew.fe.command.SubCommand;
 import org.melonbrew.fe.database.Account;
+
+import com.niccholaspage.Metro.base.command.Command;
+import com.niccholaspage.Metro.base.command.CommandSender;
+import com.niccholaspage.Metro.base.player.Player;
 
 public class DeductCommand extends SubCommand {
 	private final Fe plugin;
@@ -46,7 +47,7 @@ public class DeductCommand extends SubCommand {
 
 		Phrase.PLAYER_DEDUCT_MONEY.sendWithPrefix(sender, formattedMoney, plugin.getReadName(victim));
 		
-		Player recieverPlayer = plugin.getServer().getPlayerExact(victimName);
+		Player recieverPlayer = plugin.getServer().getOnlinePlayer(victimName, true);
 		
 		if (recieverPlayer != null){
 			Phrase.PLAYER_DEDUCTED_MONEY.sendWithPrefix(recieverPlayer, formattedMoney, sender.getName());
