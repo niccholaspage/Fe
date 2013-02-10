@@ -47,8 +47,6 @@ public class Fe extends MetroPlugin {
 				section = getConfig().createConfigSection(name);
 			}
 			
-			System.out.println(section);
-			
 			database.getConfigDefaults(section);
 			
 			if (section.getKeys(false).isEmpty()){
