@@ -3,7 +3,6 @@ package org.melonbrew.fe;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.melonbrew.fe.database.Account;
 import org.melonbrew.fe.database.Database;
@@ -17,8 +16,6 @@ import com.niccholaspage.Metro.base.player.OfflinePlayer;
 import com.niccholaspage.Metro.base.player.Player;
 
 public class Fe extends MetroPlugin {
-	private Logger log;
-	
 	private API api;
 	
 	private Database database;
@@ -32,8 +29,6 @@ public class Fe extends MetroPlugin {
 	private String latestVersionString;
 	
 	public void onEnable(){
-		log = getLogger();
-		
 		getDataFolder().mkdirs();
 		
 		Phrase.init(this);
@@ -146,10 +141,6 @@ public class Fe extends MetroPlugin {
 	
 	public void onDisable(){
 		getFeDatabase().close();
-	}
-	
-	public void log(String message){
-		log.info("[Fe] " + message);
 	}
 	
 	public void log(Phrase phrase, String... args){
