@@ -74,7 +74,7 @@ public class Economy_Fe implements Economy {
 		if (api == null) {
 			return false;
 		} else {
-			return fe.isEnabled();
+			return plugin.isEnabled();
 		}
 	}
 

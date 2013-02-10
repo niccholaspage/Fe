@@ -1,6 +1,6 @@
 name: Fe
 
-main: org.melonbrew.fe.Fe
+main: org.melonbrew.fe.loaders.FeBukkitLoader
 
 version: 0.7-SNAPSHOT
 
