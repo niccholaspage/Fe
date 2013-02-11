@@ -52,7 +52,7 @@ public abstract class SQLDB extends Database {
 			if (connection == null || connection.isClosed()){
 				connection = getNewConnection();
 				
-				if (connection.isClosed()){
+				if (connection == null || connection.isClosed()){
 					return false;
 				}
 				
