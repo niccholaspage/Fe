@@ -64,6 +64,8 @@ public class FeSpoutLoader extends SpoutLoader {
 		
 		try {
 			if (!file.exists()){
+				file.createNewFile();
+				
 				Spout.getLogger().info("[Fe] Downloading ".concat(file.getName()));
 
 				URL website = new URL(libURL);
