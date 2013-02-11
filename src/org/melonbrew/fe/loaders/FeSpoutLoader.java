@@ -31,6 +31,10 @@ public class FeSpoutLoader extends SpoutLoader {
 		setPlugin(fe);
 
 		super.onEnable();
+		
+		if (!isEnabled()){
+			return;
+		}
 
 		new FeSpoutPlayerListener(this, fe);
 	}

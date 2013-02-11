@@ -26,6 +26,10 @@ public class FeBukkitLoader extends BukkitLoader {
 		
 		super.onEnable();
 		
+		if (!isEnabled()){
+			return;
+		}
+		
 		new FeBukkitPlayerListener(this, fe);
 		
 		setupVault();
