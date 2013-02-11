@@ -13,7 +13,7 @@ public enum Phrase {
 	YOU_HAVE("You have $1"),
 	HELP("Fe Help"),
 	HELP_ARGUMENTS("$1 Required, $2 Optional"),
-	RICH("Fe Rich List"),
+	RICH("Rich List"),
 	CONVERSION("Conversion Plugins"),
 	CONVERTER_DOES_NOT_EXIST("That converter doesn't exist!"),
 	FLAT_FILE("Flat File"),

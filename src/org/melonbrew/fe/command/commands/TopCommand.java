@@ -39,7 +39,7 @@ public class TopCommand extends SubCommand {
 			sender.sendMessage(two + (i + 1) + ". " + Phrase.PRIMARY_COLOR.parse() + plugin.getReadName(account) + two + " - " + plugin.getAPI().format(account));
 		}
 		
-		sender.sendMessage(plugin.getEndEqualMessage(31));
+		sender.sendMessage(plugin.getEndEqualMessage(28));
 		
 		return true;
 	}
