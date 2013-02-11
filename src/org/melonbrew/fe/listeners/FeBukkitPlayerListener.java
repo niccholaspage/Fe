@@ -6,29 +6,32 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.Phrase;
 
-public class FePlayerListener implements Listener {
-	private final Fe plugin;
+import com.niccholaspage.Metro.base.player.players.BukkitPlayer;
+
+public class FeBukkitPlayerListener implements Listener {
+	private final Fe fe;
 	
-	public FePlayerListener(Fe plugin){
-		this.plugin = plugin;
+	public FeBukkitPlayerListener(JavaPlugin plugin, Fe fe){
+		this.fe = fe;
 		
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerLogin(PlayerLoginEvent event){
-		plugin.getAPI().createAccount(event.getPlayer().getName());
+		fe.getAPI().createAccount(event.getPlayer().getName());
 	}
 	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event){
 		Player player = event.getPlayer();
 		
-		if (!plugin.isUpdated() && player.hasPermission("fe.notify")){
-			Phrase.FE_OUTDATED.sendWithPrefix(player, plugin.getLatestVersionString());
+		if (!fe.isUpdated() && player.hasPermission("fe.notify")){
+			Phrase.FE_OUTDATED.sendWithPrefix(new BukkitPlayer(player), fe.getLatestVersionString());
 		}
 	}
 }

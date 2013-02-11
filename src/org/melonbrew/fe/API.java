@@ -5,8 +5,9 @@ import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.Locale;
 
-import org.bukkit.ChatColor;
 import org.melonbrew.fe.database.Account;
+
+import com.niccholaspage.Metro.base.command.ChatFormat;
 
 public class API {
 	private final Fe plugin;
@@ -80,7 +81,7 @@ public class API {
 	}
 
 	public String formatNoColor(double amount){
-		return ChatColor.stripColor(format(amount));
+		return ChatFormat.stripColor(format(amount));
 	}
 
 	private String formatValue(double value){
@@ -134,7 +135,7 @@ public class API {
 	}
 
 	public String formatNoColor(Account account){
-		return ChatColor.stripColor(format(account));
+		return ChatFormat.stripColor(format(account));
 	}
 
 	public String format(Account account){
