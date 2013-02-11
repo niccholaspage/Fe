@@ -200,7 +200,7 @@ public abstract class SQLDB extends Database {
 			while (set.next()){
 				String name = set.getString("name");
 				
-				if (plugin.getServer().getPlayerExact(name) != null){
+				if (plugin.getServer().getOnlinePlayer(name, true) != null){
 					continue;
 				}
 				

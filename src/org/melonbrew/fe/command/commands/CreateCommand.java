@@ -1,12 +1,12 @@
 package org.melonbrew.fe.command.commands;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.Phrase;
 import org.melonbrew.fe.command.CommandType;
 import org.melonbrew.fe.command.SubCommand;
+
+import com.niccholaspage.Metro.base.command.Command;
+import com.niccholaspage.Metro.base.command.CommandSender;
 
 public class CreateCommand extends SubCommand {
 	private final Fe plugin;
@@ -38,7 +38,7 @@ public class CreateCommand extends SubCommand {
 		
 		plugin.getAPI().createAccount(name);
 		
-		Phrase.ACCOUNT_CREATED.sendWithPrefix(sender, ChatColor.GOLD + plugin.getReadName(name) + ChatColor.GRAY);
+		Phrase.ACCOUNT_CREATED.sendWithPrefix(sender, Phrase.PRIMARY_COLOR.parse() + plugin.getReadName(name) + Phrase.SECONDARY_COLOR.parse());
 		
 		return true;
 	}

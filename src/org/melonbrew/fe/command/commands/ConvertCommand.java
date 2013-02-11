@@ -3,9 +3,6 @@ package org.melonbrew.fe.command.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.Phrase;
 import org.melonbrew.fe.command.CommandType;
@@ -13,6 +10,9 @@ import org.melonbrew.fe.command.SubCommand;
 import org.melonbrew.fe.database.converter.Converter;
 import org.melonbrew.fe.database.converter.converters.*;
 import org.melonbrew.fe.database.databases.MySQLDB;
+
+import com.niccholaspage.Metro.base.command.Command;
+import com.niccholaspage.Metro.base.command.CommandSender;
 
 public class ConvertCommand extends SubCommand {
 	private final Fe plugin;
@@ -38,9 +38,9 @@ public class ConvertCommand extends SubCommand {
 		sender.sendMessage(message);
 		
 		for (Converter converter : converters){
-			message = ChatColor.GOLD + converter.getName();
+			message = Phrase.PRIMARY_COLOR.parse() + converter.getName();
 			
-			message += " " + ChatColor.DARK_GRAY + "(" + ChatColor.YELLOW;
+			message += " " + Phrase.TERTIARY_COLOR.parse() + "(" + Phrase.ARGUMENT_COLOR.parse();
 			
 			if (converter.isFlatFile()){
 				message += Phrase.FLAT_FILE.parse();
@@ -54,7 +54,7 @@ public class ConvertCommand extends SubCommand {
 				message += Phrase.MYSQL.parse();
 			}
 			
-			message += ChatColor.DARK_GRAY + ")";
+			message += Phrase.TERTIARY_COLOR.parse() + ")";
 			
 			sender.sendMessage(message);
 		}

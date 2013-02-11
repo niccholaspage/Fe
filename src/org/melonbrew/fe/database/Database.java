@@ -2,8 +2,9 @@ package org.melonbrew.fe.database;
 
 import java.util.List;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.melonbrew.fe.Fe;
+
+import com.niccholaspage.Metro.base.config.ConfigSection;
 
 public abstract class Database {
 	private final Fe plugin;
@@ -24,7 +25,7 @@ public abstract class Database {
 	
 	public abstract void removeAccount(String name);
 	
-	public abstract void getConfigDefaults(ConfigurationSection section);
+	public abstract void getConfigDefaults(ConfigSection section);
 	
 	public abstract void clean();
 	
@@ -36,8 +37,8 @@ public abstract class Database {
 		return getName().toLowerCase().replace(" ", "");
 	}
 	
-	public ConfigurationSection getConfigSection(){
-		return plugin.getConfig().getConfigurationSection(getConfigName());
+	public ConfigSection getConfigSection(){
+		return plugin.getConfig().getConfigSection(getConfigName());
 	}
 	
 	public Account getAccount(String name){

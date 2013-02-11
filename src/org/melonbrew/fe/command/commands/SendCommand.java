@@ -1,13 +1,14 @@
 package org.melonbrew.fe.command.commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.Phrase;
 import org.melonbrew.fe.command.CommandType;
 import org.melonbrew.fe.command.SubCommand;
 import org.melonbrew.fe.database.Account;
+
+import com.niccholaspage.Metro.base.command.Command;
+import com.niccholaspage.Metro.base.command.CommandSender;
+import com.niccholaspage.Metro.base.player.Player;
 
 public class SendCommand extends SubCommand {
 	private final Fe plugin;
@@ -67,7 +68,7 @@ public class SendCommand extends SubCommand {
 		
 		Phrase.MONEY_SENT.sendWithPrefix(sender, formattedMoney, recieverName);
 		
-		Player recieverPlayer = plugin.getServer().getPlayerExact(reciever.getName());
+		Player recieverPlayer = plugin.getServer().getOnlinePlayer(reciever.getName(), true);
 		
 		if (recieverPlayer != null){
 			Phrase.MONEY_RECIEVE.sendWithPrefix(recieverPlayer, formattedMoney, sender.getName());
