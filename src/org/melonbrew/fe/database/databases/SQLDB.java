@@ -93,7 +93,8 @@ public abstract class SQLDB extends Database {
 	
 	public void close(){
 		try {
-			connection.close();
+			if (connection != null)
+				connection.close();
 		} catch (SQLException e){
 			e.printStackTrace();
 		}
