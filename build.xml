@@ -32,8 +32,10 @@
   <target name="compress" description="Compression target">
 	<echo>Compressing</echo>
         <jar jarfile="Fe.jar" basedir="build" includes="org/**/*, plugin.yml, properties.yml, config.yml">
-        <zipgroupfileset dir="lib" includes="nSQL.jar" />
-        <zipgroupfileset dir="lib" includes="Metro.jar" />
+        	<zipgroupfileset dir="lib" includes="nSQL.jar" />
+        	<zipgroupfileset dir="lib" includes="Metro.jar" />
+        	<zipgroupfileset dir="lib" includes="sqlite-jdbc.jar" />
+        	<zipgroupfileset dir="lib" includes="mysql-connector-java.jar" />
         </jar>
     	<delete dir="build" />
   </target>
