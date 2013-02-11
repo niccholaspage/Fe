@@ -11,6 +11,7 @@ import java.nio.channels.ReadableByteChannel;
 
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.listeners.FeSpoutPlayerListener;
+import org.spout.api.Spout;
 
 import com.niccholaspage.Metro.base.loader.loaders.SpoutLoader;
 
@@ -63,7 +64,7 @@ public class FeSpoutLoader extends SpoutLoader {
 		
 		try {
 			if (!file.exists()){
-				fe.log("Downloading ".concat(file.getName()));
+				Spout.getLogger().info("[Fe] Downloading ".concat(file.getName()));
 
 				URL website = new URL(libURL);
 				ReadableByteChannel rbc = Channels.newChannel(website.openStream());
