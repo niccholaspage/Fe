@@ -189,6 +189,10 @@ public class Fe extends MetroPlugin {
 		return true;
 	}
 	
+	public void log(Phrase phrase){
+		log(phrase.parse());
+	}
+	
 	private void setupPhrases(){
 		File phrasesFile = new File(getDataFolder(), "phrases.yml");
 		
