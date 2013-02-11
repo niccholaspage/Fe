@@ -21,7 +21,7 @@ public class FeSpoutLoader extends SpoutLoader {
 	public void onEnable(){
 		File folder = new File(getDataFolder(), "libs");
 		
-		folder.mkdir();
+		folder.mkdirs();
 
 		download("http://dl.dropbox.com/u/7102145/libs/sqlite-jdbc.jar", new File(folder, "sqlite-jdbc.jar"));
 		download("http://dl.dropbox.com/u/7102145/libs/mysql-connector-java.jar", new File(folder, "mysql-connector-java.jar"));
