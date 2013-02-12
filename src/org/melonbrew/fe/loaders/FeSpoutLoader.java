@@ -12,8 +12,6 @@ import java.nio.channels.ReadableByteChannel;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.listeners.FeSpoutPlayerListener;
 import org.spout.api.Spout;
-import org.spout.api.chat.ChatArguments;
-import org.spout.api.chat.style.ChatStyle;
 
 import com.niccholaspage.Metro.base.loader.loaders.SpoutLoader;
 
