@@ -83,6 +83,11 @@ public class Fe extends MetroPlugin {
 		}*/
 	}
 	
+	@Override
+	public void log(String message){
+		super.log("[Fe] " + message);
+	}
+	
 	public double versionToDouble(String version){
 		boolean isSnapshot = version.endsWith("-SNAPSHOT");
 		
