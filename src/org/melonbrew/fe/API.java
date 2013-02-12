@@ -7,7 +7,7 @@ import java.util.Locale;
 
 import org.melonbrew.fe.database.Account;
 
-import com.niccholaspage.Metro.base.command.ChatFormat;
+import com.niccholaspage.Metro.base.chat.ChatFormat;
 
 public class API {
 	private final Fe plugin;
