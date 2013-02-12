@@ -1,7 +1,7 @@
 package org.melonbrew.fe;
 
 import com.niccholaspage.Metro.base.command.CommandSender;
-import com.niccholaspage.Metro.base.command.ChatFormat;
+import com.niccholaspage.Metro.base.chat.ChatFormat;
 
 public enum Phrase {
 	DATABASE_TYPE_DOES_NOT_EXIST("That database type doesn't exist."),
