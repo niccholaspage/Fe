@@ -78,9 +78,9 @@ public class Fe extends MetroPlugin {
 		
 		getResources().registerCommand("fe", new FeCommand(this));
 		
-		/*if (getConfig().getBoolean("updatecheck")){
+		if (getConfig().getBoolean("updatecheck")){
 			getServer().getScheduler().runTaskAsynchronously(this, new UpdateCheck(this));
-		}*/
+		}
 	}
 	
 	@Override
