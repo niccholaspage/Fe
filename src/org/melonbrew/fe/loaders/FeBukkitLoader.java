@@ -9,10 +9,9 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.melonbrew.fe.Economy_Fe;
 import org.melonbrew.fe.Fe;
-import org.melonbrew.fe.Metrics;
-import org.melonbrew.fe.Metrics.Graph;
-import org.melonbrew.fe.Metrics.Plotter;
 import org.melonbrew.fe.listeners.FeBukkitPlayerListener;
+import org.melonbrew.fe.loaders.BukkitMetrics.Graph;
+import org.melonbrew.fe.loaders.BukkitMetrics.Plotter;
 
 import com.niccholaspage.Metro.base.loader.loaders.BukkitLoader;
 
@@ -45,7 +44,7 @@ public class FeBukkitLoader extends BukkitLoader {
 	
 	private void loadMetrics(){
 		try {
-			Metrics metrics = new Metrics(this);
+			BukkitMetrics metrics = new BukkitMetrics(this);
 			
 			Graph databaseGraph = metrics.createGraph("Database Engine");
 			
