@@ -11,6 +11,8 @@ import java.nio.channels.ReadableByteChannel;
 
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.listeners.FeSpoutPlayerListener;
+import org.melonbrew.fe.loaders.SpoutMetrics.Graph;
+import org.melonbrew.fe.loaders.SpoutMetrics.Plotter;
 import org.spout.api.Spout;
 
 import com.niccholaspage.Metro.base.loader.loaders.SpoutLoader;
@@ -37,6 +39,48 @@ public class FeSpoutLoader extends SpoutLoader {
 		}
 
 		new FeSpoutPlayerListener(this, fe);
+		
+		loadMetrics();
+	}
+	
+	private void loadMetrics(){
+		try {
+			SpoutMetrics metrics = new SpoutMetrics(this);
+			
+			Graph databaseGraph = metrics.createGraph("Database Engine");
+			
+			databaseGraph.addPlotter(new Plotter(fe.getFeDatabase().getName()){
+                public int getValue(){
+                    return 1;
+                }
+            });
+			
+			Graph defaultHoldings = metrics.createGraph("Default Holdings");
+			
+			defaultHoldings.addPlotter(new Plotter(fe.getAPI().getDefaultHoldings() + ""){
+		        public int getValue(){
+		            return 1;
+		        }
+		    });
+			
+			Graph maxHoldings = metrics.createGraph("Max Holdings");
+			
+			String maxHolding = fe.getAPI().getMaxHoldings() + "";
+			
+			if (fe.getAPI().getMaxHoldings() == -1){
+				maxHolding = "Unlimited";
+			}
+			
+			maxHoldings.addPlotter(new Plotter(maxHolding){
+		        public int getValue(){
+		            return 1;
+		        }
+		    });
+            
+            metrics.start();
+		} catch (Exception e){
+			
+		}
 	}
 	
 	private void addURLs(URL[] urls){
