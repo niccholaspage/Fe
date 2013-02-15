@@ -95,6 +95,6 @@ public class FeBukkitLoader extends BukkitLoader {
 			getServer().getServicesManager().unregister(economyProvider.getProvider());
 		}
 		
-		getServer().getServicesManager().register(Economy.class, new Economy_Fe(this), this, ServicePriority.Highest);
+		getServer().getServicesManager().register(Economy.class, new Economy_Fe(fe, this), this, ServicePriority.Highest);
 	}
 }
