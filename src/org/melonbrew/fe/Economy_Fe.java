@@ -20,18 +20,19 @@ import org.melonbrew.fe.database.Account;
 
 public class Economy_Fe implements Economy {
 	private final String name = "Fe";
-	private Plugin plugin = null;
+	private Plugin bukkitPlugin = null;
 	private Fe fe = null;
 	private API api = null;
 
-	public Economy_Fe(Plugin plugin) {
-		this.plugin = plugin;
-		Bukkit.getServer().getPluginManager().registerEvents(new EconomyServerListener(this), plugin);
+	public Economy_Fe(Fe fe, Plugin bukkitPlugin) {
+		this.bukkitPlugin = bukkitPlugin;
 		
-		if (fe == null) {
-			Plugin efe = plugin.getServer().getPluginManager().getPlugin("Fe");
+		Bukkit.getServer().getPluginManager().registerEvents(new EconomyServerListener(this), bukkitPlugin);
+		
+		if (this.fe == null) {
+			Plugin efe = bukkitPlugin.getServer().getPluginManager().getPlugin("Fe");
 			if (efe != null && efe.isEnabled()) {
-				fe = (Fe) efe;
+				this.fe = fe;
 				api = fe.getAPI();
 				fe.log("Vault support enabled.");
 			}
@@ -48,9 +49,8 @@ public class Economy_Fe implements Economy {
 		@EventHandler(priority = EventPriority.MONITOR)
 		public void onPluginEnable(PluginEnableEvent event) {
 			if (fe == null) {
-				Plugin efe = plugin.getServer().getPluginManager().getPlugin("Fe");
+				Plugin efe = bukkitPlugin.getServer().getPluginManager().getPlugin("Fe");
 				if (efe != null && efe.isEnabled()) {
-					fe = (Fe) efe;
 					api = fe.getAPI();
 					fe.log("Vault support enabled.");
 				}
@@ -74,7 +74,7 @@ public class Economy_Fe implements Economy {
 		if (api == null) {
 			return false;
 		} else {
-			return plugin.isEnabled();
+			return bukkitPlugin.isEnabled();
 		}
 	}
 
