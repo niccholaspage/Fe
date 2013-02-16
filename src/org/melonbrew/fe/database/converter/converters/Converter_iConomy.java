@@ -77,8 +77,10 @@ public class Converter_iConomy extends Converter {
 			database.query("INSERT temp_fe_accounts SELECT * FROM iconomy;");
 			database.query("ALTER TABLE temp_fe_accounts DROP COLUMN id;");
 			database.query("ALTER TABLE temp_fe_accounts DROP COLUMN status;");
-			database.query("ALTER TABLE temp_fe_accounts CHANGE username name varchar(64);");
-			database.query("ALTER TABLE temp_fe_accounts CHANGE balance money double;");
+			database.query("ALTER TABLE temp_fe_accounts CHANGE username name varchar(64) NOT NULL;");
+			database.query("ALTER TABLE temp_fe_accounts CHANGE balance money double NOT NULL;");
+			
+			database.query("DROP TABLE IF EXISTS fe_accounts");
 
 			database.query("RENAME TABLE temp_fe_accounts TO fe_accounts;");
 		}catch (Exception e){
