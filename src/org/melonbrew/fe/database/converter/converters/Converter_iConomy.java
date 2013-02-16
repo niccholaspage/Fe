@@ -73,12 +73,14 @@ public class Converter_iConomy extends Converter {
 		SQLDB database = ((SQLDB) plugin.getFeDatabase());
 		
 		try {
-			database.query("ALTER TABLE iconomy DROP COLUMN id;");
-			database.query("ALTER TABLE iconomy DROP COLUMN status;");
-			database.query("ALTER TABLE iconomy CHANGE username name varchar(64);");
-			database.query("ALTER TABLE iconomy CHANGE balance money double;");
+			database.query("CREATE TABLE temp_fe_accounts LIKE iconomy;");
+			database.query("INSERT temp_fe_accounts SELECT * FROM iconomy;");
+			database.query("ALTER TABLE temp_fe_accounts DROP COLUMN id;");
+			database.query("ALTER TABLE temp_fe_accounts DROP COLUMN status;");
+			database.query("ALTER TABLE temp_fe_accounts CHANGE username name varchar(64);");
+			database.query("ALTER TABLE temp_fe_accounts CHANGE balance money double;");
 
-			database.query("RENAME TABLE iconomy TO fe_accounts;");
+			database.query("RENAME TABLE temp_fe_accounts TO fe_accounts;");
 		}catch (Exception e){
 			return false;
 		}
