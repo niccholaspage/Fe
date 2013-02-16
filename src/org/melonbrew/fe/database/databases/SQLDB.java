@@ -39,6 +39,10 @@ public abstract class SQLDB extends Database {
 		this.accountsName = accountsName;
 	}
 	
+	public String getAccountsName(){
+		return accountsName;
+	}
+	
 	public boolean init(){
 		if (!checkConnection()){
 			return false;
