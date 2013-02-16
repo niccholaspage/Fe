@@ -80,9 +80,9 @@ public class Converter_iConomy extends Converter {
 			database.query("ALTER TABLE temp_fe_accounts CHANGE username name varchar(64) NOT NULL;");
 			database.query("ALTER TABLE temp_fe_accounts CHANGE balance money double NOT NULL;");
 			
-			database.query("DROP TABLE IF EXISTS fe_accounts");
+			database.query("DROP TABLE IF EXISTS " + database.getAccountsName());
 
-			database.query("RENAME TABLE temp_fe_accounts TO fe_accounts;");
+			database.query("RENAME TABLE temp_fe_accounts TO " + database.getAccountsName());
 		}catch (Exception e){
 			return false;
 		}
