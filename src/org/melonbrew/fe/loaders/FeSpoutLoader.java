@@ -14,6 +14,8 @@ import org.melonbrew.fe.listeners.FeSpoutPlayerListener;
 import org.melonbrew.fe.loaders.SpoutMetrics.Graph;
 import org.melonbrew.fe.loaders.SpoutMetrics.Plotter;
 import org.spout.api.Spout;
+import org.spout.api.plugin.ServiceManager.ServicePriority;
+import org.spout.api.plugin.services.EconomyService;
 
 import com.niccholaspage.Metro.base.loader.loaders.SpoutLoader;
 
@@ -39,6 +41,8 @@ public class FeSpoutLoader extends SpoutLoader {
 		}
 
 		new FeSpoutPlayerListener(this, fe);
+		
+		getEngine().getServiceManager().register(EconomyService.class, new FeEconomyService(fe.getAPI()), this, ServicePriority.Highest);
 		
 		loadMetrics();
 	}

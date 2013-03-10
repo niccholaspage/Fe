@@ -52,7 +52,7 @@ public class SendCommand extends SubCommand {
 			return true;
 		}
 		
-		String recieverName = plugin.getReadName(reciever);
+		String recieverName = plugin.getAPI().getReadName(reciever);
 		
 		if (!reciever.canRecieve(money)){
 			Phrase.MAX_BALANCE_REACHED.sendWithPrefix(sender, recieverName);

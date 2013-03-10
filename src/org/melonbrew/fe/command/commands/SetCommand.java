@@ -38,7 +38,7 @@ public class SetCommand extends SubCommand {
 			return true;
 		}
 
-		String victimName = plugin.getReadName(victim);
+		String victimName = plugin.getAPI().getReadName(victim);
 
 		if (!victim.canRecieve(money)){
 			Phrase.MAX_BALANCE_REACHED.sendWithPrefix(sender, victimName);
@@ -49,7 +49,7 @@ public class SetCommand extends SubCommand {
 
 		victim.setMoney(money);
 
-		Phrase.PLAYER_SET_MONEY.sendWithPrefix(sender, plugin.getReadName(victim), formattedMoney);
+		Phrase.PLAYER_SET_MONEY.sendWithPrefix(sender, plugin.getAPI().getReadName(victim), formattedMoney);
 
 		return true;
 	}
