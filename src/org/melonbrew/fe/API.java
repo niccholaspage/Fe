@@ -8,6 +8,7 @@ import java.util.Locale;
 import org.melonbrew.fe.database.Account;
 
 import com.niccholaspage.Metro.base.chat.ChatFormat;
+import com.niccholaspage.Metro.base.player.OfflinePlayer;
 
 public class API {
 	private final Fe plugin;
@@ -144,5 +145,21 @@ public class API {
 
 	public void clean(){
 		plugin.getFeDatabase().clean();
+	}
+	
+	public String getReadName(Account account){
+		return getReadName(account.getName());
+	}
+	
+	public String getReadName(String name){
+		name = name.toLowerCase();
+		
+		OfflinePlayer player = plugin.getServer().getOfflinePlayer(name);
+		
+		if (player != null){
+			name = player.getName();
+		}
+		
+		return name;
 	}
 }

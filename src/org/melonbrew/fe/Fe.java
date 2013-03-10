@@ -12,7 +12,6 @@ import org.melonbrew.fe.database.databases.SQLiteDB;
 import com.niccholaspage.Metro.base.MetroPlugin;
 import com.niccholaspage.Metro.base.config.Config;
 import com.niccholaspage.Metro.base.config.ConfigSection;
-import com.niccholaspage.Metro.base.player.OfflinePlayer;
 import com.niccholaspage.Metro.base.player.Player;
 
 public class Fe extends MetroPlugin {
@@ -242,22 +241,6 @@ public class Fe extends MetroPlugin {
 		setupPhrases();
 		
 		getConfig().save();
-	}
-	
-	public String getReadName(Account account){
-		return getReadName(account.getName());
-	}
-	
-	public String getReadName(String name){
-		name = name.toLowerCase();
-		
-		OfflinePlayer player = getServer().getOfflinePlayer(name);
-		
-		if (player != null){
-			name = player.getName();
-		}
-		
-		return name;
 	}
 	
 	public Account getShortenedAccount(String name){
