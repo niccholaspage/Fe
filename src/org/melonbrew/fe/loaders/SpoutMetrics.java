@@ -45,10 +45,10 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import org.spout.api.Platform;
 import org.spout.api.Spout;
 import org.spout.api.Server;
 import org.spout.api.exception.ConfigurationException;
-import org.spout.api.plugin.Platform;
 import org.spout.api.plugin.Plugin;
 import org.spout.api.plugin.PluginDescriptionFile;
 import org.spout.api.scheduler.Task;
@@ -346,10 +346,10 @@ public class SpoutMetrics {
         PluginDescriptionFile description = plugin.getDescription();
         String pluginName = description.getName();
         String pluginVersion = description.getVersion();
-        String serverVersion = "Spout " + Spout.getEngine().getVersion();
+        String serverVersion = "Spout " + plugin.getEngine().getVersion();
         int playersOnline;
-        if (Spout.getPlatform() == Platform.SERVER) {
-            playersOnline = ((Server) Spout.getEngine()).getOnlinePlayers().length;
+        if (plugin.getEngine().getPlatform() == Platform.SERVER) {
+            playersOnline = ((Server) plugin.getEngine()).getOnlinePlayers().length;
         } else {
             playersOnline = 1;
         }
