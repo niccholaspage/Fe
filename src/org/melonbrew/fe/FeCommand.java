@@ -71,9 +71,7 @@ public class FeCommand implements CommandExecutor {
 	}
 	
 	private void sendDefaultCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		String command;
-		
-		command = "balance";
+		String command = "balance";
 		
 		if (!(sender instanceof Player) && args.length < 1){
 			command = "help";
