@@ -26,9 +26,9 @@ public class Economy_Fe implements Economy {
 
 	public Economy_Fe(Fe fe, Plugin bukkitPlugin) {
 		this.bukkitPlugin = bukkitPlugin;
-		
+
 		Bukkit.getServer().getPluginManager().registerEvents(new EconomyServerListener(this), bukkitPlugin);
-		
+
 		if (this.fe == null) {
 			Plugin efe = bukkitPlugin.getServer().getPluginManager().getPlugin("Fe");
 			if (efe != null && efe.isEnabled()) {
@@ -213,5 +213,35 @@ public class Economy_Fe implements Economy {
 	@Override
 	public int fractionalDigits(){
 		return -1;
+	}
+
+	@Override
+	public boolean hasAccount(String playerName, String worldName) {
+		return hasAccount(playerName);
+	}
+
+	@Override
+	public double getBalance(String playerName, String world) {
+		return getBalance(playerName);
+	}
+
+	@Override
+	public boolean has(String playerName, String worldName, double amount) {
+		return has(playerName, amount);
+	}
+
+	@Override
+	public EconomyResponse withdrawPlayer(String playerName, String worldName, double amount) {
+		return withdrawPlayer(playerName, amount);
+	}
+
+	@Override
+	public EconomyResponse depositPlayer(String playerName, String worldName, double amount) {
+		return depositPlayer(playerName, amount);
+	}
+
+	@Override
+	public boolean createPlayerAccount(String playerName, String worldName) {
+		return createPlayerAccount(playerName);
 	}
 }
