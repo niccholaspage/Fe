@@ -25,11 +25,12 @@ public class TopCommand extends SubCommand {
 		
 		switch(args.length){
 		case 0:
+		case 1:
 			topAccounts = plugin.getAPI().getTopAccounts();
 			break;
-		case 1:
+		case 2:
 			try {
-				Integer currenttopsize = Integer.parseIntereg(args[1]);
+				Integer currenttopsize = Integer.parseInteger(args[1]);
 				topAccounts = plugin.getAPI().getTopAccounts(currenttopsize);
 			} catch (NumberFormatException e){
 				return false;
