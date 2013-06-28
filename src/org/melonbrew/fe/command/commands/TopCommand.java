@@ -29,7 +29,7 @@ public class TopCommand extends SubCommand {
 			break;
 		case 1:
 			try {
-				Integer currenttopsize = Integer.parseDouble(args[1]);
+				Integer currenttopsize = Integer.parseIntereg(args[1]);
 				topAccounts = plugin.getAPI().getTopAccounts(currenttopsize);
 			} catch (NumberFormatException e){
 				return false;
