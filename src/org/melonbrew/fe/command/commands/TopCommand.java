@@ -30,7 +30,7 @@ public class TopCommand extends SubCommand {
 			break;
 		case 2:
 			try {
-				Integer currenttopsize = Integer.parseInteger(args[1]);
+				Integer currenttopsize = Integer.parseInt(args[1]);
 				topAccounts = plugin.getAPI().getTopAccounts(currenttopsize);
 			} catch (NumberFormatException e){
 				return false;
