@@ -18,6 +18,7 @@ public enum Phrase {
 	CONVERTER_DOES_NOT_EXIST("That converter doesn't exist!"),
 	FLAT_FILE("Flat File"),
 	MYSQL("MySQL"),
+	MONGO("Mongo"),
 	CONVERTER_DOES_NOT_SUPPORT("That converter does not support $1."),
 	MYSQL_TO_FLAT_FILE("MySQL to Flat File"),
 	CONVERSION_SUCCEEDED("Conversion succeeded!"),
