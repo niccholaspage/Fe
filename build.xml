@@ -25,15 +25,12 @@
     	<echo>Compiling</echo>
         <javac srcdir="." destdir="build" debug="on" debuglevel="lines,vars,source" classpathref="classpath" includeantruntime="false" />
     	<copy file="plugin.yml" tofile="build/plugin.yml" />
-    	<copy file="properties.yml" tofile="build/properties.yml" />
     	<copy file="config.yml" tofile="build/config.yml" />
     </target>
   
   <target name="compress" description="Compression target">
 	<echo>Compressing</echo>
-        <jar jarfile="Fe.jar" basedir="build" includes="org/**/*, plugin.yml, properties.yml, config.yml">
-        	<zipgroupfileset dir="lib" includes="nSQL.jar" />
-        	<zipgroupfileset dir="lib" includes="Metro.jar" />
+        <jar jarfile="Fe.jar" basedir="build" includes="org/**/*, plugin.yml, config.yml">
         </jar>
     	<delete dir="build" />
   </target>
