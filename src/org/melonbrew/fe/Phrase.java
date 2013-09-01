@@ -1,7 +1,7 @@
 package org.melonbrew.fe;
 
-import com.niccholaspage.Metro.base.command.CommandSender;
-import com.niccholaspage.Metro.base.chat.ChatFormat;
+import org.bukkit.command.CommandSender;
+import org.bukkit.ChatColor;
 
 public enum Phrase {
 	DATABASE_TYPE_DOES_NOT_EXIST("That database type doesn't exist."),
@@ -43,10 +43,10 @@ public enum Phrase {
 	ACCOUNT_CLEANED("All accounts with the default balance have been removed."),
 	TRY_COMMAND("Try $1"),
 	FE_OUTDATED("Fe is outdated! The latest version is $1."),
-	PRIMARY_COLOR(ChatFormat.GOLD.toString()),
-	SECONDARY_COLOR(ChatFormat.GRAY.toString()),
-	TERTIARY_COLOR(ChatFormat.DARK_GRAY.toString()),
-	ARGUMENT_COLOR(ChatFormat.YELLOW.toString()),
+	PRIMARY_COLOR(ChatColor.GOLD.toString()),
+	SECONDARY_COLOR(ChatColor.GRAY.toString()),
+	TERTIARY_COLOR(ChatColor.DARK_GRAY.toString()),
+	ARGUMENT_COLOR(ChatColor.YELLOW.toString()),
 	COMMAND_BALANCE("Checks your balance", true),
 	COMMAND_SEND("Sends another player money", true),
 	COMMAND_TOP("Checks the top 5 richest players", true),

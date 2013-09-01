@@ -25,7 +25,14 @@
  * authors and contributors and should not be interpreted as representing official policies,
  * either expressed or implied, of anybody else.
  */
-package org.melonbrew.fe.loaders;
+package org.melonbrew.fe;
+
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -45,26 +52,16 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 
-import org.spout.api.Platform;
-import org.spout.api.Spout;
-import org.spout.api.Server;
-import org.spout.api.exception.ConfigurationException;
-import org.spout.api.plugin.Plugin;
-import org.spout.api.plugin.PluginDescriptionFile;
-import org.spout.api.scheduler.Task;
-import org.spout.api.scheduler.TaskPriority;
-import org.spout.api.util.config.yaml.YamlConfiguration;
-
 /**
  * <p> The metrics class obtains data about a plugin and submits statistics about it to the metrics backend. </p> <p>
  * Public methods provided by this class: </p>
  * <code>
  * Graph createGraph(String name); <br/>
- * void addCustomData(Plotter plotter); <br/>
+ * void addCustomData(BukkitMetrics.Plotter plotter); <br/>
  * void start(); <br/>
  * </code>
  */
-public class SpoutMetrics {
+public class Metrics {
 
     /**
      * The current revision number
@@ -87,10 +84,6 @@ public class SpoutMetrics {
      * Interval of time to ping (in minutes)
      */
     private static final int PING_INTERVAL = 10;
-    /**
-     * Debug mode
-     */
-    private final boolean debug;
     /**
      * The plugin this metrics submits for
      */
@@ -116,35 +109,43 @@ public class SpoutMetrics {
      */
     private final String guid;
     /**
+     * Debug mode
+     */
+    private final boolean debug;
+    /**
      * Lock for synchronization
      */
     private final Object optOutLock = new Object();
     /**
-     * Id of the scheduled task
+     * The scheduled task
      */
-    private volatile Task taskId = null;
+    private volatile BukkitTask task = null;
 
-    public SpoutMetrics(final Plugin plugin) throws ConfigurationException {
+    public Metrics(final Plugin plugin) throws IOException {
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null");
         }
 
         this.plugin = plugin;
 
+        // load the config
         configurationFile = getConfigFile();
-        configuration = new YamlConfiguration(configurationFile);
-        configuration.load();
+        configuration = YamlConfiguration.loadConfiguration(configurationFile);
 
         // add some defaults
-        configuration.getChild("opt-out").getBoolean(false);
-        configuration.getChild("guid").getString(UUID.randomUUID().toString());
-        configuration.getChild("debug").getBoolean(false);
-        configuration.setHeader("http://metrics.griefcraft.com");
-        configuration.save();
+        configuration.addDefault("opt-out", false);
+        configuration.addDefault("guid", UUID.randomUUID().toString());
+        configuration.addDefault("debug", false);
+
+        // Do we need to create the file?
+        if (configuration.get("guid", null) == null) {
+            configuration.options().header("http://mcstats.org").copyDefaults(true);
+            configuration.save(configurationFile);
+        }
 
         // Load the guid then
-        guid = configuration.getNode("guid").getString();
-        debug = configuration.getChild("debug").getBoolean(false);
+        guid = configuration.getString("guid");
+        debug = configuration.getBoolean("debug", false);
     }
 
     /**
@@ -170,7 +171,7 @@ public class SpoutMetrics {
     }
 
     /**
-     * Add a Graph object to SpoutMetrics that represents data for the plugin that should be sent to the backend
+     * Add a Graph object to BukkitMetrics that represents data for the plugin that should be sent to the backend
      *
      * @param graph The name of the graph
      */
@@ -214,12 +215,12 @@ public class SpoutMetrics {
             }
 
             // Is metrics already running?
-            if (taskId != null) {
+            if (task != null) {
                 return true;
             }
 
             // Begin hitting the server with glorious data
-            taskId = plugin.getEngine().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+            task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
 
                 private boolean firstPost = true;
 
@@ -228,9 +229,9 @@ public class SpoutMetrics {
                         // This has to be synchronized or it can collide with the disable method.
                         synchronized (optOutLock) {
                             // Disable Task, if it is running and the server owner decided to opt-out
-                            if (isOptOut() && taskId != null) {
-                                plugin.getEngine().getScheduler().cancelTask(taskId);
-                                taskId = null;
+                            if (isOptOut() && task != null) {
+                                task.cancel();
+                                task = null;
                                 // Tell all plotters to stop gathering information.
                                 for (Graph graph : graphs) {
                                     graph.onOptOut();
@@ -248,11 +249,11 @@ public class SpoutMetrics {
                         firstPost = false;
                     } catch (IOException e) {
                         if (debug) {
-                            Spout.getLogger().log(Level.INFO, "[Metrics] " + e.getMessage());
+                            Bukkit.getLogger().log(Level.INFO, "[Metrics] " + e.getMessage());
                         }
                     }
                 }
-            }, 0, PING_INTERVAL * 1200, TaskPriority.LOW);
+            }, 0, PING_INTERVAL * 1200);
 
             return true;
         }
@@ -267,33 +268,38 @@ public class SpoutMetrics {
         synchronized (optOutLock) {
             try {
                 // Reload the metrics file
-                configuration.load();
-            } catch (ConfigurationException ex) {
+                configuration.load(getConfigFile());
+            } catch (IOException ex) {
                 if (debug) {
-                    Spout.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
+                    Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
+                }
+                return true;
+            } catch (InvalidConfigurationException ex) {
+                if (debug) {
+                    Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
                 }
                 return true;
             }
-            return configuration.getNode("opt-out").getBoolean(false);
+            return configuration.getBoolean("opt-out", false);
         }
     }
 
     /**
      * Enables metrics for the server by setting "opt-out" to false in the config file and starting the metrics task.
      *
-     * @throws org.spout.api.exception.ConfigurationException
+     * @throws java.io.IOException
      */
-    public void enable() throws ConfigurationException {
+    public void enable() throws IOException {
         // This has to be synchronized or it can collide with the check in the task.
         synchronized (optOutLock) {
             // Check if the server owner has already set opt-out, if not, set it.
             if (isOptOut()) {
-                configuration.getNode("opt-out").setValue(false);
-                configuration.save();
+                configuration.set("opt-out", false);
+                configuration.save(configurationFile);
             }
 
             // Enable Task, if it is not running
-            if (taskId == null) {
+            if (task == null) {
                 start();
             }
         }
@@ -302,21 +308,21 @@ public class SpoutMetrics {
     /**
      * Disables metrics for the server by setting "opt-out" to true in the config file and canceling the metrics task.
      *
-     * @throws org.spout.api.exception.ConfigurationException
+     * @throws java.io.IOException
      */
-    public void disable() throws ConfigurationException {
+    public void disable() throws IOException {
         // This has to be synchronized or it can collide with the check in the task.
         synchronized (optOutLock) {
             // Check if the server owner has already set opt-out, if not, set it.
             if (!isOptOut()) {
-                configuration.getNode("opt-out").setValue(true);
-                configuration.save();
+                configuration.set("opt-out", true);
+                configuration.save(configurationFile);
             }
 
             // Disable Task, if it is running
-            if (taskId != null) {
-                this.plugin.getEngine().getScheduler().cancelTask(taskId);
-                taskId = null;
+            if (task != null) {
+                task.cancel();
+                task = null;
             }
         }
     }
@@ -345,19 +351,16 @@ public class SpoutMetrics {
         // Server software specific section
         PluginDescriptionFile description = plugin.getDescription();
         String pluginName = description.getName();
+        boolean onlineMode = Bukkit.getServer().getOnlineMode(); // TRUE if online mode is enabled
         String pluginVersion = description.getVersion();
-        String serverVersion = "Spout " + plugin.getEngine().getVersion();
-        int playersOnline;
-        if (plugin.getEngine().getPlatform() == Platform.SERVER) {
-            playersOnline = ((Server) plugin.getEngine()).getOnlinePlayers().length;
-        } else {
-            playersOnline = 1;
-        }
+        String serverVersion = Bukkit.getVersion();
+        int playersOnline = Bukkit.getServer().getOnlinePlayers().length;
 
         // END server software specific section -- all code below does not use any code outside of this class / Java
 
-        // Construct the post data	
+        // Construct the post data
         final StringBuilder data = new StringBuilder();
+
         // The plugin's description file containg all of the plugin data such as name, version, author, etc
         data.append(encode("guid")).append('=').append(encode(guid));
         encodeDataPair(data, "version", pluginVersion);
@@ -381,6 +384,7 @@ public class SpoutMetrics {
         encodeDataPair(data, "osarch", osarch);
         encodeDataPair(data, "osversion", osversion);
         encodeDataPair(data, "cores", Integer.toString(coreCount));
+        encodeDataPair(data, "online-mode", Boolean.toString(onlineMode));
         encodeDataPair(data, "java_version", java_version);
 
         // If we're pinging, append it

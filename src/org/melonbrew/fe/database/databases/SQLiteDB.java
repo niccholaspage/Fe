@@ -3,9 +3,9 @@ package org.melonbrew.fe.database.databases;
 import java.io.File;
 import java.sql.Connection;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.melonbrew.fe.Fe;
 
-import com.niccholaspage.Metro.base.config.ConfigSection;
 import com.niccholaspage.nSQL.connection.SQLiteConnection;
 
 public class SQLiteDB extends SQLDB {
@@ -21,7 +21,7 @@ public class SQLiteDB extends SQLDB {
 		return new SQLiteConnection(new File(plugin.getDataFolder().getPath(), "database.db")).getConnection();
 	}
 	
-	public void getConfigDefaults(ConfigSection section){
+	public void getConfigDefaults(ConfigurationSection section){
 		
 	}
 	
