@@ -20,11 +20,27 @@ public class TopCommand extends SubCommand {
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		List<Account> topAccounts = plugin.getAPI().getTopAccounts();
+		List<Account> topAccounts;
+		
+		switch(args.length){
+		case 0:
+		case 1:
+			topAccounts = plugin.getAPI().getTopAccounts();
+			break;
+		case 2:
+			try {
+				Integer currenttopsize = Integer.parseInt(args[1]);
+				topAccounts = plugin.getAPI().getTopAccounts(currenttopsize);
+			} catch (NumberFormatException e){
+				return false;
+			}
+			break;
+		default:
+			return false;
+		}
 		
 		if (topAccounts.size() < 1){
 			Phrase.NO_ACCOUNTS_EXIST.sendWithPrefix(sender);
-			
 			return true;
 		}
 		
