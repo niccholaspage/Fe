@@ -2,9 +2,9 @@ package org.melonbrew.fe.database.databases;
 
 import java.sql.Connection;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.melonbrew.fe.Fe;
 
-import com.niccholaspage.Metro.base.config.ConfigSection;
 import com.niccholaspage.nSQL.connection.MySQLConnection;
 
 public class MySQLDB extends SQLDB {
@@ -13,7 +13,7 @@ public class MySQLDB extends SQLDB {
 	}
 	
 	protected Connection getNewConnection(){
-		ConfigSection config = getConfigSection();
+		ConfigurationSection config = getConfigSection();
 		
 		MySQLConnection mySQL = new MySQLConnection(config.getString("host"), config.getString("port"), config.getString("database"), config.getString("user"), config.getString("password"));
 		
@@ -22,7 +22,7 @@ public class MySQLDB extends SQLDB {
 		return mySQL.getConnection();
 	}
 	
-	public void getConfigDefaults(ConfigSection section){
+	public void getConfigDefaults(ConfigurationSection section){
 		section.addDefault("host", "localhost");
 		
 		section.addDefault("port", 3306);
@@ -33,10 +33,10 @@ public class MySQLDB extends SQLDB {
 		
 		section.addDefault("database", "Fe");
 		
-		ConfigSection tables = section.getConfigSection("tables");
+		ConfigurationSection tables = section.getConfigurationSection("tables");
 		
 		if (tables == null){
-			tables = section.createConfigSection("tables");
+			tables = section.createSection("tables");
 		}
 		
 		tables.addDefault("accounts", "fe_accounts");

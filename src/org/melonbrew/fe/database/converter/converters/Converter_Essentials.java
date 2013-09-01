@@ -3,10 +3,10 @@ package org.melonbrew.fe.database.converter.converters;
 import java.io.File;
 import java.io.FilenameFilter;
 
+import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.database.converter.Converter;
-
-import com.niccholaspage.Metro.base.config.Config;
 
 public class Converter_Essentials extends Converter {
 	private final Fe plugin;
@@ -37,7 +37,7 @@ public class Converter_Essentials extends Converter {
 		});
 		
 		for (File account : accounts){
-			Config config = plugin.getResources().newConfig(account);
+			Configuration config = YamlConfiguration.loadConfiguration(account);
 			
 			String name = account.getName().replace(".yml", "");
 			

@@ -1,9 +1,0 @@
-name: Fe
-
-description: An economy plugin
-
-main: org.melonbrew.fe.loaders.FeSpoutLoader
-
-version: 0.7-SNAPSHOT
-
-platform: SERVER

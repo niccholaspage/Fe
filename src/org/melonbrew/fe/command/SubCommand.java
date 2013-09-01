@@ -1,9 +1,8 @@
 package org.melonbrew.fe.command;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.melonbrew.fe.Phrase;
-
-import com.niccholaspage.Metro.base.command.Command;
-import com.niccholaspage.Metro.base.command.CommandSender;
 
 public abstract class SubCommand {
 	private final String name;

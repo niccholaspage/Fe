@@ -14,29 +14,22 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.plugin.Plugin;
-import org.melonbrew.fe.API;
+
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.database.Account;
 
 public class Economy_Fe implements Economy {
 	private final String name = "Fe";
-	private Plugin bukkitPlugin = null;
-	private Fe fe = null;
-	private API api = null;
 
-	public Economy_Fe(Fe fe, Plugin bukkitPlugin) {
-		this.bukkitPlugin = bukkitPlugin;
+	private Fe plugin;
 
-		Bukkit.getServer().getPluginManager().registerEvents(new EconomyServerListener(this), bukkitPlugin);
+	public Economy_Fe(Fe plugin) {
+		this.plugin = plugin;
 
-		if (this.fe == null) {
-			Plugin efe = bukkitPlugin.getServer().getPluginManager().getPlugin("Fe");
-			if (efe != null && efe.isEnabled()) {
-				this.fe = fe;
-				api = fe.getAPI();
-				fe.log("Vault support enabled.");
-			}
-		}
+		Bukkit.getServer().getPluginManager().registerEvents(new EconomyServerListener(this), plugin);
+
+		plugin.log("Vault support enabled.");
+
 	}
 
 	public class EconomyServerListener implements Listener {
@@ -48,21 +41,21 @@ public class Economy_Fe implements Economy {
 
 		@EventHandler(priority = EventPriority.MONITOR)
 		public void onPluginEnable(PluginEnableEvent event) {
-			if (fe == null) {
-				Plugin efe = bukkitPlugin.getServer().getPluginManager().getPlugin("Fe");
+			if (plugin == null) {
+				Plugin efe = Bukkit.getServer().getPluginManager().getPlugin("Fe");
+
 				if (efe != null && efe.isEnabled()) {
-					api = fe.getAPI();
-					fe.log("Vault support enabled.");
+					plugin.log("Vault support enabled.");
 				}
 			}
 		}
 
 		@EventHandler(priority = EventPriority.MONITOR)
 		public void onPluginDisable(PluginDisableEvent event) {
-			if (fe != null) {
-				if (event.getPlugin().getDescription().getName().equals("Fe")) {
-					fe = null;
-					api = null;
+			if (plugin != null) {
+				if (event.getPlugin().getDescription().getName().equals(name)) {
+					plugin = null;
+
 					Bukkit.getLogger().info("[Fe] Vault support disabled.");
 				}
 			}
@@ -71,11 +64,7 @@ public class Economy_Fe implements Economy {
 
 	@Override
 	public boolean isEnabled() {
-		if (api == null) {
-			return false;
-		} else {
-			return bukkitPlugin.isEnabled();
-		}
+		return plugin != null;
 	}
 
 	@Override
@@ -85,23 +74,23 @@ public class Economy_Fe implements Economy {
 
 	@Override
 	public String format(double amount) {
-		return api.formatNoColor(amount);
+		return plugin.getAPI().formatNoColor(amount);
 	}
 
 	@Override
 	public String currencyNameSingular() {
-		return api.getCurrencyMajorSingle();
+		return plugin.getAPI().getCurrencyMajorSingle();
 	}
 
 	@Override
 	public String currencyNamePlural() {
-		return api.getCurrencyMajorMultiple();
+		return plugin.getAPI().getCurrencyMajorMultiple();
 	}
 
 	@Override
 	public double getBalance(String playerName) {
-		if (api.accountExists(playerName)) {
-			return api.getAccount(playerName).getMoney();
+		if (plugin.getAPI().accountExists(playerName)) {
+			return plugin.getAPI().getAccount(playerName).getMoney();
 		} else {
 			return 0;
 		}
@@ -113,13 +102,15 @@ public class Economy_Fe implements Economy {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot withdraw negative funds");
 		}
 
-		if (!api.accountExists(playerName)){
+		if (!plugin.getAPI().accountExists(playerName)){
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Account doesn't exist");
 		}
 
-		Account account = api.getAccount(playerName);
+		Account account = plugin.getAPI().getAccount(playerName);
+
 		if (account.has(amount)) {
 			account.withdraw(amount);
+
 			return new EconomyResponse(amount, account.getMoney(), ResponseType.SUCCESS, "");
 		} else {
 			return new EconomyResponse(0, account.getMoney(), ResponseType.FAILURE, "Insufficient funds");
@@ -132,12 +123,14 @@ public class Economy_Fe implements Economy {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot desposit negative funds");
 		}
 
-		if (!api.accountExists(playerName)){
+		if (!plugin.getAPI().accountExists(playerName)){
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Account doesn't exist");
 		}
 
-		Account account = api.getAccount(playerName);
+		Account account = plugin.getAPI().getAccount(playerName);
+
 		account.deposit(amount);
+
 		return new EconomyResponse(amount, account.getMoney(), ResponseType.SUCCESS, "");
 	}
 
@@ -198,7 +191,7 @@ public class Economy_Fe implements Economy {
 
 	@Override
 	public boolean hasAccount(String playerName) {
-		return api.accountExists(playerName);
+		return plugin.getAPI().accountExists(playerName);
 	}
 
 	@Override
@@ -206,7 +199,9 @@ public class Economy_Fe implements Economy {
 		if (hasAccount(playerName)) {
 			return false;
 		}
-		api.createAccount(playerName);
+
+		plugin.getAPI().createAccount(playerName);
+
 		return true;
 	}
 
