@@ -43,7 +43,7 @@ public class ConvertCommand extends SubCommand {
 			message += " " + Phrase.TERTIARY_COLOR.parse() + "(" + Phrase.ARGUMENT_COLOR.parse();
 
 			for (ConverterType type : converter.getConverterTypes()){
-				message += type.getPhrase() + ", ";
+				message += type.getPhrase().parse() + ", ";
 			}
 
 			message = message.substring(0, message.length() - 2);

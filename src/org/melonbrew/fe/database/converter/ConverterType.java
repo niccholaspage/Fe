@@ -19,7 +19,7 @@ public enum ConverterType {
 	
 	public static ConverterType getType(String name){
 		for (ConverterType type : values()){
-			if (type.phrase.parse().equalsIgnoreCase(name)){
+			if (type.phrase.parse().replace(" ", "").equalsIgnoreCase(name)){
 				return type;
 			}
 		}
