@@ -34,8 +34,10 @@ public class ItemDB extends Database {
 			public int compare(Account account1, Account account2){
 				return ((Double) account1.getMoney()).compareTo(account2.getMoney());
 			}});
-		
-		topAccounts.subList(0, size - 1);
+
+		if (topAccounts.size() > size){
+			topAccounts.subList(0, size - 1);
+		}
 
 		return topAccounts;
 	}
