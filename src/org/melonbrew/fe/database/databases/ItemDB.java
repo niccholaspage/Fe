@@ -32,7 +32,7 @@ public class ItemDB extends Database {
 
 		Collections.sort(topAccounts, new Comparator<Account>(){
 			public int compare(Account account1, Account account2){
-				return ((Double) account1.getMoney()).compareTo(account2.getMoney());
+				return ((Double) account2.getMoney()).compareTo(account1.getMoney());
 			}});
 
 		if (topAccounts.size() > size){
