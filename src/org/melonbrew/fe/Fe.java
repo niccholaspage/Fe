@@ -69,7 +69,7 @@ public class Fe extends JavaPlugin {
 				"holdings - The amount of money that players will start out with\n" +
 				"prefix - The message prefix\n" +
 				"currency - The single and multiple names for the currency\n" +
-				"type - The type of database used (sqlite or mysql)\n");
+				"type - The type of database used (sqlite, mysql, or mongo)\n");
 
 		saveConfig();
 
