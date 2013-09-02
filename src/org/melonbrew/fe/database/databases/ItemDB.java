@@ -20,7 +20,7 @@ public class ItemDB extends Database {
 	}
 
 	public boolean init() {
-		return false;
+		return true;
 	}
 
 	@Override
