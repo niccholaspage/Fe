@@ -25,12 +25,18 @@ public class Converter_Fe implements Converter {
 			}
 
 			return convert(new SQLiteDB(plugin));
-		}else {
+		}else if (type == ConverterType.MYSQL) {
 			if (plugin.getFeDatabase() instanceof MySQLDB){
 				return false;
 			}
 
 			return convert(new MySQLDB(plugin));
+		}else {
+			if (plugin.getFeDatabase() instanceof MongoDB){
+				return false;
+			}
+
+			return convert(new MongoDB(plugin));
 		}
 	}
 
