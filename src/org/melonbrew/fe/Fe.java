@@ -18,6 +18,7 @@ import org.melonbrew.fe.Metrics.Graph;
 import org.melonbrew.fe.Metrics.Plotter;
 import org.melonbrew.fe.database.Account;
 import org.melonbrew.fe.database.Database;
+import org.melonbrew.fe.database.databases.MongoDB;
 import org.melonbrew.fe.database.databases.MySQLDB;
 import org.melonbrew.fe.database.databases.SQLiteDB;
 import org.melonbrew.fe.listeners.FePlayerListener;
@@ -44,6 +45,7 @@ public class Fe extends JavaPlugin {
 
 		databases.add(new MySQLDB(this));
 		databases.add(new SQLiteDB(this));
+		databases.add(new MongoDB(this));
 
 		for (Database database : databases){
 			String name = database.getConfigName();
