@@ -148,7 +148,7 @@ public class MongoDB extends Database {
 	}
 
 	public void clean() {
-		DBCursor cursor = getDatabase().getCollection(ACCOUNTS_COLLECTION).find().sort(new BasicDBObject("money", plugin.getAPI().getDefaultHoldings()));
+		DBCursor cursor = getDatabase().getCollection(ACCOUNTS_COLLECTION).find((new BasicDBObject("money", plugin.getAPI().getDefaultHoldings())));
 
 		Iterator<DBObject> iterator = cursor.iterator();
 		
