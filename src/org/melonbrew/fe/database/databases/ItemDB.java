@@ -1,5 +1,8 @@
 package org.melonbrew.fe.database.databases;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.bukkit.Material;
@@ -25,12 +28,27 @@ public class ItemDB extends Database {
 
 	@Override
 	public List<Account> getTopAccounts(int size){
-		return null;
+		List<Account> topAccounts = getAccounts();
+
+		Collections.sort(topAccounts, new Comparator<Account>(){
+			public int compare(Account account1, Account account2){
+				return ((Double) account1.getMoney()).compareTo(account2.getMoney());
+			}});
+		
+		topAccounts.subList(0, size - 1);
+
+		return topAccounts;
 	}
 
 	@Override
 	public List<Account> getAccounts(){
-		return null;
+		List<Account> accounts = new ArrayList<Account>();
+
+		for (Player player : plugin.getServer().getOnlinePlayers()){
+			accounts.add(plugin.getAPI().getAccount(player.getName()));
+		}
+
+		return accounts;
 	}
 
 	@Override
