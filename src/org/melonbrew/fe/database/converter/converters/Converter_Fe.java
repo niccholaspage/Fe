@@ -47,6 +47,6 @@ public class Converter_Fe implements Converter {
 	}
 
 	public ConverterType[] getConverterTypes(){
-		return new ConverterType[]{ConverterType.FLAT_FILE, ConverterType.MYSQL};
+		return new ConverterType[]{ConverterType.FLAT_FILE, ConverterType.MYSQL, ConverterType.MONGO};
 	}
 }
