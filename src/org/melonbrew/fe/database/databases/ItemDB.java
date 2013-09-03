@@ -81,7 +81,7 @@ public class ItemDB extends Database {
 		if (player != null){
 			player.getInventory().remove(Material.matchMaterial(getConfigSection().getString("item")));
 			
-			player.getInventory().addItem(new ItemStack(Material.matchMaterial(getConfigSection().getString("item")), (int) money));
+			player.getInventory().addItem(new ItemStack(Material.matchMaterial(getConfigSection().getString("item")), (int) money / getConfigSection().getInt("value")));
 		}
 	}
 
