@@ -66,27 +66,39 @@ public class ItemDB extends Database {
 		double money = 0;
 
 		for (ItemStack stack : items){
-			if (stack != null && stack.getType() == Material.GOLD_INGOT){
+			if (stack != null && stack.getType() == Material.matchMaterial(getConfigSection().getString("item"))){
 				money += stack.getAmount();
 			}
 		}
 
-		return money * 10;
+		return money * getConfigSection().getInt("value");
 	}
 
 	@Override
 	protected void saveAccount(String name, double money){
+		Player player = plugin.getServer().getPlayerExact(name);
 
+		if (player != null){
+			player.getInventory().remove(Material.matchMaterial(getConfigSection().getString("item")));
+			
+			player.getInventory().addItem(new ItemStack(Material.matchMaterial(getConfigSection().getString("item")), (int) money));
+		}
 	}
 
 	@Override
 	public void removeAccount(String name){
+		Player player = plugin.getServer().getPlayerExact(name);
 
+		if (player != null){
+			player.getInventory().remove(Material.matchMaterial(getConfigSection().getString("item")));
+		}
 	}
 
 	@Override
 	public void getConfigDefaults(ConfigurationSection section){
+		section.set("item", "gold_ingot");
 
+		section.set("value", 10);
 	}
 
 	@Override
