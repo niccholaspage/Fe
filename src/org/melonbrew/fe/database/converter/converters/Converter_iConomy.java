@@ -7,6 +7,7 @@ import java.io.FileReader;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.database.converter.Converter;
 import org.melonbrew.fe.database.converter.ConverterType;
+import org.melonbrew.fe.database.databases.MySQLDB;
 import org.melonbrew.fe.database.databases.SQLDB;
 
 public class Converter_iConomy implements Converter {
@@ -61,7 +62,7 @@ public class Converter_iConomy implements Converter {
 			}
 
 			return true;
-		}else {
+		}else if (plugin.getFeDatabase() instanceof MySQLDB) {
 			SQLDB database = ((SQLDB) plugin.getFeDatabase());
 
 			try {
@@ -81,6 +82,8 @@ public class Converter_iConomy implements Converter {
 
 			return true;
 		}
+		
+		return false;
 	}
 
 	@Override

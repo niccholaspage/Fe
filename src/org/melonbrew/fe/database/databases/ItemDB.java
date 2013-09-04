@@ -98,7 +98,7 @@ public class ItemDB extends Database {
 	public void getConfigDefaults(ConfigurationSection section){
 		section.set("item", "gold_ingot");
 
-		section.set("value", 10);
+		section.set("value", 1);
 	}
 
 	@Override
