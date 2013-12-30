@@ -65,7 +65,7 @@ public class Fe extends JavaPlugin {
 				getConfig().set(name, null);
 			}
 		}
-		
+
 		getConfig().options().copyDefaults(true);
 
 		getConfig().options().header("Fe Config - meloncraft.com\n" +
@@ -91,7 +91,7 @@ public class Fe extends JavaPlugin {
 		setLatestVersionString(currentVersionString);
 
 		getCommand("fe").setExecutor(new FeCommand(this));
-		
+
 		new FePlayerListener(this);
 
 		setupVault();
@@ -101,7 +101,7 @@ public class Fe extends JavaPlugin {
 		if (getConfig().getBoolean("updatecheck")){
 			getServer().getScheduler().runTaskAsynchronously(this, new UpdateCheck(this));
 		}
-		
+
 		if (database instanceof SQLDB){
 			getServer().getScheduler().runTaskTimer(this, new Runnable(){
 				public void run(){
@@ -172,6 +172,8 @@ public class Fe extends JavaPlugin {
 	}
 
 	public void onDisable(){
+		getServer().getScheduler().cancelTasks(this);
+
 		getFeDatabase().close();
 	}
 
