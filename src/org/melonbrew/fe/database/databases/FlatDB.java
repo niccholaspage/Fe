@@ -142,8 +142,7 @@ public class FlatDB extends Database {
 	@Override
 	public List<Account> getAccounts() {
 		List<Account> accountsList = new ArrayList<Account>();
-		HashMap<String, Double> sortedAccounts = sortHashMap(accounts);
-		Iterator<Entry<String, Double>> iterator = sortedAccounts.entrySet().iterator();
+		Iterator<Entry<String, Double>> iterator = accounts.entrySet().iterator();
 		while (iterator.hasNext()){
 			Entry<String, Double> topAccount = iterator.next();
 			Account account = new Account(topAccount.getKey(), plugin, this);
@@ -161,36 +160,5 @@ public class FlatDB extends Database {
 	@Override
 	public void close() {
 
-	}
-
-	public HashMap<String, Double> sortHashMap(HashMap<String, Double> passedMap) {
-		List<String> mapKeys = new ArrayList<String>(passedMap.keySet());
-		List<Double> mapValues = new ArrayList<Double>(passedMap.values());
-		Collections.sort(mapValues);
-		Collections.sort(mapKeys);
-		Collections.reverse(mapValues);
-		Collections.reverse(mapKeys);
-
-		LinkedHashMap<String, Double> sortedMap = new LinkedHashMap<String, Double>();
-
-		Iterator<Double> valueIt = mapValues.iterator();
-		while (valueIt.hasNext()) {
-			Object val = valueIt.next();
-			Iterator<String> keyIt = mapKeys.iterator();
-
-			while (keyIt.hasNext()) {
-				Object key = keyIt.next();
-				String comp1 = passedMap.get(key).toString();
-				String comp2 = val.toString();
-
-				if (comp1.equals(comp2)){
-					passedMap.remove(key);
-					mapKeys.remove(key);
-					sortedMap.put((String)key, (Double)val);
-					break;
-				}
-			}
-		}
-		return sortedMap;
 	}
 }
