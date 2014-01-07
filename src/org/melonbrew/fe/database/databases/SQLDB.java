@@ -205,7 +205,7 @@ public abstract class SQLDB extends Database {
 				statement.execute();
 			}
 		} catch (SQLException e){
-
+			e.printStackTrace();
 		}
 	}
 
@@ -239,7 +239,7 @@ public abstract class SQLDB extends Database {
 				query(builder.toString());
 			}
 		} catch (SQLException e){
-
+			e.printStackTrace();
 		}
 	}
 }
