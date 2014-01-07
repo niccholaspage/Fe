@@ -177,6 +177,8 @@ public abstract class SQLDB extends Database {
 		try {
 			statement = connection.prepareStatement("DELETE FROM " + accountsName + " WHERE name=?");
 
+			statement.setString(1, name);
+
 			statement.executeQuery();
 		} catch (SQLException e) {
 			e.printStackTrace();
