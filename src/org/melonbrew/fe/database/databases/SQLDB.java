@@ -147,8 +147,6 @@ public abstract class SQLDB extends Database {
 	public Double loadAccountMoney(String name){
 		checkConnection();
 
-		double money = -1;
-
 		try {
 			PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + accountsName + " WHERE name=?");
 
@@ -156,18 +154,20 @@ public abstract class SQLDB extends Database {
 
 			ResultSet set = statement.executeQuery();
 
+			Double money = null;
+
 			while (set.next()){
 				money = set.getDouble("money");
 			}
 
 			set.close();
+
+			return money;
 		} catch (SQLException e){
 			e.printStackTrace();
 
 			return null;
 		}
-
-		return money;
 	}
 
 	public void removeAccount(String name){
