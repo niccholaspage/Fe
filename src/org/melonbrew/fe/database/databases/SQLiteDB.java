@@ -2,29 +2,36 @@ package org.melonbrew.fe.database.databases;
 
 import java.io.File;
 import java.sql.Connection;
+import java.sql.DriverManager;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.melonbrew.fe.Fe;
 
-import com.niccholaspage.nSQL.connection.SQLiteConnection;
-
 public class SQLiteDB extends SQLDB {
 	private final Fe plugin;
-	
+
 	public SQLiteDB(Fe plugin){
 		super(plugin, false);
-		
+
 		this.plugin = plugin;
 	}
-	
+
 	public Connection getNewConnection(){
-		return new SQLiteConnection(new File(plugin.getDataFolder().getPath(), "database.db")).getConnection();
+		try {
+			Class.forName("org.sqlite.JDBC");
+
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:" + new File(plugin.getDataFolder(), "database.db").getAbsolutePath());
+
+			return connection;
+		} catch (Exception e){
+			return null;
+		}
 	}
-	
+
 	public void getConfigDefaults(ConfigurationSection section){
-		
+
 	}
-	
+
 	public String getName(){
 		return "SQLite";
 	}

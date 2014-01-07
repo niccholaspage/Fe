@@ -1,6 +1,7 @@
 package org.melonbrew.fe.database.databases;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,9 +12,6 @@ import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.database.Account;
 import org.melonbrew.fe.database.Database;
 
-import com.niccholaspage.nSQL.Table;
-import com.niccholaspage.nSQL.query.SelectQuery;
-
 public abstract class SQLDB extends Database {
 	private final Fe plugin;
 
@@ -22,8 +20,6 @@ public abstract class SQLDB extends Database {
 	private Connection connection;
 
 	private String accountsName;
-
-	private Table accounts;
 
 	public SQLDB(Fe plugin, boolean supportsModification){
 		super(plugin);
@@ -60,9 +56,7 @@ public abstract class SQLDB extends Database {
 					return false;
 				}
 
-				accounts = new Table(connection, accountsName);
-
-				accounts.create().create("name varchar(64) NOT NULL").create("money double NOT NULL").execute();
+				query("CREATE TABLE IF NOT EXISTS " + accountsName + " (name varchar(64) NOT NULL, money double NOT NULL)");
 
 				if (supportsModification){
 					query("ALTER TABLE " + accountsName + " MODIFY name varchar(64) NOT NULL");
@@ -133,9 +127,9 @@ public abstract class SQLDB extends Database {
 
 		List<Account> accounts = new ArrayList<Account>();
 
-		ResultSet set = this.accounts.select().execute();
-
 		try {
+			ResultSet set = connection.createStatement().executeQuery("SELECT * from " + accountsName);
+
 			while (set.next()){
 				Account account = new Account(set.getString("name").toLowerCase(), plugin, this);
 
@@ -156,15 +150,17 @@ public abstract class SQLDB extends Database {
 		double money = -1;
 
 		try {
-			SelectQuery query = accounts.select().where("name", name);
+			PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + accountsName + " WHERE name=?");
 
-			ResultSet set = query.execute();
+			statement.setString(1, name);
+
+			ResultSet set = statement.executeQuery();
 
 			while (set.next()){
 				money = set.getDouble("money");
 			}
 
-			query.close();
+			set.close();
 		} catch (SQLException e){
 			e.printStackTrace();
 
@@ -177,16 +173,39 @@ public abstract class SQLDB extends Database {
 	public void removeAccount(String name){
 		checkConnection();
 
-		accounts.delete().where("name", name).execute();
+		PreparedStatement statement;
+		try {
+			statement = connection.prepareStatement("DELETE FROM " + accountsName + " WHERE name=?");
+
+			statement.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	protected void saveAccount(String name, double money){
 		checkConnection();
 
-		if (accountExists(name)){
-			accounts.update().set("money", money).where("name", name).execute();
-		}else {
-			accounts.insert().insert("name").insert("money").value(name).value(money).execute();
+		try {
+			if (accountExists(name)){
+				PreparedStatement statement = connection.prepareStatement("UPDATE " + accountsName + " SET name=?, money=?");
+
+				statement.setString(1, name);
+
+				statement.setDouble(2, money);
+
+				statement.execute();
+			}else {
+				PreparedStatement statement = connection.prepareStatement("INSERT INTO " + accountsName + " (name, money) VALUES (?, ?)");
+
+				statement.setString(1, name);
+
+				statement.setDouble(2, money);
+
+				statement.execute();
+			}
+		} catch (SQLException e){
+
 		}
 	}
 
@@ -194,9 +213,7 @@ public abstract class SQLDB extends Database {
 		checkConnection();
 
 		try {
-			SelectQuery query = accounts.select().where("money", plugin.getAPI().getDefaultHoldings());
-
-			ResultSet set = query.execute();
+			ResultSet set = connection.prepareStatement("SELECT * from " + accountsName + " WHERE money=" + plugin.getAPI().getDefaultHoldings()).executeQuery();
 
 			boolean executeQuery = false;
 
