@@ -18,7 +18,7 @@ public abstract class Database {
 	
 	public abstract List<Account> getAccounts();
 	
-	public abstract double loadAccountMoney(String name);
+	public abstract Double loadAccountMoney(String name);
 	
 	protected abstract void saveAccount(String name, double money);
 	
@@ -41,9 +41,9 @@ public abstract class Database {
 	}
 	
 	public Account getAccount(String name){
-		double money = loadAccountMoney(name);
+		Double money = loadAccountMoney(name);
 		
-		if (money == -1){
+		if (money == null){
 			return null;
 		}else {
 			Account account = new Account(name, plugin, this);
