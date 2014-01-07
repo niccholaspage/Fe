@@ -179,7 +179,7 @@ public abstract class SQLDB extends Database {
 
 			statement.setString(1, name);
 
-			statement.executeQuery();
+			statement.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
