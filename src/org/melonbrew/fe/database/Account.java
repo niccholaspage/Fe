@@ -22,7 +22,7 @@ public class Account {
 		return name;
 	}
 
-	public double getMoney(){
+	public Double getMoney(){
 		return database.loadAccountMoney(name);
 	}
 
