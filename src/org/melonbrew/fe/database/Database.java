@@ -18,7 +18,7 @@ public abstract class Database {
 	
 	public abstract List<Account> getAccounts();
 	
-	public abstract Double loadAccountMoney(String name);
+	public abstract double loadAccountMoney(String name);
 	
 	protected abstract void saveAccount(String name, double money);
 	

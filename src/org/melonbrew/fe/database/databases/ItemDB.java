@@ -54,11 +54,11 @@ public class ItemDB extends Database {
 	}
 
 	@Override
-	public Double loadAccountMoney(String name){
+	public double loadAccountMoney(String name){
 		Player player = plugin.getServer().getPlayerExact(name);
 
 		if (player == null){
-			return 0D;
+			return 0;
 		}
 
 		ItemStack[] items = player.getInventory().getContents();

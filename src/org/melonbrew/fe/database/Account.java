@@ -22,7 +22,7 @@ public class Account {
 		return name;
 	}
 
-	public Double getMoney(){
+	public double getMoney(){
 		return database.loadAccountMoney(name);
 	}
 
@@ -43,12 +43,10 @@ public class Account {
 	}
 
 	public void setMoney(double money){
-		Double currentMoney = getMoney();
+		double currentMoney = getMoney();
 
-		if (currentMoney != null){
-			if ((double) currentMoney == money){
-				return;
-			}
+		if (currentMoney == money){
+			return;
 		}
 
 		if (money < 0 && !api.isCurrencyNegative()){

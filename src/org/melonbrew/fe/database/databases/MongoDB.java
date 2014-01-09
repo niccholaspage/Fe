@@ -53,13 +53,13 @@ public class MongoDB extends Database {
 		return database;
 	}
 
-	public Double loadAccountMoney(String name){
+	public double loadAccountMoney(String name){
 		DBCollection collection = getDatabase().getCollection(ACCOUNTS_COLLECTION);
 
 		DBObject userObject = collection.findOne(new BasicDBObject("name", name));
 
 		if (userObject == null){
-			return null;
+			return -1;
 		}
 
 		return ((BasicDBObject) userObject).getDouble("money");

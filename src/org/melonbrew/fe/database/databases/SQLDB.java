@@ -144,7 +144,7 @@ public abstract class SQLDB extends Database {
 		return accounts;
 	}
 
-	public Double loadAccountMoney(String name){
+	public double loadAccountMoney(String name){
 		checkConnection();
 
 		try {
@@ -166,7 +166,7 @@ public abstract class SQLDB extends Database {
 		} catch (SQLException e){
 			e.printStackTrace();
 
-			return null;
+			return -1;
 		}
 	}
 
