@@ -38,10 +38,10 @@ public class Converter_Essentials implements Converter {
 
 			String name = account.getName().replace(".yml", "");
 
-			double money = config.getDouble("money");
+			try {
+				plugin.getAPI().createAccount(name).setMoney(Double.parseDouble(config.getString("money")));
+			}catch (Exception e){
 
-			if (money != -1){
-				plugin.getAPI().createAccount(name).setMoney(money);
 			}
 		}
 
