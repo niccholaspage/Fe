@@ -190,11 +190,11 @@ public abstract class SQLDB extends Database {
 
 		try {
 			if (accountExists(name)){
-				PreparedStatement statement = connection.prepareStatement("UPDATE " + accountsName + " SET name=?, money=?");
+				PreparedStatement statement = connection.prepareStatement("UPDATE " + accountsName + " SET money=? WHERE name=?");
 
-				statement.setString(1, name);
+				statement.setDouble(1, money);
 
-				statement.setDouble(2, money);
+				statement.setString(2, name);
 
 				statement.execute();
 			}else {
