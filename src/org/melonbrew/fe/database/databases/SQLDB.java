@@ -213,15 +213,13 @@ public abstract class SQLDB extends Database {
 		checkConnection();
 
 		try {
-			if (accountExists(name)){
-				PreparedStatement statement = connection.prepareStatement("UPDATE " + accountsName + " SET " + accountsColumnMoney + "=? WHERE " + accountsColumnUser + "=?");
+			PreparedStatement statement = connection.prepareStatement("UPDATE " + accountsName + " SET " + accountsColumnMoney + "=? WHERE " + accountsColumnUser + "=?");
 
-				statement.setDouble(1, money);
+			statement.setDouble(1, money);
 
-				statement.setString(2, name);
+			statement.setString(2, name);
 
-				statement.execute();
-			}else {
+			if (statement.executeUpdate() == 0) {
 				PreparedStatement statement = connection.prepareStatement("INSERT INTO " + accountsName + " (" + accountsColumnUser + ", " + accountsColumnMoney + ") VALUES (?, ?)");
 
 				statement.setString(1, name);
