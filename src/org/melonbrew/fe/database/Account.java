@@ -47,7 +47,7 @@ public class Account {
 			money = 0;
 		}
 
-		currentMoney = api.getMoneyRounded(money);
+		double currentMoney = api.getMoneyRounded(money);
 
 		if (api.getMaxHoldings() > 0 && currentMoney > api.getMaxHoldings()){
 			currentMoney = api.getMoneyRounded(api.getMaxHoldings());

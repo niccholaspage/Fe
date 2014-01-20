@@ -220,7 +220,7 @@ public abstract class SQLDB extends Database {
 			statement.setString(2, name);
 
 			if (statement.executeUpdate() == 0) {
-				PreparedStatement statement = connection.prepareStatement("INSERT INTO " + accountsName + " (" + accountsColumnUser + ", " + accountsColumnMoney + ") VALUES (?, ?)");
+				statement = connection.prepareStatement("INSERT INTO " + accountsName + " (" + accountsColumnUser + ", " + accountsColumnMoney + ") VALUES (?, ?)");
 
 				statement.setString(1, name);
 
