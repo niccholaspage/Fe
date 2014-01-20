@@ -16,6 +16,10 @@ public class MySQLDB extends SQLDB {
 
 		setAccountTable(config.getString("tables.accounts"));
 
+		setAccountsColumnUser(config.getString("columns.accounts.username"));
+
+		setAccountsColumnMoney(config.getString("columns.accounts.money"));
+
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 
@@ -25,6 +29,16 @@ public class MySQLDB extends SQLDB {
 		} catch (Exception e){
 			return null;
 		}
+	}
+
+	private ConfigurationSection getSection(ConfigurationSection parent, String childName){
+		ConfigurationSection child = parent.getConfigurationSection(childName);
+
+		if (child == null) {
+			child = parent.createSection(childName);
+		}
+
+		return child;
 	}
 
 	public void getConfigDefaults(ConfigurationSection section){
@@ -38,13 +52,17 @@ public class MySQLDB extends SQLDB {
 
 		section.addDefault("database", "Fe");
 
-		ConfigurationSection tables = section.getConfigurationSection("tables");
-
-		if (tables == null){
-			tables = section.createSection("tables");
-		}
+		ConfigurationSection tables = getSection(section, "tables");
 
 		tables.addDefault("accounts", "fe_accounts");
+
+		ConfigurationSection columns = getSection(section, "columns");
+
+		ConfigurationSection columnsAccounts = getSection(columns, "accounts");
+
+		columnsAccounts.addDefault("username", "name");
+
+		columnsAccounts.addDefault("money", "money");
 	}
 
 	public String getName(){

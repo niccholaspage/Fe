@@ -21,6 +21,10 @@ public abstract class SQLDB extends Database {
 
 	private String accountsName;
 
+	private String accountsColumnUser;
+
+	private String accountsColumnMoney;
+
 	public SQLDB(Fe plugin, boolean supportsModification){
 		super(plugin);
 
@@ -29,6 +33,10 @@ public abstract class SQLDB extends Database {
 		this.supportsModification = supportsModification;
 
 		accountsName = "fe_accounts";
+
+		accountsColumnUser = "name";
+
+		accountsColumnMoney = "money";
 	}
 
 	public void setAccountTable(String accountsName){
@@ -37,6 +45,22 @@ public abstract class SQLDB extends Database {
 
 	public String getAccountsName(){
 		return accountsName;
+	}
+
+	public void setAccountsColumnUser(String accountsColumnUser){
+		this.accountsColumnUser = accountsColumnUser;
+	}
+
+	public String getAccountsColumnUser(){
+		return accountsColumnUser;
+	}
+
+	public void setAccountsColumnMoney(String accountsColumnMoney){
+		this.accountsColumnMoney = accountsColumnMoney;
+	}
+
+	public String getAccountsColumnMoney(){
+		return accountsColumnMoney;
 	}
 
 	public boolean init(){
@@ -56,12 +80,12 @@ public abstract class SQLDB extends Database {
 					return false;
 				}
 
-				query("CREATE TABLE IF NOT EXISTS " + accountsName + " (name varchar(64) NOT NULL, money double NOT NULL)");
+				query("CREATE TABLE IF NOT EXISTS " + accountsName + " (" + accountsColumnUser + " varchar(64) NOT NULL, " + accountsColumnMoney + " double NOT NULL)");
 
 				if (supportsModification){
-					query("ALTER TABLE " + accountsName + " MODIFY name varchar(64) NOT NULL");
+					query("ALTER TABLE " + accountsName + " MODIFY " + accountsColumnUser + " varchar(64) NOT NULL");
 
-					query("ALTER TABLE " + accountsName + " MODIFY money double NOT NULL");
+					query("ALTER TABLE " + accountsName + " MODIFY " + accountsColumnMoney + " double NOT NULL");
 				}
 			}
 		} catch (SQLException e){
@@ -109,9 +133,9 @@ public abstract class SQLDB extends Database {
 			ResultSet set = connection.createStatement().executeQuery(sql);
 
 			while (set.next()){
-				Account account = new Account(set.getString("name").toLowerCase(), plugin, this);
+				Account account = new Account(set.getString(accountsColumnUser).toLowerCase(), plugin, this);
 
-				account.setMoney(set.getDouble("money"));
+				account.setMoney(set.getDouble(accountsColumnMoney));
 
 				topAccounts.add(account);
 			}
@@ -131,9 +155,9 @@ public abstract class SQLDB extends Database {
 			ResultSet set = connection.createStatement().executeQuery("SELECT * from " + accountsName);
 
 			while (set.next()){
-				Account account = new Account(set.getString("name").toLowerCase(), plugin, this);
+				Account account = new Account(set.getString(accountsColumnUser).toLowerCase(), plugin, this);
 
-				account.setMoney(set.getDouble("money"));
+				account.setMoney(set.getDouble(accountsColumnMoney));
 
 				accounts.add(account);
 			}
@@ -148,7 +172,7 @@ public abstract class SQLDB extends Database {
 		checkConnection();
 
 		try {
-			PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + accountsName + " WHERE name=?");
+			PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + accountsName + " WHERE " + accountsColumnUser + "=?");
 
 			statement.setString(1, name);
 
@@ -157,7 +181,7 @@ public abstract class SQLDB extends Database {
 			Double money = null;
 
 			while (set.next()){
-				money = set.getDouble("money");
+				money = set.getDouble(accountsColumnUser);
 			}
 
 			set.close();
@@ -175,7 +199,7 @@ public abstract class SQLDB extends Database {
 
 		PreparedStatement statement;
 		try {
-			statement = connection.prepareStatement("DELETE FROM " + accountsName + " WHERE name=?");
+			statement = connection.prepareStatement("DELETE FROM " + accountsName + " WHERE " + accountsColumnUser + "=?");
 
 			statement.setString(1, name);
 
@@ -190,7 +214,7 @@ public abstract class SQLDB extends Database {
 
 		try {
 			if (accountExists(name)){
-				PreparedStatement statement = connection.prepareStatement("UPDATE " + accountsName + " SET money=? WHERE name=?");
+				PreparedStatement statement = connection.prepareStatement("UPDATE " + accountsName + " SET " + accountsColumnMoney + "=? WHERE " + accountsColumnUser + "=?");
 
 				statement.setDouble(1, money);
 
@@ -198,7 +222,7 @@ public abstract class SQLDB extends Database {
 
 				statement.execute();
 			}else {
-				PreparedStatement statement = connection.prepareStatement("INSERT INTO " + accountsName + " (name, money) VALUES (?, ?)");
+				PreparedStatement statement = connection.prepareStatement("INSERT INTO " + accountsName + " (" + accountsColumnUser + ", " + accountsColumnMoney + ") VALUES (?, ?)");
 
 				statement.setString(1, name);
 
@@ -215,14 +239,14 @@ public abstract class SQLDB extends Database {
 		checkConnection();
 
 		try {
-			ResultSet set = connection.prepareStatement("SELECT * from " + accountsName + " WHERE money=" + plugin.getAPI().getDefaultHoldings()).executeQuery();
+			ResultSet set = connection.prepareStatement("SELECT * from " + accountsName + " WHERE " + accountsColumnMoney + "=" + plugin.getAPI().getDefaultHoldings()).executeQuery();
 
 			boolean executeQuery = false;
 
-			StringBuilder builder = new StringBuilder("DELETE FROM " + accountsName + " WHERE name IN (");
+			StringBuilder builder = new StringBuilder("DELETE FROM " + accountsName + " WHERE " + accountsColumnUser + " IN (");
 
 			while (set.next()){
-				String name = set.getString("name");
+				String name = set.getString(accountsColumnUser);
 
 				if (plugin.getServer().getPlayerExact(name) != null){
 					continue;
