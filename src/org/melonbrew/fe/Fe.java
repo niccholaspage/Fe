@@ -38,12 +38,14 @@ public class Fe extends JavaPlugin {
 
 	private String latestVersionString;
 
+	public Fe(){
+		databases = new HashSet<Database>();
+	}
+
 	public void onEnable(){
 		getDataFolder().mkdirs();
 
 		Phrase.init(this);
-
-		databases = new HashSet<Database>();
 
 		databases.add(new MySQLDB(this));
 		databases.add(new SQLiteDB(this));
@@ -183,6 +185,10 @@ public class Fe extends JavaPlugin {
 
 	public Database getFeDatabase(){
 		return database;
+	}
+
+	public Set<Database> getDatabases(){
+		return databases;
 	}
 
 	public API getAPI(){
