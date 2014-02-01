@@ -380,6 +380,6 @@ public class Fe extends JavaPlugin {
 			getServer().getServicesManager().unregister(economyProvider.getProvider());
 		}
 
-		getServer().getServicesManager().register(Economy.class, new Economy_Fe(this), this, ServicePriority.Highest);
+		getServer().getServicesManager().register(Economy.class, new VaultHandler(this), this, ServicePriority.Highest);
 	}
 }

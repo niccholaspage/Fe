@@ -18,34 +18,35 @@ import org.bukkit.plugin.Plugin;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.database.Account;
 
-public class Economy_Fe implements Economy {
+public class VaultHandler implements Economy {
 	private final String name = "Fe";
 
 	private Fe plugin;
 
-	public Economy_Fe(Fe plugin) {
+	public VaultHandler(Fe plugin) {
 		this.plugin = plugin;
 
 		Bukkit.getServer().getPluginManager().registerEvents(new EconomyServerListener(this), plugin);
 
 		plugin.log("Vault support enabled.");
-
 	}
 
 	public class EconomyServerListener implements Listener {
-		Economy_Fe economy = null;
+		VaultHandler economy = null;
 
-		public EconomyServerListener(Economy_Fe economy) {
+		public EconomyServerListener(VaultHandler economy) {
 			this.economy = economy;
 		}
 
 		@EventHandler(priority = EventPriority.MONITOR)
 		public void onPluginEnable(PluginEnableEvent event) {
 			if (plugin == null) {
-				Plugin efe = Bukkit.getServer().getPluginManager().getPlugin("Fe");
+				Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("Fe");
 
-				if (efe != null && efe.isEnabled()) {
-					plugin.log("Vault support enabled.");
+				if (plugin != null && plugin.isEnabled()) {
+					VaultHandler.this.plugin = (Fe) plugin;
+
+					VaultHandler.this.plugin.log("Vault support enabled.");
 				}
 			}
 		}
