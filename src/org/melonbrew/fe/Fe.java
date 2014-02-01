@@ -187,8 +187,12 @@ public class Fe extends JavaPlugin {
 		return database;
 	}
 
+	public boolean addDatabase(Database database){
+		return databases.add(database);
+	}
+
 	public Set<Database> getDatabases(){
-		return databases;
+		return new HashSet<Database>(databases);
 	}
 
 	public API getAPI(){
