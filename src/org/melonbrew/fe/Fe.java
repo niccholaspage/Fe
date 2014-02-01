@@ -221,7 +221,7 @@ public class Fe extends JavaPlugin {
 		if (!database.init()){
 			log(Phrase.DATABASE_FAILURE_DISABLE);
 
-			getServer().getPluginManager().disablePlugin(this);
+			setEnabled(false);
 
 			return false;
 		}
