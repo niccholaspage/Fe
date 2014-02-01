@@ -43,11 +43,17 @@ public class Account {
 	}
 
 	public void setMoney(double money){
+		double currentMoney = getMoney();
+
+		if (currentMoney == money){
+			return;
+		}
+
 		if (money < 0 && !api.isCurrencyNegative()){
 			money = 0;
 		}
 
-		double currentMoney = api.getMoneyRounded(money);
+		currentMoney = api.getMoneyRounded(money);
 
 		if (api.getMaxHoldings() > 0 && currentMoney > api.getMaxHoldings()){
 			currentMoney = api.getMoneyRounded(api.getMaxHoldings());
