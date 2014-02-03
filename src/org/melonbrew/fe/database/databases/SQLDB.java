@@ -181,7 +181,7 @@ public abstract class SQLDB extends Database {
 			Double money = null;
 
 			while (set.next()){
-				money = set.getDouble(accountsColumnUser);
+				money = set.getDouble(accountsColumnMoney);
 			}
 
 			set.close();
