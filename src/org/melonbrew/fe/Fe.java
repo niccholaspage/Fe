@@ -22,7 +22,6 @@ import org.melonbrew.fe.database.databases.ItemDB;
 import org.melonbrew.fe.database.databases.MongoDB;
 import org.melonbrew.fe.database.databases.MySQLDB;
 import org.melonbrew.fe.database.databases.SQLiteDB;
-import org.melonbrew.fe.database.databases.SQLDB;
 import org.melonbrew.fe.listeners.FePlayerListener;
 
 public class Fe extends JavaPlugin {
@@ -102,14 +101,6 @@ public class Fe extends JavaPlugin {
 
 		if (getConfig().getBoolean("updatecheck")){
 			getServer().getScheduler().runTaskAsynchronously(this, new UpdateCheck(this));
-		}
-
-		if (database instanceof SQLDB){
-			getServer().getScheduler().runTaskTimer(this, new Runnable(){
-				public void run(){
-					((SQLDB) database).checkConnection();
-				}
-			}, 60 * 20, 60 * 20);
 		}
 	}
 
