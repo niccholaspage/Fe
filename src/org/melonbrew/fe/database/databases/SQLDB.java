@@ -1,5 +1,9 @@
 package org.melonbrew.fe.database.databases;
 
+import org.melonbrew.fe.Fe;
+import org.melonbrew.fe.database.Account;
+import org.melonbrew.fe.database.Database;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,263 +11,271 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import org.melonbrew.fe.Fe;
-import org.melonbrew.fe.database.Account;
-import org.melonbrew.fe.database.Database;
-
 public abstract class SQLDB extends Database {
-	private final Fe plugin;
+    private final Fe plugin;
 
-	private final boolean supportsModification;
+    private final boolean supportsModification;
 
-	private Connection connection;
+    private Connection connection;
 
-	private String accountsName;
+    private String accountsName;
 
-	private String accountsColumnUser;
+    private String accountsColumnUser;
 
-	private String accountsColumnMoney;
+    private String accountsColumnMoney;
 
-	public SQLDB(Fe plugin, boolean supportsModification){
-		super(plugin);
+    public SQLDB(Fe plugin, boolean supportsModification) {
+        super(plugin);
 
-		this.plugin = plugin;
+        this.plugin = plugin;
 
-		this.supportsModification = supportsModification;
+        this.supportsModification = supportsModification;
 
-		accountsName = "fe_accounts";
+        accountsName = "fe_accounts";
 
-		accountsColumnUser = "name";
+        accountsColumnUser = "name";
 
-		accountsColumnMoney = "money";
-	}
+        accountsColumnMoney = "money";
 
-	public void setAccountTable(String accountsName){
-		this.accountsName = accountsName;
-	}
+        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (connection != null && !connection.isClosed()) {
+                        connection.createStatement().execute("/* ping */ SELECT 1");
+                    }
+                } catch (SQLException e) {
+                    connection = getNewConnection();
+                }
+            }
+        }, 60 * 20, 60 * 20);
+    }
 
-	public String getAccountsName(){
-		return accountsName;
-	}
+    public void setAccountTable(String accountsName) {
+        this.accountsName = accountsName;
+    }
 
-	public void setAccountsColumnUser(String accountsColumnUser){
-		this.accountsColumnUser = accountsColumnUser;
-	}
+    public String getAccountsName() {
+        return accountsName;
+    }
 
-	public String getAccountsColumnUser(){
-		return accountsColumnUser;
-	}
+    public void setAccountsColumnUser(String accountsColumnUser) {
+        this.accountsColumnUser = accountsColumnUser;
+    }
 
-	public void setAccountsColumnMoney(String accountsColumnMoney){
-		this.accountsColumnMoney = accountsColumnMoney;
-	}
+    public String getAccountsColumnUser() {
+        return accountsColumnUser;
+    }
 
-	public String getAccountsColumnMoney(){
-		return accountsColumnMoney;
-	}
+    public void setAccountsColumnMoney(String accountsColumnMoney) {
+        this.accountsColumnMoney = accountsColumnMoney;
+    }
 
-	public boolean init(){
-		if (!checkConnection()){
-			return false;
-		}
+    public String getAccountsColumnMoney() {
+        return accountsColumnMoney;
+    }
 
-		return true;
-	}
+    public boolean init() {
+        if (!checkConnection()) {
+            return false;
+        }
 
-	public boolean checkConnection(){
-		try {
-			if (connection == null || connection.isClosed()){
-				connection = getNewConnection();
+        return true;
+    }
 
-				if (connection == null || connection.isClosed()){
-					return false;
-				}
+    public boolean checkConnection() {
+        try {
+            if (connection == null || connection.isClosed()) {
+                connection = getNewConnection();
 
-				query("CREATE TABLE IF NOT EXISTS " + accountsName + " (" + accountsColumnUser + " varchar(64) NOT NULL, " + accountsColumnMoney + " double NOT NULL)");
+                if (connection == null || connection.isClosed()) {
+                    return false;
+                }
 
-				if (supportsModification){
-					query("ALTER TABLE " + accountsName + " MODIFY " + accountsColumnUser + " varchar(64) NOT NULL");
+                query("CREATE TABLE IF NOT EXISTS " + accountsName + " (" + accountsColumnUser + " varchar(64) NOT NULL, " + accountsColumnMoney + " double NOT NULL)");
 
-					query("ALTER TABLE " + accountsName + " MODIFY " + accountsColumnMoney + " double NOT NULL");
-				}
-			}
-		} catch (SQLException e){
-			e.printStackTrace();
+                if (supportsModification) {
+                    query("ALTER TABLE " + accountsName + " MODIFY " + accountsColumnUser + " varchar(64) NOT NULL");
 
-			return false;
-		}
+                    query("ALTER TABLE " + accountsName + " MODIFY " + accountsColumnMoney + " double NOT NULL");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
 
-		return true;
-	}
+            return false;
+        }
 
-	protected abstract Connection getNewConnection();
+        return true;
+    }
 
-	public boolean query(String sql){
-		try {
-			return connection.createStatement().execute(sql);
-		} catch (SQLException e){
-			e.printStackTrace();
+    protected abstract Connection getNewConnection();
 
-			return false;
-		}
-	}
+    public boolean query(String sql) {
+        try {
+            return connection.createStatement().execute(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
 
-	public Connection getConnection(){
-		return connection;
-	}
+            return false;
+        }
+    }
 
-	public void close(){
-		try {
-			if (connection != null)
-				connection.close();
-		} catch (SQLException e){
-			e.printStackTrace();
-		}
-	}
+    public Connection getConnection() {
+        return connection;
+    }
 
-	public List<Account> getTopAccounts(int size){
-		checkConnection();
+    public void close() {
+        try {
+            if (connection != null)
+                connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-		String sql = "SELECT * FROM " + accountsName + " ORDER BY money DESC limit " + size;
+    public List<Account> getTopAccounts(int size) {
+        checkConnection();
 
-		List<Account> topAccounts = new ArrayList<Account>();
+        String sql = "SELECT * FROM " + accountsName + " ORDER BY money DESC limit " + size;
 
-		try {
-			ResultSet set = connection.createStatement().executeQuery(sql);
+        List<Account> topAccounts = new ArrayList<Account>();
 
-			while (set.next()){
-				Account account = new Account(set.getString(accountsColumnUser).toLowerCase(), plugin, this);
+        try {
+            ResultSet set = connection.createStatement().executeQuery(sql);
 
-				account.setMoney(set.getDouble(accountsColumnMoney));
+            while (set.next()) {
+                Account account = new Account(set.getString(accountsColumnUser).toLowerCase(), plugin, this);
 
-				topAccounts.add(account);
-			}
-		} catch (SQLException e){
-			e.printStackTrace();
-		}
+                account.setMoney(set.getDouble(accountsColumnMoney));
 
-		return topAccounts;
-	}
+                topAccounts.add(account);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-	public List<Account> getAccounts(){
-		checkConnection();
+        return topAccounts;
+    }
 
-		List<Account> accounts = new ArrayList<Account>();
+    public List<Account> getAccounts() {
+        checkConnection();
 
-		try {
-			ResultSet set = connection.createStatement().executeQuery("SELECT * from " + accountsName);
+        List<Account> accounts = new ArrayList<Account>();
 
-			while (set.next()){
-				Account account = new Account(set.getString(accountsColumnUser).toLowerCase(), plugin, this);
+        try {
+            ResultSet set = connection.createStatement().executeQuery("SELECT * from " + accountsName);
 
-				account.setMoney(set.getDouble(accountsColumnMoney));
+            while (set.next()) {
+                Account account = new Account(set.getString(accountsColumnUser).toLowerCase(), plugin, this);
 
-				accounts.add(account);
-			}
-		} catch (SQLException e){
-			e.printStackTrace();
-		}
+                account.setMoney(set.getDouble(accountsColumnMoney));
 
-		return accounts;
-	}
+                accounts.add(account);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-	public double loadAccountMoney(String name){
-		checkConnection();
+        return accounts;
+    }
 
-		try {
-			PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + accountsName + " WHERE " + accountsColumnUser + "=?");
+    public Double loadAccountMoney(String name) {
+        checkConnection();
 
-			statement.setString(1, name);
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + accountsName + " WHERE " + accountsColumnUser + "=?");
 
-			ResultSet set = statement.executeQuery();
+            statement.setString(1, name);
 
-			Double money = null;
+            ResultSet set = statement.executeQuery();
 
-			while (set.next()){
-				money = set.getDouble(accountsColumnMoney);
-			}
+            Double money = null;
 
-			set.close();
+            while (set.next()) {
+                money = set.getDouble(accountsColumnMoney);
+            }
 
-			return money;
-		} catch (SQLException e){
-			e.printStackTrace();
+            set.close();
 
-			return -1;
-		}
-	}
+            return money;
+        } catch (SQLException e) {
+            e.printStackTrace();
 
-	public void removeAccount(String name){
-		checkConnection();
+            return null;
+        }
+    }
 
-		PreparedStatement statement;
-		try {
-			statement = connection.prepareStatement("DELETE FROM " + accountsName + " WHERE " + accountsColumnUser + "=?");
+    public void removeAccount(String name) {
+        checkConnection();
 
-			statement.setString(1, name);
+        PreparedStatement statement;
+        try {
+            statement = connection.prepareStatement("DELETE FROM " + accountsName + " WHERE " + accountsColumnUser + "=?");
 
-			statement.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+            statement.setString(1, name);
 
-	protected void saveAccount(String name, double money){
-		checkConnection();
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-		try {
-			PreparedStatement statement = connection.prepareStatement("UPDATE " + accountsName + " SET " + accountsColumnMoney + "=? WHERE " + accountsColumnUser + "=?");
+    protected void saveAccount(String name, double money) {
+        checkConnection();
 
-			statement.setDouble(1, money);
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE " + accountsName + " SET " + accountsColumnMoney + "=? WHERE " + accountsColumnUser + "=?");
 
-			statement.setString(2, name);
+            statement.setDouble(1, money);
 
-			if (statement.executeUpdate() == 0) {
-				statement = connection.prepareStatement("INSERT INTO " + accountsName + " (" + accountsColumnUser + ", " + accountsColumnMoney + ") VALUES (?, ?)");
+            statement.setString(2, name);
 
-				statement.setString(1, name);
+            if (statement.executeUpdate() == 0) {
+                statement = connection.prepareStatement("INSERT INTO " + accountsName + " (" + accountsColumnUser + ", " + accountsColumnMoney + ") VALUES (?, ?)");
 
-				statement.setDouble(2, money);
+                statement.setString(1, name);
 
-				statement.execute();
-			}
-		} catch (SQLException e){
-			e.printStackTrace();
-		}
-	}
+                statement.setDouble(2, money);
 
-	public void clean(){
-		checkConnection();
+                statement.execute();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-		try {
-			ResultSet set = connection.prepareStatement("SELECT * from " + accountsName + " WHERE " + accountsColumnMoney + "=" + plugin.getAPI().getDefaultHoldings()).executeQuery();
+    public void clean() {
+        checkConnection();
 
-			boolean executeQuery = false;
+        try {
+            ResultSet set = connection.prepareStatement("SELECT * from " + accountsName + " WHERE " + accountsColumnMoney + "=" + plugin.getAPI().getDefaultHoldings()).executeQuery();
 
-			StringBuilder builder = new StringBuilder("DELETE FROM " + accountsName + " WHERE " + accountsColumnUser + " IN (");
+            boolean executeQuery = false;
 
-			while (set.next()){
-				String name = set.getString(accountsColumnUser);
+            StringBuilder builder = new StringBuilder("DELETE FROM " + accountsName + " WHERE " + accountsColumnUser + " IN (");
 
-				if (plugin.getServer().getPlayerExact(name) != null){
-					continue;
-				}
+            while (set.next()) {
+                String name = set.getString(accountsColumnUser);
 
-				executeQuery = true;
+                if (plugin.getServer().getPlayerExact(name) != null) {
+                    continue;
+                }
 
-				builder.append("'").append(name).append("', ");
-			}
+                executeQuery = true;
 
-			set.close();
+                builder.append("'").append(name).append("', ");
+            }
 
-			builder.delete(builder.length() - 2, builder.length()).append(")");
+            set.close();
 
-			if (executeQuery){
-				query(builder.toString());
-			}
-		} catch (SQLException e){
-			e.printStackTrace();
-		}
-	}
+            builder.delete(builder.length() - 2, builder.length()).append(")");
+
+            if (executeQuery) {
+                query(builder.toString());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

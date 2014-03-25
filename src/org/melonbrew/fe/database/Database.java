@@ -1,9 +1,9 @@
 package org.melonbrew.fe.database;
 
-import java.util.List;
-
 import org.bukkit.configuration.ConfigurationSection;
 import org.melonbrew.fe.Fe;
+
+import java.util.List;
 
 public abstract class Database {
 	private final Fe plugin;
@@ -18,7 +18,7 @@ public abstract class Database {
 	
 	public abstract List<Account> getAccounts();
 	
-	public abstract double loadAccountMoney(String name);
+	public abstract Double loadAccountMoney(String name);
 	
 	protected abstract void saveAccount(String name, double money);
 	
