@@ -1,21 +1,20 @@
 package org.melonbrew.fe.database.databases;
 
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.bukkit.configuration.ConfigurationSection;
-import org.melonbrew.fe.Fe;
-import org.melonbrew.fe.database.Account;
-import org.melonbrew.fe.database.Database;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import org.bukkit.configuration.ConfigurationSection;
+import org.melonbrew.fe.Fe;
+import org.melonbrew.fe.database.Account;
+import org.melonbrew.fe.database.Database;
+
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class MongoDB extends Database {
 	private final Fe plugin;
@@ -53,13 +52,13 @@ public class MongoDB extends Database {
 		return database;
 	}
 
-	public double loadAccountMoney(String name){
+	public Double loadAccountMoney(String name){
 		DBCollection collection = getDatabase().getCollection(ACCOUNTS_COLLECTION);
 
 		DBObject userObject = collection.findOne(new BasicDBObject("name", name));
 
 		if (userObject == null){
-			return -1;
+			return null;
 		}
 
 		return ((BasicDBObject) userObject).getDouble("money");

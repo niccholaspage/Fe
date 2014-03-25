@@ -1,10 +1,5 @@
 package org.melonbrew.fe.database.databases;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -12,6 +7,11 @@ import org.bukkit.inventory.ItemStack;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.database.Account;
 import org.melonbrew.fe.database.Database;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class ItemDB extends Database {
 	private final Fe plugin;
@@ -54,11 +54,11 @@ public class ItemDB extends Database {
 	}
 
 	@Override
-	public double loadAccountMoney(String name){
+	public Double loadAccountMoney(String name){
 		Player player = plugin.getServer().getPlayerExact(name);
 
 		if (player == null){
-			return 0;
+			return null;
 		}
 
 		ItemStack[] items = player.getInventory().getContents();
