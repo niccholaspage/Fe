@@ -21,7 +21,7 @@ public class FePlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerLogin(PlayerLoginEvent event){
-		plugin.getAPI().createAccount(event.getPlayer().getName());
+		plugin.getAPI().createAccount(event.getPlayer().getDisplayName());
 	}
 
 	@EventHandler
