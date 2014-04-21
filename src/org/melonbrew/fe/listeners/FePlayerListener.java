@@ -31,5 +31,8 @@ public class FePlayerListener implements Listener {
 		if (!plugin.isUpdated() && player.hasPermission("fe.notify")){
 			Phrase.FE_OUTDATED.sendWithPrefix(player, plugin.getLatestVersionString());
 		}
+        if (plugin.getConfig().getBoolean("default-account") && plugin.getAPI().getAccount(player.getDisplayName()) != null) {
+            plugin.getAPI().createAccount(player.getDisplayName());
+        }
 	}
 }

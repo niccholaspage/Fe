@@ -2,6 +2,8 @@ holdings: 10.00
 
 maxholdings: -1
 
+default-account: true
+
 prefix: Fe
 
 topsize: 5
