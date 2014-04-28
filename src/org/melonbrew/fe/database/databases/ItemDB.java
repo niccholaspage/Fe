@@ -53,6 +53,7 @@ public class ItemDB extends Database {
 		return accounts;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public Double loadAccountMoney(String name){
 		Player player = plugin.getServer().getPlayerExact(name);
@@ -74,17 +75,19 @@ public class ItemDB extends Database {
 		return money * getConfigSection().getInt("value");
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void saveAccount(String name, double money){
 		Player player = plugin.getServer().getPlayerExact(name);
 
 		if (player != null){
 			player.getInventory().remove(Material.matchMaterial(getConfigSection().getString("item")));
-			
+
 			player.getInventory().addItem(new ItemStack(Material.matchMaterial(getConfigSection().getString("item")), (int) money / getConfigSection().getInt("value")));
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void removeAccount(String name){
 		Player player = plugin.getServer().getPlayerExact(name);

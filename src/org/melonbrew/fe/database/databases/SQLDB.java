@@ -251,6 +251,7 @@ public abstract class SQLDB extends Database {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public void clean() {
 		checkConnection();
 

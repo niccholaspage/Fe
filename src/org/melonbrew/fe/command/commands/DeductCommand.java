@@ -18,6 +18,7 @@ public class DeductCommand extends SubCommand {
 		this.plugin = plugin;
 	}
 
+	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		if (args.length < 2){
 			return false;
@@ -45,9 +46,9 @@ public class DeductCommand extends SubCommand {
 		victim.withdraw(money);
 
 		Phrase.PLAYER_DEDUCT_MONEY.sendWithPrefix(sender, formattedMoney, plugin.getAPI().getReadName(victim));
-		
+
 		Player recieverPlayer = plugin.getServer().getPlayerExact(victimName);
-		
+
 		if (recieverPlayer != null){
 			Phrase.PLAYER_DEDUCTED_MONEY.sendWithPrefix(recieverPlayer, formattedMoney, sender.getName());
 		}

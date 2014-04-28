@@ -34,7 +34,11 @@ public abstract class Database {
 
 	public abstract void clean();
 
-	public abstract void close();
+	public void close(){
+		for (Account account : accounts){
+			account.save(account.getMoney());
+		}
+	}
 
 	public abstract String getName();
 

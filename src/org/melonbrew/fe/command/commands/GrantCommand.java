@@ -18,6 +18,7 @@ public class GrantCommand extends SubCommand {
 		this.plugin = plugin;
 	}
 
+	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		if (args.length < 2){
 			return false;

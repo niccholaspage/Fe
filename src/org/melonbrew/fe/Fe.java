@@ -274,6 +274,7 @@ public class Fe extends JavaPlugin {
 		saveConfig();
 	}
 
+	@SuppressWarnings("deprecation")
 	public Account getShortenedAccount(String name){
 		Account account = getAPI().getAccount(name);
 

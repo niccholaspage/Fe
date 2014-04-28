@@ -7,7 +7,6 @@ import java.util.Locale;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.ChatColor;
-
 import org.melonbrew.fe.database.Account;
 
 public class API {
@@ -16,7 +15,7 @@ public class API {
 	public API(Fe plugin){
 		this.plugin = plugin;
 	}
-	
+
 	public List<Account> getTopAccounts(){
 		return plugin.getFeDatabase().getTopAccounts(plugin.getConfig().getInt("topsize"));
 	}
@@ -24,7 +23,7 @@ public class API {
 	public List<Account> getTopAccounts(int size){
 		return plugin.getFeDatabase().getTopAccounts(size);
 	}
-	
+
 	public List<Account> getAccounts(){
 		return plugin.getFeDatabase().getAccounts();
 	}
@@ -40,7 +39,7 @@ public class API {
 	public String getCurrencyPrefix(){
 		return plugin.getConfig().getString("currency.prefix");
 	}
-	
+
 	public boolean isCurrencyNegative(){
 		return plugin.getConfig().getBoolean("currency.negative");
 	}
@@ -110,7 +109,7 @@ public class API {
 			}else if (amount < 1.0){
 				suffix += getCurrencyMinorMultiple();
 			}
-			
+
 			amount *= 100;
 		}else if (amount == 1.0){
 			suffix += getCurrencyMajorSingle();
@@ -146,20 +145,21 @@ public class API {
 	public void clean(){
 		plugin.getFeDatabase().clean();
 	}
-	
+
 	public String getReadName(Account account){
 		return getReadName(account.getName());
 	}
-	
+
+	@SuppressWarnings("deprecation")
 	public String getReadName(String name){
 		name = name.toLowerCase();
-		
+
 		OfflinePlayer player = plugin.getServer().getOfflinePlayer(name);
-		
+
 		if (player != null){
 			name = player.getName();
 		}
-		
+
 		return name;
 	}
 }
