@@ -59,7 +59,9 @@ public class Account {
 			currentMoney = api.getMoneyRounded(api.getMaxHoldings());
 		}
 
-		save(currentMoney);
+		if (!database.cacheAccounts()){
+			save(currentMoney);
+		}
 	}
 
 	public boolean has(double amount){

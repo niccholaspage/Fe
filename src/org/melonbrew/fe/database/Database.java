@@ -3,13 +3,19 @@ package org.melonbrew.fe.database;
 import org.bukkit.configuration.ConfigurationSection;
 import org.melonbrew.fe.Fe;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public abstract class Database {
 	private final Fe plugin;
 
+	private final Set<Account> accounts;
+
 	public Database(Fe plugin){
 		this.plugin = plugin;
+
+		this.accounts = new HashSet<Account>();
 	}
 
 	public abstract boolean init();
@@ -41,6 +47,12 @@ public abstract class Database {
 	}
 
 	public Account getAccount(String name){
+		for (Account account : accounts){
+			if (account.getName().equals(name)){
+				return account;
+			}
+		}
+
 		Double money = loadAccountMoney(name);
 
 		if (money == null){
@@ -49,6 +61,8 @@ public abstract class Database {
 			Account account = new Account(name, plugin, this);
 
 			account.setMoney(money);
+
+			accounts.add(account);
 
 			return account;
 		}
@@ -68,5 +82,9 @@ public abstract class Database {
 
 	public boolean accountExists(String name){
 		return getAccount(name) != null;
+	}
+
+	public boolean cacheAccounts(){
+		return plugin.getConfig().getBoolean("cache-accounts");
 	}
 }

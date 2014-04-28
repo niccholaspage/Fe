@@ -20,6 +20,8 @@ public class MySQLDB extends SQLDB {
 
 		setAccountsColumnMoney(config.getString("columns.accounts.money"));
 
+		setAccountsColumnMoney(config.getString("columns.accounts.uuid"));
+
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 
@@ -63,6 +65,8 @@ public class MySQLDB extends SQLDB {
 		columnsAccounts.addDefault("username", "name");
 
 		columnsAccounts.addDefault("money", "money");
+
+		columnsAccounts.addDefault("uuid", "uuid");
 	}
 
 	public String getName(){

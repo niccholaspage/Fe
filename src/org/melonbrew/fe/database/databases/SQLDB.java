@@ -24,6 +24,8 @@ public abstract class SQLDB extends Database {
 
 	private String accountsColumnMoney;
 
+	private String accountsColumnUUID;
+
 	public SQLDB(Fe plugin, boolean supportsModification) {
 		super(plugin);
 
@@ -36,6 +38,8 @@ public abstract class SQLDB extends Database {
 		accountsColumnUser = "name";
 
 		accountsColumnMoney = "money";
+
+		accountsColumnUUID = "uuid";
 
 		plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
 			@Override
@@ -63,16 +67,12 @@ public abstract class SQLDB extends Database {
 		this.accountsColumnUser = accountsColumnUser;
 	}
 
-	public String getAccountsColumnUser() {
-		return accountsColumnUser;
-	}
-
 	public void setAccountsColumnMoney(String accountsColumnMoney) {
 		this.accountsColumnMoney = accountsColumnMoney;
 	}
 
-	public String getAccountsColumnMoney() {
-		return accountsColumnMoney;
+	public void setAccountsColumnUUID(String accountsColumnUUID) {
+		this.accountsColumnUUID = accountsColumnUUID;
 	}
 
 	public boolean init() {
@@ -98,6 +98,12 @@ public abstract class SQLDB extends Database {
 					query("ALTER TABLE " + accountsName + " MODIFY " + accountsColumnUser + " varchar(64) NOT NULL");
 
 					query("ALTER TABLE " + accountsName + " MODIFY " + accountsColumnMoney + " double NOT NULL");
+				}
+
+				try {
+					query("ALTER TABLE " + accountsName + " ADD uuid varchar(128);");
+				} catch (Exception e){
+
 				}
 			}
 		} catch (SQLException e) {

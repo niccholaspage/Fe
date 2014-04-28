@@ -20,3 +20,5 @@ currency:
 type: sqlite
 
 updatecheck: true
+
+cache-accounts: false
