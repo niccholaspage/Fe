@@ -101,7 +101,7 @@ public abstract class SQLDB extends Database {
 				}
 
 				try {
-					query("ALTER TABLE " + accountsName + " ADD uuid varchar(128);");
+					query("ALTER TABLE " + accountsName + " ADD " + accountsColumnUUID + " varchar(128);");
 				} catch (Exception e){
 
 				}

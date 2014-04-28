@@ -10,12 +10,16 @@ public class Account {
 
 	private final Database database;
 
+	private double money;
+
 	public Account(String name, Fe plugin, Database database){
 		this.name = name;
 
 		this.api = plugin.getAPI();
 
 		this.database = database;
+
+		this.money = -1;
 	}
 
 	public String getName(){
@@ -23,6 +27,16 @@ public class Account {
 	}
 
 	public double getMoney(){
+		if (database.cacheAccounts()){
+			if (money != -1){
+				return money;
+			}
+
+			money = database.loadAccountMoney(name);
+
+			return money;
+		}
+
 		return database.loadAccountMoney(name);
 	}
 
@@ -61,6 +75,8 @@ public class Account {
 
 		if (!database.cacheAccounts()){
 			save(currentMoney);
+		}else {
+			this.money = currentMoney;
 		}
 	}
 
