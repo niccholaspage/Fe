@@ -59,7 +59,7 @@ public class Account {
 	public void setMoney(double money){
 		Double currentMoney = getMoney();
 
-		if (currentMoney == money){
+		if (currentMoney != null && currentMoney == money){
 			return;
 		}
 
