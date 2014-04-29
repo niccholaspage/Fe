@@ -42,7 +42,9 @@ public abstract class Database {
 			});
 		}
 
-		topAccounts = topAccounts.subList(0, size + 1);
+		if (topAccounts.size() > size){
+			topAccounts = topAccounts.subList(0, size);
+		}
 
 		return topAccounts;
 	}
