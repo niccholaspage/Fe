@@ -30,17 +30,29 @@ public abstract class Database {
 	}
 
 	public List<Account> getTopAccounts(int size){
-		List<Account> topAccounts = new ArrayList<Account>(accounts);
-
-		topAccounts.addAll(loadTopAccounts(size));
+		List<Account> topAccounts = loadTopAccounts(size);
 
 		if (!accounts.isEmpty()){
-			Collections.sort(topAccounts, new Comparator<Account>(){
+			List<Account> cachedTopAccounts = new ArrayList<Account>(accounts);
+
+			Collections.sort(cachedTopAccounts, new Comparator<Account>(){
 				public int compare(Account account1, Account account2) {
 					return (int) (account2.getMoney() - account1.getMoney());
 				}
 			});
+
+			if (accounts.size() > size){
+				cachedTopAccounts = cachedTopAccounts.subList(0, size);
+			}
+
+			topAccounts.addAll(cachedTopAccounts);
 		}
+
+		Collections.sort(topAccounts, new Comparator<Account>(){
+			public int compare(Account account1, Account account2) {
+				return (int) (account2.getMoney() - account1.getMoney());
+			}
+		});
 
 		if (topAccounts.size() > size){
 			topAccounts = topAccounts.subList(0, size);
@@ -80,10 +92,10 @@ public abstract class Database {
 	}
 
 	public Account getAccount(String name){
-		for (Account account : accounts){
-			if (account.getName().equals(name)){
-				return account;
-			}
+		Account account = getCachedAccount(name);
+
+		if (account != null){
+			return account;
 		}
 
 		Double money = loadAccountMoney(name);
@@ -91,7 +103,7 @@ public abstract class Database {
 		if (money == null){
 			return null;
 		}else {
-			Account account = new Account(name, plugin, this);
+			account = new Account(name, plugin, this);
 
 			account.setMoney(money);
 
@@ -119,6 +131,16 @@ public abstract class Database {
 
 	public boolean cacheAccounts(){
 		return cacheAccounts;
+	}
+
+	public Account getCachedAccount(String name){
+		for (Account account : accounts){
+			if (account.getName().equals(name)){
+				return account;
+			}
+		}
+
+		return null;
 	}
 
 	public boolean removeCachedAccount(Account account){

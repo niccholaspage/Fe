@@ -87,4 +87,15 @@ public class Account {
 	public void save(double money){
 		database.saveAccount(name, money);
 	}
+
+	@Override
+	public boolean equals(Object object){
+		if (!(object instanceof Account)){
+			return false;
+		}
+
+		Account account = (Account) object;
+
+		return account.getName().equals(getName());
+	}
 }
