@@ -124,6 +124,8 @@ public abstract class Database {
 			account = new Account(name, plugin, this);
 
 			account.setMoney(plugin.getAPI().getDefaultHoldings());
+
+			accounts.add(account);
 		}
 
 		return account;
