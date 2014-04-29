@@ -107,7 +107,7 @@ public class MongoDB extends Database {
 	}
 
 	@Override
-	public List<Account> getTopAccounts(int size) {
+	public List<Account> loadTopAccounts(int size) {
 		DBCursor cursor = getDatabase().getCollection(ACCOUNTS_COLLECTION).find().sort(new BasicDBObject("money", -1)).limit(size);
 
 		List<Account> topAccounts = new ArrayList<Account>();

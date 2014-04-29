@@ -43,6 +43,8 @@ public class FePlayerListener implements Listener {
 			Account account = database.getAccount(event.getPlayer().getName());
 
 			account.save(account.getMoney());
+
+			database.removeCachedAccount(account);
 		}
 	}
 }

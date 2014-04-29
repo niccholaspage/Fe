@@ -3,6 +3,9 @@ package org.melonbrew.fe.database;
 import org.bukkit.configuration.ConfigurationSection;
 import org.melonbrew.fe.Fe;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,7 +29,25 @@ public abstract class Database {
 		return false;
 	}
 
-	public abstract List<Account> getTopAccounts(int size);
+	public List<Account> getTopAccounts(int size){
+		List<Account> topAccounts = new ArrayList<Account>(accounts);
+
+		topAccounts.addAll(loadTopAccounts(size));
+
+		if (!accounts.isEmpty()){
+			Collections.sort(topAccounts, new Comparator<Account>(){
+				public int compare(Account account1, Account account2) {
+					return (int) (account2.getMoney() - account1.getMoney());
+				}
+			});
+		}
+
+		topAccounts = topAccounts.subList(0, size + 1);
+
+		return topAccounts;
+	}
+
+	public abstract List<Account> loadTopAccounts(int size);
 
 	public abstract List<Account> getAccounts();
 
@@ -96,5 +117,9 @@ public abstract class Database {
 
 	public boolean cacheAccounts(){
 		return cacheAccounts;
+	}
+
+	public boolean removeCachedAccount(Account account){
+		return accounts.remove(account);
 	}
 }

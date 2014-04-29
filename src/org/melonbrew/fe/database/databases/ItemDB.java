@@ -29,7 +29,7 @@ public class ItemDB extends Database {
 	}
 
 	@Override
-	public List<Account> getTopAccounts(int size){
+	public List<Account> loadTopAccounts(int size){
 		List<Account> topAccounts = getAccounts();
 
 		Collections.sort(topAccounts, new Comparator<Account>(){

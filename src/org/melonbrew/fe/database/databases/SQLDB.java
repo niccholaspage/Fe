@@ -138,7 +138,7 @@ public abstract class SQLDB extends Database {
 		}
 	}
 
-	public List<Account> getTopAccounts(int size) {
+	public List<Account> loadTopAccounts(int size) {
 		checkConnection();
 
 		String sql = "SELECT * FROM " + accountsName + " ORDER BY money DESC limit " + size;
