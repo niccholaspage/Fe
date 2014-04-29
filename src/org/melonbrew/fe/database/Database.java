@@ -30,9 +30,13 @@ public abstract class Database {
 	}
 
 	public List<Account> getTopAccounts(int size){
-		List<Account> topAccounts = loadTopAccounts(size);
+		List<Account> topAccounts = loadTopAccounts(size * 2);
 
 		if (!accounts.isEmpty()){
+			for (Account account : accounts){
+				topAccounts.remove(account);
+			}
+
 			List<Account> cachedTopAccounts = new ArrayList<Account>(accounts);
 
 			Collections.sort(cachedTopAccounts, new Comparator<Account>(){
