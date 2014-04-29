@@ -26,7 +26,7 @@ public class Account {
 		return name;
 	}
 
-	public double getMoney(){
+	public Double getMoney(){
 		if (database.cacheAccounts()){
 			if (money != null){
 				return money;
@@ -57,7 +57,7 @@ public class Account {
 	}
 
 	public void setMoney(double money){
-		double currentMoney = getMoney();
+		Double currentMoney = getMoney();
 
 		if (currentMoney == money){
 			return;
