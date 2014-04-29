@@ -117,14 +117,8 @@ public abstract class SQLDB extends Database {
 
 	protected abstract Connection getNewConnection();
 
-	public boolean query(String sql) {
-		try {
-			return connection.createStatement().execute(sql);
-		} catch (SQLException e) {
-			e.printStackTrace();
-
-			return false;
-		}
+	public boolean query(String sql) throws SQLException {
+		return connection.createStatement().execute(sql);
 	}
 
 	public Connection getConnection() {
@@ -132,6 +126,8 @@ public abstract class SQLDB extends Database {
 	}
 
 	public void close() {
+		super.close();
+
 		try {
 			if (connection != null)
 				connection.close();
