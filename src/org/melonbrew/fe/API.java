@@ -64,6 +64,10 @@ public class API {
 		return plugin.getConfig().getString("currency.minor.multiple");
 	}
 
+	public boolean getCacheAccounts(){
+		return plugin.getConfig().getBoolean("cacheaccounts");
+	}
+
 	public Account createAccount(String name){
 		return plugin.getFeDatabase().createAccount(name.toLowerCase());
 	}

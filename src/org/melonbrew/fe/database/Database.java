@@ -10,10 +10,18 @@ import java.util.Set;
 public abstract class Database {
 	private final Fe plugin;
 
+	private final boolean cacheAccounts;
+
 	private final Set<Account> accounts;
 
 	public Database(Fe plugin){
+		this(plugin, plugin.getAPI().getCacheAccounts());
+	}
+
+	public Database(Fe plugin, boolean cacheAccounts){
 		this.plugin = plugin;
+
+		this.cacheAccounts = cacheAccounts;
 
 		this.accounts = new HashSet<Account>();
 	}
@@ -89,6 +97,6 @@ public abstract class Database {
 	}
 
 	public boolean cacheAccounts(){
-		return plugin.getConfig().getBoolean("cache-accounts");
+		return cacheAccounts;
 	}
 }

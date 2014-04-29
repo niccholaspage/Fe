@@ -155,9 +155,4 @@ public class MongoDB extends Database {
 			getDatabase().getCollection(ACCOUNTS_COLLECTION).remove(iterator.next());
 		}
 	}
-
-	@Override
-	public void close() {
-
-	}
 }

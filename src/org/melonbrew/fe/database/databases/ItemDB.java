@@ -17,7 +17,7 @@ public class ItemDB extends Database {
 	private final Fe plugin;
 
 	public ItemDB(Fe plugin) {
-		super(plugin);
+		super(plugin, false);
 
 		this.plugin = plugin;
 	}

@@ -10,7 +10,7 @@ public class Account {
 
 	private final Database database;
 
-	private double money;
+	private Double money;
 
 	public Account(String name, Fe plugin, Database database){
 		this.name = name;
@@ -19,7 +19,7 @@ public class Account {
 
 		this.database = database;
 
-		this.money = -1;
+		this.money = null;
 	}
 
 	public String getName(){
@@ -28,7 +28,7 @@ public class Account {
 
 	public double getMoney(){
 		if (database.cacheAccounts()){
-			if (money != -1){
+			if (money != null){
 				return money;
 			}
 

@@ -21,4 +21,4 @@ type: sqlite
 
 updatecheck: true
 
-cache-accounts: false
+cacheaccounts: true
