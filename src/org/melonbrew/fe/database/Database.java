@@ -10,23 +10,21 @@ import java.util.Set;
 public abstract class Database {
 	private final Fe plugin;
 
-	private final boolean cacheAccounts;
+	protected boolean cacheAccounts;
 
 	private final Set<Account> accounts;
 
 	public Database(Fe plugin){
-		this(plugin, plugin.getAPI().getCacheAccounts());
-	}
-
-	public Database(Fe plugin, boolean cacheAccounts){
 		this.plugin = plugin;
-
-		this.cacheAccounts = cacheAccounts;
 
 		this.accounts = new HashSet<Account>();
 	}
 
-	public abstract boolean init();
+	public boolean init(){
+		this.cacheAccounts = plugin.getAPI().getCacheAccounts();
+
+		return false;
+	}
 
 	public abstract List<Account> getTopAccounts(int size);
 

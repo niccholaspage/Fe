@@ -76,6 +76,8 @@ public abstract class SQLDB extends Database {
 	}
 
 	public boolean init() {
+		super.init();
+
 		if (!checkConnection()) {
 			return false;
 		}

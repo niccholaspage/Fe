@@ -31,6 +31,8 @@ public class MongoDB extends Database {
 
 	@Override
 	public boolean init() {
+		super.init();
+
 		try {
 			mongoClient = new MongoClient(getConfigSection().getString("host"), getConfigSection().getInt("port"));
 		} catch (UnknownHostException e){

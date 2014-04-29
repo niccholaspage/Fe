@@ -17,12 +17,14 @@ public class ItemDB extends Database {
 	private final Fe plugin;
 
 	public ItemDB(Fe plugin) {
-		super(plugin, false);
+		super(plugin);
 
 		this.plugin = plugin;
 	}
 
 	public boolean init() {
+		cacheAccounts = false;
+
 		return true;
 	}
 
