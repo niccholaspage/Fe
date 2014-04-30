@@ -96,7 +96,7 @@ public abstract class SQLDB extends Database {
 					return false;
 				}
 
-				query("CREATE TABLE IF NOT EXISTS " + accountsName + " (" + accountsColumnUser + " varchar(64) NOT NULL, " + accountsColumnMoney + " double NOT NULL)");
+				query("CREATE TABLE IF NOT EXISTS " + accountsName + " (" + accountsColumnUser + " varchar(64) NOT NULL, " + accountsColumnUUID + " varchar(36), " + accountsColumnMoney + " double NOT NULL)");
 
 				if (supportsModification) {
 					query("ALTER TABLE " + accountsName + " MODIFY " + accountsColumnUser + " varchar(64) NOT NULL");
@@ -236,13 +236,15 @@ public abstract class SQLDB extends Database {
 		UUID uuid = player.getUniqueId();
 
 		try {
-			PreparedStatement statement = connection.prepareStatement("UPDATE " + accountsName + " SET " + accountsColumnMoney + "=?, " + accountsColumnUser + "=? WHERE " + accountsColumnUUID + "=?");
+			PreparedStatement statement = connection.prepareStatement("UPDATE " + accountsName + " SET " + accountsColumnMoney + "=?, " + accountsColumnUser + "=? WHERE " + accountsColumnUUID + "=? OR " + accountsColumnUser + "=?");
 
 			statement.setDouble(1, money);
 
 			statement.setString(2, name);
 
 			statement.setString(3, uuid.toString());
+
+			statement.setString(4, name);
 
 			if (statement.executeUpdate() == 0) {
 				statement = connection.prepareStatement("INSERT INTO " + accountsName + " (" + accountsColumnUser + ", " + accountsColumnUUID + ", " + accountsColumnMoney + ") VALUES (?, ?, ?)");
