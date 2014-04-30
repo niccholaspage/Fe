@@ -1,11 +1,14 @@
 package org.melonbrew.fe.database.databases;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.database.Account;
@@ -15,6 +18,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 public class MongoDB extends Database {
 	private final Fe plugin;
@@ -54,16 +58,33 @@ public class MongoDB extends Database {
 		return database;
 	}
 
+	@SuppressWarnings("deprecation")
 	public Double loadAccountMoney(String name){
-		DBCollection collection = getDatabase().getCollection(ACCOUNTS_COLLECTION);
+		OfflinePlayer player = plugin.getServer().getOfflinePlayer(name);
 
-		DBObject userObject = collection.findOne(new BasicDBObject("name", name));
+		UUID uuid = player.getUniqueId();
 
-		if (userObject == null){
+		DBObject query = getQueryFromNameOrUUID(name, uuid);
+
+		if (query == null){
 			return null;
 		}
 
-		return ((BasicDBObject) userObject).getDouble("money");
+		return ((BasicDBObject) query).getDouble("money");
+	}
+
+	private DBObject getQueryFromNameOrUUID(String name, UUID uuid){
+		DBObject nameClause = new BasicDBObject("name", name);
+
+		DBObject uuidClause = new BasicDBObject("uuid", uuid.toString());
+
+		BasicDBList or = new BasicDBList();
+
+		or.add(nameClause);
+
+		or.add(uuidClause);
+
+		return getDatabase().getCollection(ACCOUNTS_COLLECTION).findOne(new BasicDBObject("$or", or));
 	}
 
 	public void removeAccount(String name){
@@ -76,16 +97,21 @@ public class MongoDB extends Database {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public void saveAccount(String name, double money){
+		OfflinePlayer player = plugin.getServer().getOfflinePlayer(name);
+
+		UUID uuid = player.getUniqueId();
+
+		DBObject query = getQueryFromNameOrUUID(name, uuid);
+
 		DBCollection collection = getDatabase().getCollection(ACCOUNTS_COLLECTION);
 
-		DBObject oldUserObject = collection.findOne(new BasicDBObject("name", name));
-
-		if (oldUserObject != null){
-			collection.remove(oldUserObject);
+		if (query != null){
+			collection.remove(query);
 		}
 
-		collection.insert(new BasicDBObject("name", name).append("money", money));
+		collection.insert(new BasicDBObject("name", name).append("uuid", uuid.toString()).append("money", money));
 	}
 
 	@Override
