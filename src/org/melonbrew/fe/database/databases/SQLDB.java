@@ -1,5 +1,6 @@
 package org.melonbrew.fe.database.databases;
 
+import org.bukkit.OfflinePlayer;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.database.Account;
 import org.melonbrew.fe.database.Database;
@@ -10,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public abstract class SQLDB extends Database {
 	private final Fe plugin;
@@ -225,22 +227,31 @@ public abstract class SQLDB extends Database {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	protected void saveAccount(String name, double money) {
 		checkConnection();
 
+		OfflinePlayer player = plugin.getServer().getOfflinePlayer(name);
+
+		UUID uuid = player.getUniqueId();
+
 		try {
-			PreparedStatement statement = connection.prepareStatement("UPDATE " + accountsName + " SET " + accountsColumnMoney + "=? WHERE " + accountsColumnUser + "=?");
+			PreparedStatement statement = connection.prepareStatement("UPDATE " + accountsName + " SET " + accountsColumnMoney + "=?, " + accountsColumnUser + "=? WHERE " + accountsColumnUUID + "=?");
 
 			statement.setDouble(1, money);
 
 			statement.setString(2, name);
 
+			statement.setString(3, uuid.toString());
+
 			if (statement.executeUpdate() == 0) {
-				statement = connection.prepareStatement("INSERT INTO " + accountsName + " (" + accountsColumnUser + ", " + accountsColumnMoney + ") VALUES (?, ?)");
+				statement = connection.prepareStatement("INSERT INTO " + accountsName + " (" + accountsColumnUser + ", " + accountsColumnUUID + ", " + accountsColumnMoney + ") VALUES (?, ?, ?)");
 
 				statement.setString(1, name);
 
-				statement.setDouble(2, money);
+				statement.setString(2, uuid.toString());
+
+				statement.setDouble(3, money);
 
 				statement.execute();
 			}
