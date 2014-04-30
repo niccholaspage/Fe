@@ -107,13 +107,7 @@ public abstract class Database {
 		if (money == null){
 			return null;
 		}else {
-			account = new Account(name, plugin, this);
-
-			account.setMoney(money);
-
-			accounts.add(account);
-
-			return account;
+			return createAndAddAccount(name, money);
 		}
 	}
 
@@ -121,10 +115,18 @@ public abstract class Database {
 		Account account = getAccount(name);
 
 		if (account == null){
-			account = new Account(name, plugin, this);
+			account = createAndAddAccount(name, plugin.getAPI().getDefaultHoldings());
+		}
 
-			account.setMoney(plugin.getAPI().getDefaultHoldings());
+		return account;
+	}
 
+	private Account createAndAddAccount(String name, double money){
+		Account account = new Account(name, plugin, this);
+
+		account.setMoney(money);
+
+		if (cacheAccounts()){
 			accounts.add(account);
 		}
 
