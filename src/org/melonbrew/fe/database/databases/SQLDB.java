@@ -186,13 +186,20 @@ public abstract class SQLDB extends Database {
 		return accounts;
 	}
 
+	@SuppressWarnings("deprecation")
 	public Double loadAccountMoney(String name) {
 		checkConnection();
 
+		OfflinePlayer player = plugin.getServer().getOfflinePlayer(name);
+
+		UUID uuid = player.getUniqueId();
+
 		try {
-			PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + accountsName + " WHERE " + accountsColumnUser + "=?");
+			PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + accountsName + " WHERE " + accountsColumnUser + "=? OR " + accountsColumnUUID + "=?");
 
 			statement.setString(1, name);
+
+			statement.setString(2, uuid.toString());
 
 			ResultSet set = statement.executeQuery();
 
