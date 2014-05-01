@@ -54,7 +54,7 @@ public class SendCommand extends SubCommand {
 
 		String recieverName = plugin.getAPI().getReadName(reciever);
 
-		if (!reciever.canRecieve(money)){
+		if (!reciever.canReceive(money)){
 			Phrase.MAX_BALANCE_REACHED.sendWithPrefix(sender, recieverName);
 
 			return true;

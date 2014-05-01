@@ -41,7 +41,7 @@ public class GrantCommand extends SubCommand {
 
 		String victimName = plugin.getAPI().getReadName(victim);
 
-		if (!victim.canRecieve(money)){
+		if (!victim.canReceive(money)){
 			Phrase.MAX_BALANCE_REACHED.sendWithPrefix(sender, victimName);
 			return true;
 		}

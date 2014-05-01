@@ -48,7 +48,7 @@ public class Account {
 		setMoney(getMoney() + amount);
 	}
 
-	public boolean canRecieve(double amount){
+	public boolean canReceive(double amount){
 		if (api.getMaxHoldings() == -1){
 			return true;
 		}
