@@ -15,11 +15,9 @@ public enum Phrase {
 	HELP_ARGUMENTS("$1 Required, $2 Optional"),
 	RICH("Rich List"),
 	CONVERSION("Conversion Plugins"),
-	CONVERTER_DOES_NOT_EXIST("That converter doesn't exist!"),
 	FLAT_FILE("Flat File"),
 	MYSQL("MySQL"),
 	MONGO("Mongo"),
-	CONVERTER_DOES_NOT_SUPPORT("That converter does not support $1."),
 	MYSQL_TO_FLAT_FILE("MySQL to Flat File"),
 	CONVERSION_SUCCEEDED("Conversion succeeded!"),
 	CONVERSION_FAILED("Conversion failed."),
@@ -58,24 +56,23 @@ public enum Phrase {
 	COMMAND_GRANT("Grants a player money", true),
 	COMMAND_DEDUCT("Deducts money from a player", true),
 	COMMAND_CLEAN("Cleans the accounts with default balance", true),
-	COMMAND_CONVERT("Converts data from a previous economy plugin to Fe", true),
 	COMMAND_RELOAD("Reloads the config", true);
-	
+
 	private static Fe plugin;
 
 	private final String defaultMessage;
-	
+
 	private final boolean categorized;
 
 	private String message;
-	
+
 	private Phrase(String defaultMessage){
 		this(defaultMessage, false);
 	}
 
 	private Phrase(String defaultMessage, boolean categorized){
 		this.defaultMessage = defaultMessage;
-		
+
 		this.categorized = categorized;
 
 		message = defaultMessage + "";
@@ -95,11 +92,11 @@ public enum Phrase {
 
 	public String getConfigName(){
 		String name = name();
-		
+
 		if (categorized){
 			name = name.replaceFirst("_", ".");
 		}
-		
+
 		return name.toLowerCase();
 	}
 
@@ -114,23 +111,23 @@ public enum Phrase {
 
 		return parsedMessage;
 	}
-	
+
 	public String parseWithoutSpaces(String... params){
 		return parse(params).replace(" ", "");
 	}
-	
+
 	private String parseWithPrefix(String... params){
 		return plugin.getMessagePrefix().replace("$1", plugin.getConfig().getString("prefix")) + parse(params);
 	}
-	
+
 	public void send(CommandSender sender, String... params){
 		sender.sendMessage(parse(params));
 	}
-	
+
 	public void sendWithPrefix(CommandSender sender, String... params){
 		sender.sendMessage(parseWithPrefix(params));
 	}
-	
+
 	public static void init(Fe instance){
 		plugin = instance;
 	}

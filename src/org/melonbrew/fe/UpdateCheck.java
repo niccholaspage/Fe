@@ -11,11 +11,11 @@ import org.w3c.dom.NodeList;
 
 public class UpdateCheck implements Runnable {
 	private final Fe plugin;
-	
+
 	public UpdateCheck(Fe plugin){
 		this.plugin = plugin;
 	}
-	
+
 	public void run(){
 		String pluginUrlString = "http://dev.bukkit.org/server-mods/fe-economy/files.rss";
 
@@ -40,13 +40,13 @@ public class UpdateCheck implements Runnable {
 				NodeList firstNodes = firstNameElement.getChildNodes();
 
 				String version = firstNodes.item(0).getNodeValue().trim();
-				
+
 				double latestVersion = plugin.versionToDouble(version);
-				
+
 				plugin.setLatestVersion(latestVersion);
-				
+
 				plugin.setLatestVersionString(version);
-				
+
 				if (!plugin.isUpdated()){
 					plugin.log(Phrase.FE_OUTDATED, version);
 				}
