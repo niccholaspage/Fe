@@ -15,12 +15,12 @@ public abstract class Database {
 
 	protected boolean cacheAccounts;
 
-	private final Set<Account> accounts;
+	private final Set<Account> cachedAccounts;
 
 	public Database(Fe plugin){
 		this.plugin = plugin;
 
-		this.accounts = new HashSet<Account>();
+		this.cachedAccounts = new HashSet<Account>();
 	}
 
 	public boolean init(){
@@ -32,12 +32,12 @@ public abstract class Database {
 	public List<Account> getTopAccounts(int size){
 		List<Account> topAccounts = loadTopAccounts(size * 2);
 
-		if (!accounts.isEmpty()){
-			for (Account account : accounts){
+		if (!cachedAccounts.isEmpty()){
+			for (Account account : cachedAccounts){
 				topAccounts.remove(account);
 			}
 
-			List<Account> cachedTopAccounts = new ArrayList<Account>(accounts);
+			List<Account> cachedTopAccounts = new ArrayList<Account>(cachedAccounts);
 
 			Collections.sort(cachedTopAccounts, new Comparator<Account>(){
 				public int compare(Account account1, Account account2) {
@@ -45,7 +45,7 @@ public abstract class Database {
 				}
 			});
 
-			if (accounts.size() > size){
+			if (cachedAccounts.size() > size){
 				cachedTopAccounts = cachedTopAccounts.subList(0, size);
 			}
 
@@ -80,8 +80,10 @@ public abstract class Database {
 	public abstract void clean();
 
 	public void close(){
-		for (Account account : accounts){
+		for (Account account : new HashSet<Account>(cachedAccounts)){
 			account.save(account.getMoney());
+
+            removeCachedAccount(account);
 		}
 	}
 
@@ -127,7 +129,7 @@ public abstract class Database {
 		account.setMoney(money);
 
 		if (cacheAccounts()){
-			accounts.add(account);
+			cachedAccounts.add(account);
 		}
 
 		return account;
@@ -142,7 +144,7 @@ public abstract class Database {
 	}
 
 	public Account getCachedAccount(String name){
-		for (Account account : accounts){
+		for (Account account : cachedAccounts){
 			if (account.getName().equals(name)){
 				return account;
 			}
@@ -152,6 +154,6 @@ public abstract class Database {
 	}
 
 	public boolean removeCachedAccount(Account account){
-		return accounts.remove(account);
+		return cachedAccounts.remove(account);
 	}
 }
