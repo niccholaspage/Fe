@@ -36,9 +36,9 @@ public class SendCommand extends SubCommand {
 			return false;
 		}
 
-		Account reciever = plugin.getShortenedAccount(args[0]);
+		Account receiver = plugin.getShortenedAccount(args[0]);
 
-		if (reciever == null){
+		if (receiver == null){
 			Phrase.ACCOUNT_DOES_NOT_EXIST.sendWithPrefix(sender);
 
 			return true;
@@ -52,10 +52,10 @@ public class SendCommand extends SubCommand {
 			return true;
 		}
 
-		String recieverName = plugin.getAPI().getReadName(reciever);
+		String receiverName = plugin.getAPI().getReadName(receiver);
 
-		if (!reciever.canReceive(money)){
-			Phrase.MAX_BALANCE_REACHED.sendWithPrefix(sender, recieverName);
+		if (!receiver.canReceive(money)){
+			Phrase.MAX_BALANCE_REACHED.sendWithPrefix(sender, receiverName);
 
 			return true;
 		}
@@ -64,14 +64,14 @@ public class SendCommand extends SubCommand {
 
 		account.withdraw(money);
 
-		reciever.deposit(money);
+		receiver.deposit(money);
 
-		Phrase.MONEY_SENT.sendWithPrefix(sender, formattedMoney, recieverName);
+		Phrase.MONEY_SENT.sendWithPrefix(sender, formattedMoney, receiverName);
 
-		Player recieverPlayer = plugin.getServer().getPlayerExact(reciever.getName());
+		Player receiverPlayer = plugin.getServer().getPlayerExact(receiver.getName());
 
-		if (recieverPlayer != null){
-			Phrase.MONEY_RECIEVE.sendWithPrefix(recieverPlayer, formattedMoney, sender.getName());
+		if (receiverPlayer != null){
+			Phrase.MONEY_RECEIVE.sendWithPrefix(receiverPlayer, formattedMoney, sender.getName());
 		}
 
 		return true;

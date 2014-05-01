@@ -52,10 +52,10 @@ public class GrantCommand extends SubCommand {
 
 		Phrase.PLAYER_GRANT_MONEY.sendWithPrefix(sender, formattedMoney, plugin.getAPI().getReadName(victim));
 
-		Player recieverPlayer = plugin.getServer().getPlayerExact(victimName);
+		Player receiverPlayer = plugin.getServer().getPlayerExact(victimName);
 
-		if (recieverPlayer != null){
-			Phrase.PLAYER_GRANTED_MONEY.sendWithPrefix(recieverPlayer, formattedMoney, sender.getName());
+		if (receiverPlayer != null){
+			Phrase.PLAYER_GRANTED_MONEY.sendWithPrefix(receiverPlayer, formattedMoney, sender.getName());
 		}
 
 		return true;

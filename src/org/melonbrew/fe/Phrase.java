@@ -28,7 +28,7 @@ public enum Phrase {
 	ACCOUNT_EXISTS("That account already exists."),
 	ACCOUNT_CREATED("An account for $1 has been created."),
 	ACCOUNT_REMOVED("An account for $1 has been removed."),
-	MONEY_RECIEVE("You've recieved $1 from $2."),
+	MONEY_RECEIVE("You've received $1 from $2."),
 	MONEY_SENT("You've sent $1 to $2"),
 	MAX_BALANCE_REACHED("$1 has reached the maximum balance."),
 	PLAYER_SET_MONEY("You've set $1's balance to $2."),

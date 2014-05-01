@@ -43,12 +43,9 @@ public class MongoDB extends Database {
 			return false;
 		}
 
-		if (getDatabase() == null || !getDatabase().isAuthenticated()){
-			return false;
-		}
+        return !(getDatabase() == null || !getDatabase().isAuthenticated());
 
-		return true;
-	}
+    }
 
 	public DB getDatabase(){
 		DB database = mongoClient.getDB(getConfigSection().getString("database"));
@@ -159,17 +156,15 @@ public class MongoDB extends Database {
 
 		List<Account> accounts = new ArrayList<Account>();
 
-		Iterator<DBObject> iterator = cursor.iterator();
+        for (DBObject aCursor : cursor) {
+            BasicDBObject accountObject = (BasicDBObject) aCursor;
 
-		while (iterator.hasNext()){
-			BasicDBObject accountObject = (BasicDBObject) iterator.next();
+            Account account = new Account(accountObject.getString("name"), plugin, this);
 
-			Account account = new Account(accountObject.getString("name"), plugin, this);
+            account.setMoney(accountObject.getDouble("money"));
 
-			account.setMoney(accountObject.getDouble("money"));
-
-			accounts.add(account);
-		}
+            accounts.add(account);
+        }
 
 		return accounts;
 	}
@@ -177,10 +172,8 @@ public class MongoDB extends Database {
 	public void clean() {
 		DBCursor cursor = getDatabase().getCollection(ACCOUNTS_COLLECTION).find((new BasicDBObject("money", plugin.getAPI().getDefaultHoldings())));
 
-		Iterator<DBObject> iterator = cursor.iterator();
-
-		while (iterator.hasNext()){
-			getDatabase().getCollection(ACCOUNTS_COLLECTION).remove(iterator.next());
-		}
+        for (DBObject aCursor : cursor) {
+            getDatabase().getCollection(ACCOUNTS_COLLECTION).remove(aCursor);
+        }
 	}
 }
