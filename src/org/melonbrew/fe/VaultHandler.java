@@ -121,7 +121,7 @@ public class VaultHandler implements Economy {
 	@Override
 	public EconomyResponse depositPlayer(String playerName, double amount) {
 		if (amount < 0) {
-			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot desposit negative funds");
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot deposit negative funds");
 		}
 
 		if (!plugin.getAPI().accountExists(playerName)){
