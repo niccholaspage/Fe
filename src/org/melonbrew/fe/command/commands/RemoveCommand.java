@@ -8,31 +8,31 @@ import org.melonbrew.fe.command.CommandType;
 import org.melonbrew.fe.command.SubCommand;
 
 public class RemoveCommand extends SubCommand {
-	private final Fe plugin;
+    private final Fe plugin;
 
-	public RemoveCommand(Fe plugin){
-		super("remove", "fe.remove", "remove [name]", Phrase.COMMAND_REMOVE, CommandType.CONSOLE);
+    public RemoveCommand(Fe plugin) {
+        super("remove", "fe.remove", "remove [name]", Phrase.COMMAND_REMOVE, CommandType.CONSOLE);
 
-		this.plugin = plugin;
-	}
+        this.plugin = plugin;
+    }
 
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		if (args.length < 1){
-			return false;
-		}
+    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+        if (args.length < 1) {
+            return false;
+        }
 
-		String name = args[0];
+        String name = args[0];
 
-		if (!plugin.getAPI().accountExists(name)){
-			Phrase.ACCOUNT_DOES_NOT_EXIST.sendWithPrefix(sender);
+        if (!plugin.getAPI().accountExists(name)) {
+            Phrase.ACCOUNT_DOES_NOT_EXIST.sendWithPrefix(sender);
 
-			return true;
-		}
+            return true;
+        }
 
-		plugin.getAPI().removeAccount(name);
+        plugin.getAPI().removeAccount(name);
 
-		Phrase.ACCOUNT_REMOVED.sendWithPrefix(sender, Phrase.PRIMARY_COLOR.parse() + plugin.getAPI().getReadName(name) + Phrase.SECONDARY_COLOR.parse());
+        Phrase.ACCOUNT_REMOVED.sendWithPrefix(sender, Phrase.PRIMARY_COLOR.parse() + plugin.getAPI().getReadName(name) + Phrase.SECONDARY_COLOR.parse());
 
-		return true;
-	}
+        return true;
+    }
 }

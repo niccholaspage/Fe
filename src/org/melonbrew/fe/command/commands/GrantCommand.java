@@ -10,54 +10,54 @@ import org.melonbrew.fe.command.SubCommand;
 import org.melonbrew.fe.database.Account;
 
 public class GrantCommand extends SubCommand {
-	private final Fe plugin;
+    private final Fe plugin;
 
-	public GrantCommand(Fe plugin){
-		super("grant", "fe.grant", "grant [name] [amount]", Phrase.COMMAND_GRANT, CommandType.CONSOLE);
+    public GrantCommand(Fe plugin) {
+        super("grant", "fe.grant", "grant [name] [amount]", Phrase.COMMAND_GRANT, CommandType.CONSOLE);
 
-		this.plugin = plugin;
-	}
+        this.plugin = plugin;
+    }
 
-	@SuppressWarnings("deprecation")
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		if (args.length < 2){
-			return false;
-		}
+    @SuppressWarnings("deprecation")
+    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+        if (args.length < 2) {
+            return false;
+        }
 
-		double money;
+        double money;
 
-		try {
-			money = Double.parseDouble(args[1]);
-		} catch (NumberFormatException e){
-			return false;
-		}
+        try {
+            money = Double.parseDouble(args[1]);
+        } catch (NumberFormatException e) {
+            return false;
+        }
 
-		Account victim = plugin.getShortenedAccount(args[0]);
+        Account victim = plugin.getShortenedAccount(args[0]);
 
-		if (victim == null){
-			Phrase.ACCOUNT_DOES_NOT_EXIST.sendWithPrefix(sender);
-			return true;
-		}
+        if (victim == null) {
+            Phrase.ACCOUNT_DOES_NOT_EXIST.sendWithPrefix(sender);
+            return true;
+        }
 
-		String victimName = plugin.getAPI().getReadName(victim);
+        String victimName = plugin.getAPI().getReadName(victim);
 
-		if (!victim.canReceive(money)){
-			Phrase.MAX_BALANCE_REACHED.sendWithPrefix(sender, victimName);
-			return true;
-		}
+        if (!victim.canReceive(money)) {
+            Phrase.MAX_BALANCE_REACHED.sendWithPrefix(sender, victimName);
+            return true;
+        }
 
-		String formattedMoney = plugin.getAPI().format(money);
+        String formattedMoney = plugin.getAPI().format(money);
 
-		victim.deposit(money);
+        victim.deposit(money);
 
-		Phrase.PLAYER_GRANT_MONEY.sendWithPrefix(sender, formattedMoney, plugin.getAPI().getReadName(victim));
+        Phrase.PLAYER_GRANT_MONEY.sendWithPrefix(sender, formattedMoney, plugin.getAPI().getReadName(victim));
 
-		Player receiverPlayer = plugin.getServer().getPlayerExact(victimName);
+        Player receiverPlayer = plugin.getServer().getPlayerExact(victimName);
 
-		if (receiverPlayer != null){
-			Phrase.PLAYER_GRANTED_MONEY.sendWithPrefix(receiverPlayer, formattedMoney, sender.getName());
-		}
+        if (receiverPlayer != null) {
+            Phrase.PLAYER_GRANTED_MONEY.sendWithPrefix(receiverPlayer, formattedMoney, sender.getName());
+        }
 
-		return true;
-	}
+        return true;
+    }
 }	

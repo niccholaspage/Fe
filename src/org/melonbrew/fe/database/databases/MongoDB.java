@@ -1,13 +1,6 @@
 package org.melonbrew.fe.database.databases;
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-
+import com.mongodb.*;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.melonbrew.fe.Fe;
@@ -16,145 +9,140 @@ import org.melonbrew.fe.database.Database;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
 public class MongoDB extends Database {
-	private final Fe plugin;
+    private static final String ACCOUNTS_COLLECTION = "accounts";
+    private final Fe plugin;
+    private MongoClient mongoClient;
 
-	private MongoClient mongoClient;
+    public MongoDB(Fe plugin) {
+        super(plugin);
 
-	private static final String ACCOUNTS_COLLECTION = "accounts";
+        this.plugin = plugin;
+    }
 
-	public MongoDB(Fe plugin) {
-		super(plugin);
+    @Override
+    public boolean init() {
+        super.init();
 
-		this.plugin = plugin;
-	}
-
-	@Override
-	public boolean init() {
-		super.init();
-
-		try {
-			mongoClient = new MongoClient(getConfigSection().getString("host"), getConfigSection().getInt("port"));
-		} catch (UnknownHostException e){
-			return false;
-		}
+        try {
+            mongoClient = new MongoClient(getConfigSection().getString("host"), getConfigSection().getInt("port"));
+        } catch (UnknownHostException e) {
+            return false;
+        }
 
         return !(getDatabase() == null || !getDatabase().isAuthenticated());
 
     }
 
-	private DB getDatabase(){
-		DB database = mongoClient.getDB(getConfigSection().getString("database"));
+    private DB getDatabase() {
+        DB database = mongoClient.getDB(getConfigSection().getString("database"));
 
-		database.authenticate(getConfigSection().getString("user"), getConfigSection().getString("password").toCharArray());
+        database.authenticate(getConfigSection().getString("user"), getConfigSection().getString("password").toCharArray());
 
-		return database;
-	}
+        return database;
+    }
 
-	@SuppressWarnings("deprecation")
-	public Double loadAccountMoney(String name){
-		OfflinePlayer player = plugin.getServer().getOfflinePlayer(name);
+    @SuppressWarnings("deprecation")
+    public Double loadAccountMoney(String name) {
+        OfflinePlayer player = plugin.getServer().getOfflinePlayer(name);
 
-		UUID uuid = player.getUniqueId();
+        UUID uuid = player.getUniqueId();
 
-		DBObject query = getQueryFromNameOrUUID(name, uuid);
+        DBObject query = getQueryFromNameOrUUID(name, uuid);
 
-		if (query == null){
-			return null;
-		}
+        if (query == null) {
+            return null;
+        }
 
-		return ((BasicDBObject) query).getDouble("money");
-	}
+        return ((BasicDBObject) query).getDouble("money");
+    }
 
-	private DBObject getQueryFromNameOrUUID(String name, UUID uuid){
-		DBObject nameClause = new BasicDBObject("name", name);
+    private DBObject getQueryFromNameOrUUID(String name, UUID uuid) {
+        DBObject nameClause = new BasicDBObject("name", name);
 
-		DBObject uuidClause = new BasicDBObject("uuid", uuid.toString());
+        DBObject uuidClause = new BasicDBObject("uuid", uuid.toString());
 
-		BasicDBList or = new BasicDBList();
+        BasicDBList or = new BasicDBList();
 
-		or.add(nameClause);
+        or.add(nameClause);
 
-		or.add(uuidClause);
+        or.add(uuidClause);
 
-		return getDatabase().getCollection(ACCOUNTS_COLLECTION).findOne(new BasicDBObject("$or", or));
-	}
+        return getDatabase().getCollection(ACCOUNTS_COLLECTION).findOne(new BasicDBObject("$or", or));
+    }
 
-	public void removeAccount(String name){
-		DBCollection collection = getDatabase().getCollection(ACCOUNTS_COLLECTION);
+    public void removeAccount(String name) {
+        DBCollection collection = getDatabase().getCollection(ACCOUNTS_COLLECTION);
 
-		DBObject oldUserObject = collection.findOne(new BasicDBObject("name", name));
+        DBObject oldUserObject = collection.findOne(new BasicDBObject("name", name));
 
-		if (oldUserObject != null){
-			collection.remove(oldUserObject);
-		}
-	}
+        if (oldUserObject != null) {
+            collection.remove(oldUserObject);
+        }
+    }
 
-	@SuppressWarnings("deprecation")
-	public void saveAccount(String name, double money){
-		OfflinePlayer player = plugin.getServer().getOfflinePlayer(name);
+    @SuppressWarnings("deprecation")
+    public void saveAccount(String name, double money) {
+        OfflinePlayer player = plugin.getServer().getOfflinePlayer(name);
 
-		UUID uuid = player.getUniqueId();
+        UUID uuid = player.getUniqueId();
 
-		DBObject query = getQueryFromNameOrUUID(name, uuid);
+        DBObject query = getQueryFromNameOrUUID(name, uuid);
 
-		DBCollection collection = getDatabase().getCollection(ACCOUNTS_COLLECTION);
+        DBCollection collection = getDatabase().getCollection(ACCOUNTS_COLLECTION);
 
-		if (query != null){
-			collection.remove(query);
-		}
+        if (query != null) {
+            collection.remove(query);
+        }
 
-		collection.insert(new BasicDBObject("name", name).append("uuid", uuid.toString()).append("money", money));
-	}
+        collection.insert(new BasicDBObject("name", name).append("uuid", uuid.toString()).append("money", money));
+    }
 
-	@Override
-	public void getConfigDefaults(ConfigurationSection section) {
-		section.addDefault("host", "localhost");
+    @Override
+    public void getConfigDefaults(ConfigurationSection section) {
+        section.addDefault("host", "localhost");
 
-		section.addDefault("port", 27017);
+        section.addDefault("port", 27017);
 
-		section.addDefault("user", "root");
+        section.addDefault("user", "root");
 
-		section.addDefault("password", "minecraft");
+        section.addDefault("password", "minecraft");
 
-		section.addDefault("database", "Fe");
-	}
+        section.addDefault("database", "Fe");
+    }
 
-	@Override
-	public String getName() {
-		return "Mongo";
-	}
+    @Override
+    public String getName() {
+        return "Mongo";
+    }
 
-	@Override
-	public List<Account> loadTopAccounts(int size) {
-		DBCursor cursor = getDatabase().getCollection(ACCOUNTS_COLLECTION).find().sort(new BasicDBObject("money", -1)).limit(size);
+    @Override
+    public List<Account> loadTopAccounts(int size) {
+        DBCursor cursor = getDatabase().getCollection(ACCOUNTS_COLLECTION).find().sort(new BasicDBObject("money", -1)).limit(size);
 
-		List<Account> topAccounts = new ArrayList<Account>();
+        List<Account> topAccounts = new ArrayList<Account>();
 
-		Iterator<DBObject> iterator = cursor.iterator();
+        for (DBObject aCursor : cursor) {
+            BasicDBObject topAccountObject = (BasicDBObject) aCursor;
 
-		while (iterator.hasNext()){
-			BasicDBObject topAccountObject = (BasicDBObject) iterator.next();
+            Account account = new Account(topAccountObject.getString("name"), plugin, this);
 
-			Account account = new Account(topAccountObject.getString("name"), plugin, this);
+            account.setMoney(topAccountObject.getDouble("money"));
 
-			account.setMoney(topAccountObject.getDouble("money"));
+            topAccounts.add(account);
+        }
 
-			topAccounts.add(account);
-		}
+        return topAccounts;
+    }
 
-		return topAccounts;
-	}
+    @Override
+    public List<Account> getAccounts() {
+        DBCursor cursor = getDatabase().getCollection(ACCOUNTS_COLLECTION).find().sort(new BasicDBObject("money", -1));
 
-	@Override
-	public List<Account> getAccounts() {
-		DBCursor cursor = getDatabase().getCollection(ACCOUNTS_COLLECTION).find().sort(new BasicDBObject("money", -1));
-
-		List<Account> accounts = new ArrayList<Account>();
+        List<Account> accounts = new ArrayList<Account>();
 
         for (DBObject aCursor : cursor) {
             BasicDBObject accountObject = (BasicDBObject) aCursor;
@@ -166,14 +154,14 @@ public class MongoDB extends Database {
             accounts.add(account);
         }
 
-		return accounts;
-	}
+        return accounts;
+    }
 
-	public void clean() {
-		DBCursor cursor = getDatabase().getCollection(ACCOUNTS_COLLECTION).find((new BasicDBObject("money", plugin.getAPI().getDefaultHoldings())));
+    public void clean() {
+        DBCursor cursor = getDatabase().getCollection(ACCOUNTS_COLLECTION).find((new BasicDBObject("money", plugin.getAPI().getDefaultHoldings())));
 
         for (DBObject aCursor : cursor) {
             getDatabase().getCollection(ACCOUNTS_COLLECTION).remove(aCursor);
         }
-	}
+    }
 }

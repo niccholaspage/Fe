@@ -8,19 +8,19 @@ import org.melonbrew.fe.command.CommandType;
 import org.melonbrew.fe.command.SubCommand;
 
 public class ReloadCommand extends SubCommand {
-	private final Fe plugin;
+    private final Fe plugin;
 
-	public ReloadCommand(Fe plugin){
-		super("reload", "fe.reload", "reload", Phrase.COMMAND_RELOAD, CommandType.CONSOLE);
+    public ReloadCommand(Fe plugin) {
+        super("reload", "fe.reload", "reload", Phrase.COMMAND_RELOAD, CommandType.CONSOLE);
 
-		this.plugin = plugin;
-	}
+        this.plugin = plugin;
+    }
 
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		plugin.reloadConfig();
+    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+        plugin.reloadConfig();
 
-		Phrase.CONFIG_RELOADED.sendWithPrefix(sender);
+        Phrase.CONFIG_RELOADED.sendWithPrefix(sender);
 
-		return true;
-	}
+        return true;
+    }
 }

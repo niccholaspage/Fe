@@ -3,157 +3,150 @@ package org.melonbrew.fe.database;
 import org.bukkit.configuration.ConfigurationSection;
 import org.melonbrew.fe.Fe;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public abstract class Database {
-	private final Fe plugin;
+    private final Fe plugin;
+    private final Set<Account> cachedAccounts;
+    protected boolean cacheAccounts;
 
-	protected boolean cacheAccounts;
+    public Database(Fe plugin) {
+        this.plugin = plugin;
 
-	private final Set<Account> cachedAccounts;
+        this.cachedAccounts = new HashSet<Account>();
+    }
 
-	public Database(Fe plugin){
-		this.plugin = plugin;
+    public boolean init() {
+        this.cacheAccounts = plugin.getAPI().getCacheAccounts();
 
-		this.cachedAccounts = new HashSet<Account>();
-	}
+        return false;
+    }
 
-	public boolean init(){
-		this.cacheAccounts = plugin.getAPI().getCacheAccounts();
+    public List<Account> getTopAccounts(int size) {
+        List<Account> topAccounts = loadTopAccounts(size * 2);
 
-		return false;
-	}
+        if (!cachedAccounts.isEmpty()) {
+            for (Account account : cachedAccounts) {
+                topAccounts.remove(account);
+            }
 
-	public List<Account> getTopAccounts(int size){
-		List<Account> topAccounts = loadTopAccounts(size * 2);
+            List<Account> cachedTopAccounts = new ArrayList<Account>(cachedAccounts);
 
-		if (!cachedAccounts.isEmpty()){
-			for (Account account : cachedAccounts){
-				topAccounts.remove(account);
-			}
+            Collections.sort(cachedTopAccounts, new Comparator<Account>() {
+                public int compare(Account account1, Account account2) {
+                    return (int) (account2.getMoney() - account1.getMoney());
+                }
+            });
 
-			List<Account> cachedTopAccounts = new ArrayList<Account>(cachedAccounts);
+            if (cachedAccounts.size() > size) {
+                cachedTopAccounts = cachedTopAccounts.subList(0, size);
+            }
 
-			Collections.sort(cachedTopAccounts, new Comparator<Account>(){
-				public int compare(Account account1, Account account2) {
-					return (int) (account2.getMoney() - account1.getMoney());
-				}
-			});
+            topAccounts.addAll(cachedTopAccounts);
+        }
 
-			if (cachedAccounts.size() > size){
-				cachedTopAccounts = cachedTopAccounts.subList(0, size);
-			}
+        Collections.sort(topAccounts, new Comparator<Account>() {
+            public int compare(Account account1, Account account2) {
+                return (int) (account2.getMoney() - account1.getMoney());
+            }
+        });
 
-			topAccounts.addAll(cachedTopAccounts);
-		}
+        if (topAccounts.size() > size) {
+            topAccounts = topAccounts.subList(0, size);
+        }
 
-		Collections.sort(topAccounts, new Comparator<Account>(){
-			public int compare(Account account1, Account account2) {
-				return (int) (account2.getMoney() - account1.getMoney());
-			}
-		});
+        return topAccounts;
+    }
 
-		if (topAccounts.size() > size){
-			topAccounts = topAccounts.subList(0, size);
-		}
+    public abstract List<Account> loadTopAccounts(int size);
 
-		return topAccounts;
-	}
+    public abstract List<Account> getAccounts();
 
-	public abstract List<Account> loadTopAccounts(int size);
+    public abstract Double loadAccountMoney(String name);
 
-	public abstract List<Account> getAccounts();
+    protected abstract void saveAccount(String name, double money);
 
-	public abstract Double loadAccountMoney(String name);
+    public abstract void removeAccount(String name);
 
-	protected abstract void saveAccount(String name, double money);
+    public abstract void getConfigDefaults(ConfigurationSection section);
 
-	public abstract void removeAccount(String name);
+    public abstract void clean();
 
-	public abstract void getConfigDefaults(ConfigurationSection section);
-
-	public abstract void clean();
-
-	public void close(){
-		for (Account account : new HashSet<Account>(cachedAccounts)){
-			account.save(account.getMoney());
+    public void close() {
+        for (Account account : new HashSet<Account>(cachedAccounts)) {
+            account.save(account.getMoney());
 
             removeCachedAccount(account);
-		}
-	}
+        }
+    }
 
-	public abstract String getName();
+    public abstract String getName();
 
-	public String getConfigName(){
-		return getName().toLowerCase().replace(" ", "");
-	}
+    public String getConfigName() {
+        return getName().toLowerCase().replace(" ", "");
+    }
 
-	public ConfigurationSection getConfigSection(){
-		return plugin.getConfig().getConfigurationSection(getConfigName());
-	}
+    public ConfigurationSection getConfigSection() {
+        return plugin.getConfig().getConfigurationSection(getConfigName());
+    }
 
-	public Account getAccount(String name){
-		Account account = getCachedAccount(name);
+    public Account getAccount(String name) {
+        Account account = getCachedAccount(name);
 
-		if (account != null){
-			return account;
-		}
+        if (account != null) {
+            return account;
+        }
 
-		Double money = loadAccountMoney(name);
+        Double money = loadAccountMoney(name);
 
-		if (money == null){
-			return null;
-		}else {
-			return createAndAddAccount(name, money);
-		}
-	}
+        if (money == null) {
+            return null;
+        } else {
+            return createAndAddAccount(name, money);
+        }
+    }
 
-	public Account createAccount(String name){
-		Account account = getAccount(name);
+    public Account createAccount(String name) {
+        Account account = getAccount(name);
 
-		if (account == null){
-			account = createAndAddAccount(name, plugin.getAPI().getDefaultHoldings());
-		}
+        if (account == null) {
+            account = createAndAddAccount(name, plugin.getAPI().getDefaultHoldings());
+        }
 
-		return account;
-	}
+        return account;
+    }
 
-	private Account createAndAddAccount(String name, double money){
-		Account account = new Account(name, plugin, this);
+    private Account createAndAddAccount(String name, double money) {
+        Account account = new Account(name, plugin, this);
 
-		account.setMoney(money);
+        account.setMoney(money);
 
-		if (cacheAccounts()){
-			cachedAccounts.add(account);
-		}
+        if (cacheAccounts()) {
+            cachedAccounts.add(account);
+        }
 
-		return account;
-	}
+        return account;
+    }
 
-	public boolean accountExists(String name){
-		return getAccount(name) != null;
-	}
+    public boolean accountExists(String name) {
+        return getAccount(name) != null;
+    }
 
-	public boolean cacheAccounts(){
-		return cacheAccounts;
-	}
+    public boolean cacheAccounts() {
+        return cacheAccounts;
+    }
 
-	public Account getCachedAccount(String name){
-		for (Account account : cachedAccounts){
-			if (account.getName().equals(name)){
-				return account;
-			}
-		}
+    public Account getCachedAccount(String name) {
+        for (Account account : cachedAccounts) {
+            if (account.getName().equals(name)) {
+                return account;
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public boolean removeCachedAccount(Account account){
-		return cachedAccounts.remove(account);
-	}
+    public boolean removeCachedAccount(Account account) {
+        return cachedAccounts.remove(account);
+    }
 }

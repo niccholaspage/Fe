@@ -1,12 +1,6 @@
 package org.melonbrew.fe;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-
 import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -23,355 +17,353 @@ import org.melonbrew.fe.database.databases.MySQLDB;
 import org.melonbrew.fe.database.databases.SQLiteDB;
 import org.melonbrew.fe.listeners.FePlayerListener;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
 public class Fe extends JavaPlugin {
-	private API api;
+    private final Set<Database> databases;
+    private API api;
+    private Database database;
+    private double currentVersion;
 
-	private Database database;
+    private double latestVersion;
 
-	private Set<Database> databases;
+    private String latestVersionString;
 
-	private double currentVersion;
+    public Fe() {
+        databases = new HashSet<Database>();
+    }
 
-	private double latestVersion;
+    public void onEnable() {
+        getDataFolder().mkdirs();
 
-	private String latestVersionString;
+        Phrase.init(this);
 
-	public Fe(){
-		databases = new HashSet<Database>();
-	}
+        databases.add(new MySQLDB(this));
+        databases.add(new SQLiteDB(this));
+        databases.add(new MongoDB(this));
 
-	public void onEnable(){
-		getDataFolder().mkdirs();
+        for (Database database : databases) {
+            String name = database.getConfigName();
 
-		Phrase.init(this);
+            ConfigurationSection section = getConfig().getConfigurationSection(name);
 
-		databases.add(new MySQLDB(this));
-		databases.add(new SQLiteDB(this));
-		databases.add(new MongoDB(this));
+            if (section == null) {
+                section = getConfig().createSection(name);
+            }
 
-		for (Database database : databases){
-			String name = database.getConfigName();
+            database.getConfigDefaults(section);
 
-			ConfigurationSection section = getConfig().getConfigurationSection(name);
+            if (section.getKeys(false).isEmpty()) {
+                getConfig().set(name, null);
+            }
+        }
 
-			if (section == null){
-				section = getConfig().createSection(name);
-			}
+        getConfig().options().copyDefaults(true);
 
-			database.getConfigDefaults(section);
+        getConfig().options().header("Fe Config - meloncraft.com\n" +
+                "holdings - The amount of money that players will start out with\n" +
+                "prefix - The message prefix\n" +
+                "currency - The single and multiple names for the currency\n" +
+                "type - The type of database used (sqlite, mysql, or mongo)\n" +
+                "updatecheck - Checks if there is an update to Fe" +
+                "cacheaccounts - Caches players' balances when logged on to the server");
 
-			if (section.getKeys(false).isEmpty()){
-				getConfig().set(name, null);
-			}
-		}
+        saveConfig();
 
-		getConfig().options().copyDefaults(true);
+        api = new API(this);
 
-		getConfig().options().header("Fe Config - meloncraft.com\n" +
-				"holdings - The amount of money that players will start out with\n" +
-				"prefix - The message prefix\n" +
-				"currency - The single and multiple names for the currency\n" +
-				"type - The type of database used (sqlite, mysql, or mongo)\n" +
-				"updatecheck - Checks if there is an update to Fe" +
-				"cacheaccounts - Caches players' balances when logged on to the server");
+        if (!setupDatabase()) {
+            return;
+        }
 
-		saveConfig();
+        String currentVersionString = getDescription().getVersion();
 
-		api = new API(this);
+        currentVersion = versionToDouble(currentVersionString);
 
-		if (!setupDatabase()){
-			return;
-		}
+        setLatestVersion(currentVersion);
 
-		String currentVersionString = getDescription().getVersion();
+        setLatestVersionString(currentVersionString);
 
-		currentVersion = versionToDouble(currentVersionString);
+        getCommand("fe").setExecutor(new FeCommand(this));
 
-		setLatestVersion(currentVersion);
+        new FePlayerListener(this);
 
-		setLatestVersionString(currentVersionString);
+        setupVault();
 
-		getCommand("fe").setExecutor(new FeCommand(this));
+        loadMetrics();
 
-		new FePlayerListener(this);
+        if (getConfig().getBoolean("updatecheck")) {
+            getServer().getScheduler().runTaskAsynchronously(this, new UpdateCheck(this));
+        }
+    }
 
-		setupVault();
+    public void log(String message) {
+        getLogger().info("[Fe] " + message);
+    }
 
-		loadMetrics();
+    public double versionToDouble(String version) {
+        boolean isSnapshot = version.endsWith("-SNAPSHOT");
 
-		if (getConfig().getBoolean("updatecheck")){
-			getServer().getScheduler().runTaskAsynchronously(this, new UpdateCheck(this));
-		}
-	}
+        version = version.replace("-SNAPSHOT", "");
 
-	public void log(String message){
-		getLogger().info("[Fe] " + message);
-	}
+        String fixed = "";
 
-	public double versionToDouble(String version){
-		boolean isSnapshot = version.endsWith("-SNAPSHOT");
+        boolean doneFirst = false;
 
-		version = version.replace("-SNAPSHOT", "");
+        for (int i = 0; i < version.length(); i++) {
+            char c = version.charAt(i);
 
-		String fixed = "";
+            if (c == '.') {
+                if (doneFirst) {
+                    continue;
+                } else {
+                    doneFirst = true;
+                }
+            }
 
-		boolean doneFirst = false;
+            fixed += c;
+        }
 
-		for (int i = 0; i < version.length(); i++){
-			char c = version.charAt(i);
+        try {
+            double ret = Double.parseDouble(fixed);
 
-			if (c == '.'){
-				if (doneFirst){
-					continue;
-				}else {
-					doneFirst = true;
-				}
-			}
+            if (isSnapshot) {
+                ret -= 0.001;
+            }
 
-			fixed += c;
-		}
+            return ret;
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
 
-		try {
-			double ret = Double.parseDouble(fixed);
+    public double getLatestVersion() {
+        return latestVersion;
+    }
 
-			if (isSnapshot){
-				ret -= 0.001;
-			}
+    protected void setLatestVersion(double latestVersion) {
+        this.latestVersion = latestVersion;
+    }
 
-			return ret;
-		}catch (NumberFormatException e){
-			return -1;
-		}
-	}
+    public String getLatestVersionString() {
+        return latestVersionString;
+    }
 
-	protected void setLatestVersion(double latestVersion){
-		this.latestVersion = latestVersion;
-	}
+    protected void setLatestVersionString(String latestVersionString) {
+        this.latestVersionString = latestVersionString;
+    }
 
-	protected void setLatestVersionString(String latestVersionString){
-		this.latestVersionString = latestVersionString;
-	}
+    public boolean isUpdated() {
+        return currentVersion >= latestVersion;
+    }
 
-	public double getLatestVersion(){
-		return latestVersion;
-	}
+    public void onDisable() {
+        getServer().getScheduler().cancelTasks(this);
 
-	public String getLatestVersionString(){
-		return latestVersionString;
-	}
+        getFeDatabase().close();
+    }
 
-	public boolean isUpdated(){
-		return currentVersion >= latestVersion;
-	}
+    public void log(Phrase phrase, String... args) {
+        log(phrase.parse(args));
+    }
 
-	public void onDisable(){
-		getServer().getScheduler().cancelTasks(this);
+    public Database getFeDatabase() {
+        return database;
+    }
 
-		getFeDatabase().close();
-	}
+    public boolean addDatabase(Database database) {
+        return databases.add(database);
+    }
 
-	public void log(Phrase phrase, String... args){
-		log(phrase.parse(args));
-	}
+    public Set<Database> getDatabases() {
+        return new HashSet<Database>(databases);
+    }
 
-	public Database getFeDatabase(){
-		return database;
-	}
+    public API getAPI() {
+        return api;
+    }
 
-	public boolean addDatabase(Database database){
-		return databases.add(database);
-	}
+    private boolean setupDatabase() {
+        String type = getConfig().getString("type");
 
-	public Set<Database> getDatabases(){
-		return new HashSet<Database>(databases);
-	}
+        database = null;
 
-	public API getAPI(){
-		return api;
-	}
+        for (Database database : databases) {
+            if (type.equalsIgnoreCase(database.getConfigName())) {
+                this.database = database;
 
-	private boolean setupDatabase(){
-		String type = getConfig().getString("type");
+                break;
+            }
+        }
 
-		database = null;
+        if (database == null) {
+            log(Phrase.DATABASE_TYPE_DOES_NOT_EXIST);
 
-		for (Database database : databases){
-			if (type.equalsIgnoreCase(database.getConfigName())){
-				try {
-					this.database = database;
+            return false;
+        }
 
-					break;
-				} catch (Exception e){
+        if (!database.init()) {
+            log(Phrase.DATABASE_FAILURE_DISABLE);
 
-				}
-			}
-		}
+            setEnabled(false);
 
-		if (database == null){
-			log(Phrase.DATABASE_TYPE_DOES_NOT_EXIST);
+            return false;
+        }
 
-			return false;
-		}
+        return true;
+    }
 
-		if (!database.init()){
-			log(Phrase.DATABASE_FAILURE_DISABLE);
+    private void setupPhrases() {
+        File phrasesFile = new File(getDataFolder(), "phrases.yml");
 
-			setEnabled(false);
+        for (Phrase phrase : Phrase.values()) {
+            phrase.reset();
+        }
 
-			return false;
-		}
+        if (!phrasesFile.exists()) {
+            return;
+        }
 
-		return true;
-	}
+        YamlConfiguration phrasesConfig = YamlConfiguration.loadConfiguration(phrasesFile);
 
-	private void setupPhrases(){
-		File phrasesFile = new File(getDataFolder(), "phrases.yml");
+        for (Phrase phrase : Phrase.values()) {
+            String phraseConfigName = phrase.getConfigName();
 
-		for (Phrase phrase : Phrase.values()){
-			phrase.reset();
-		}
+            String phraseMessage = phrasesConfig.getString(phraseConfigName);
 
-		if (!phrasesFile.exists()){
-			return;
-		}
+            if (phraseMessage == null) {
+                phraseMessage = phrase.parse();
+            }
 
-		YamlConfiguration phrasesConfig = YamlConfiguration.loadConfiguration(phrasesFile);
+            phrase.setMessage(phraseMessage);
+        }
+    }
 
-		for (Phrase phrase : Phrase.values()){
-			String phraseConfigName = phrase.getConfigName();
+    public void reloadConfig() {
+        super.reloadConfig();
 
-			String phraseMessage = phrasesConfig.getString(phraseConfigName);
+        String oldCurrencySingle = getConfig().getString("currency.single");
 
-			if (phraseMessage == null){
-				phraseMessage = phrase.parse();
-			}
+        String oldCurrencyMultiple = getConfig().getString("currency.multiple");
 
-			phrase.setMessage(phraseMessage);
-		}
-	}
+        if (oldCurrencySingle != null) {
+            getConfig().set("currency.major.single", oldCurrencySingle);
 
-	public void reloadConfig(){
-		super.reloadConfig();
+            getConfig().set("currency.single", null);
+        }
 
-		String oldCurrencySingle = getConfig().getString("currency.single");
+        if (oldCurrencyMultiple != null) {
+            getConfig().set("currency.major.multiple", oldCurrencyMultiple);
 
-		String oldCurrencyMultiple = getConfig().getString("currency.multiple");
+            getConfig().set("currency.multiple", null);
+        }
 
-		if (oldCurrencySingle != null){
-			getConfig().set("currency.major.single", oldCurrencySingle);
+        setupPhrases();
 
-			getConfig().set("currency.single", null);
-		}
+        saveConfig();
+    }
 
-		if (oldCurrencyMultiple != null){
-			getConfig().set("currency.major.multiple", oldCurrencyMultiple);
+    @SuppressWarnings("deprecation")
+    public Account getShortenedAccount(String name) {
+        Account account = getAPI().getAccount(name);
 
-			getConfig().set("currency.multiple", null);
-		}
+        if (account == null) {
+            Player player = getServer().getPlayer(name);
 
-		setupPhrases();
+            if (player != null) {
+                account = getAPI().getAccount(player.getName());
+            }
+        }
 
-		saveConfig();
-	}
+        return account;
+    }
 
-	@SuppressWarnings("deprecation")
-	public Account getShortenedAccount(String name){
-		Account account = getAPI().getAccount(name);
+    public String getMessagePrefix() {
+        String third = Phrase.TERTIARY_COLOR.parse();
 
-		if (account == null){
-			Player player = getServer().getPlayer(name);
+        return third + "[" + Phrase.PRIMARY_COLOR.parse() + "$1" + third + "] " + Phrase.SECONDARY_COLOR.parse();
+    }
 
-			if (player != null){
-				account = getAPI().getAccount(player.getName());
-			}
-		}
+    public String getEqualMessage(String inBetween, int length) {
+        return getEqualMessage(inBetween, length, length);
+    }
 
-		return account;
-	}
+    public String getEqualMessage(String inBetween, int length, int length2) {
+        String equals = getEndEqualMessage(length);
 
-	public String getMessagePrefix(){
-		String third = Phrase.TERTIARY_COLOR.parse();
+        String end = getEndEqualMessage(length2);
 
-		return third  + "[" + Phrase.PRIMARY_COLOR.parse() + "$1" + third + "] " + Phrase.SECONDARY_COLOR.parse();
-	}
+        String third = Phrase.TERTIARY_COLOR.parse();
 
-	public String getEqualMessage(String inBetween, int length){
-		return getEqualMessage(inBetween, length, length);
-	}
+        return equals + third + "[" + Phrase.PRIMARY_COLOR.parse() + inBetween + third + "]" + end;
+    }
 
-	public String getEqualMessage(String inBetween, int length, int length2){
-		String equals = getEndEqualMessage(length);
+    public String getEndEqualMessage(int length) {
+        String message = Phrase.SECONDARY_COLOR.parse() + "";
 
-		String end = getEndEqualMessage(length2);
+        for (int i = 0; i < length; i++) {
+            message += "=";
+        }
 
-		String third = Phrase.TERTIARY_COLOR.parse();
+        return message;
+    }
 
-		return equals + third + "[" + Phrase.PRIMARY_COLOR.parse() + inBetween + third + "]" + end;
-	}
+    private void loadMetrics() {
+        try {
+            Metrics metrics = new Metrics(this);
 
-	public String getEndEqualMessage(int length){
-		String message = Phrase.SECONDARY_COLOR.parse() + "";
+            Graph databaseGraph = metrics.createGraph("Database Engine");
 
-		for (int i = 0; i < length; i++){
-			message += "=";
-		}
+            databaseGraph.addPlotter(new Plotter(getFeDatabase().getName()) {
+                public int getValue() {
+                    return 1;
+                }
+            });
 
-		return message;
-	}
+            Graph defaultHoldings = metrics.createGraph("Default Holdings");
 
-	private void loadMetrics(){
-		try {
-			Metrics metrics = new Metrics(this);
+            defaultHoldings.addPlotter(new Plotter(getAPI().getDefaultHoldings() + "") {
+                public int getValue() {
+                    return 1;
+                }
+            });
 
-			Graph databaseGraph = metrics.createGraph("Database Engine");
+            Graph maxHoldings = metrics.createGraph("Max Holdings");
 
-			databaseGraph.addPlotter(new Plotter(getFeDatabase().getName()){
-				public int getValue(){
-					return 1;
-				}
-			});
+            String maxHolding = getAPI().getMaxHoldings() + "";
 
-			Graph defaultHoldings = metrics.createGraph("Default Holdings");
+            if (getAPI().getMaxHoldings() == -1) {
+                maxHolding = "Unlimited";
+            }
 
-			defaultHoldings.addPlotter(new Plotter(getAPI().getDefaultHoldings() + ""){
-				public int getValue(){
-					return 1;
-				}
-			});
+            maxHoldings.addPlotter(new Plotter(maxHolding) {
+                public int getValue() {
+                    return 1;
+                }
+            });
 
-			Graph maxHoldings = metrics.createGraph("Max Holdings");
+            metrics.start();
+        } catch (IOException e) {
 
-			String maxHolding = getAPI().getMaxHoldings() + "";
+        }
+    }
 
-			if (getAPI().getMaxHoldings() == -1){
-				maxHolding = "Unlimited";
-			}
+    private void setupVault() {
+        Plugin vault = getServer().getPluginManager().getPlugin("Vault");
 
-			maxHoldings.addPlotter(new Plotter(maxHolding){
-				public int getValue(){
-					return 1;
-				}
-			});
+        if (vault == null) {
+            return;
+        }
 
-			metrics.start();
-		} catch (IOException e){
+        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
 
-		}
-	}
+        if (economyProvider != null) {
+            getServer().getServicesManager().unregister(economyProvider.getProvider());
+        }
 
-	private void setupVault(){
-		Plugin vault = getServer().getPluginManager().getPlugin("Vault");
-
-		if (vault == null){
-			return;
-		}
-
-		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
-
-		if (economyProvider != null){
-			getServer().getServicesManager().unregister(economyProvider.getProvider());
-		}
-
-		getServer().getServicesManager().register(Economy.class, new VaultHandler(this), this, ServicePriority.Highest);
-	}
+        getServer().getServicesManager().register(Economy.class, new VaultHandler(this), this, ServicePriority.Highest);
+    }
 }

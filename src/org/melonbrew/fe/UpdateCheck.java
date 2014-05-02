@@ -1,58 +1,57 @@
 package org.melonbrew.fe;
 
-import java.net.URL;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.net.URL;
+
 public class UpdateCheck implements Runnable {
-	private final Fe plugin;
+    private final Fe plugin;
 
-	public UpdateCheck(Fe plugin){
-		this.plugin = plugin;
-	}
+    public UpdateCheck(Fe plugin) {
+        this.plugin = plugin;
+    }
 
-	public void run(){
-		String pluginUrlString = "http://dev.bukkit.org/server-mods/fe-economy/files.rss";
+    public void run() {
+        String pluginUrlString = "http://dev.bukkit.org/server-mods/fe-economy/files.rss";
 
-		try {
-			URL url = new URL(pluginUrlString);
+        try {
+            URL url = new URL(pluginUrlString);
 
-			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(url.openConnection().getInputStream());
+            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(url.openConnection().getInputStream());
 
-			doc.getDocumentElement().normalize();
+            doc.getDocumentElement().normalize();
 
-			NodeList nodes = doc.getElementsByTagName("item");
+            NodeList nodes = doc.getElementsByTagName("item");
 
-			Node firstNode = nodes.item(0);
+            Node firstNode = nodes.item(0);
 
-			if (firstNode.getNodeType() == 1){
-				Element firstElement = (Element) firstNode;
+            if (firstNode.getNodeType() == 1) {
+                Element firstElement = (Element) firstNode;
 
-				NodeList firstElementTagName = firstElement.getElementsByTagName("title");
+                NodeList firstElementTagName = firstElement.getElementsByTagName("title");
 
-				Element firstNameElement = (Element) firstElementTagName.item(0);
+                Element firstNameElement = (Element) firstElementTagName.item(0);
 
-				NodeList firstNodes = firstNameElement.getChildNodes();
+                NodeList firstNodes = firstNameElement.getChildNodes();
 
-				String version = firstNodes.item(0).getNodeValue().trim();
+                String version = firstNodes.item(0).getNodeValue().trim();
 
-				double latestVersion = plugin.versionToDouble(version);
+                double latestVersion = plugin.versionToDouble(version);
 
-				plugin.setLatestVersion(latestVersion);
+                plugin.setLatestVersion(latestVersion);
 
-				plugin.setLatestVersionString(version);
+                plugin.setLatestVersionString(version);
 
-				if (!plugin.isUpdated()){
-					plugin.log(Phrase.FE_OUTDATED, version);
-				}
-			}
-		} catch (Exception e){
+                if (!plugin.isUpdated()) {
+                    plugin.log(Phrase.FE_OUTDATED, version);
+                }
+            }
+        } catch (Exception e) {
 
-		}
-	}
+        }
+    }
 }
