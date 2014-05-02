@@ -39,9 +39,9 @@ public class FePlayerListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Database database = plugin.getFeDatabase();
 
-        if (database.cacheAccounts()) {
-            Account account = database.getAccount(event.getPlayer().getName());
+        Account account = database.getCachedAccount(event.getPlayer().getName());
 
+        if (account != null) {
             account.save(account.getMoney());
 
             database.removeCachedAccount(account);
