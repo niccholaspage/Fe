@@ -47,7 +47,7 @@ public class MongoDB extends Database {
 
     }
 
-	public DB getDatabase(){
+	private DB getDatabase(){
 		DB database = mongoClient.getDB(getConfigSection().getString("database"));
 
 		database.authenticate(getConfigSection().getString("user"), getConfigSection().getString("password").toCharArray());
