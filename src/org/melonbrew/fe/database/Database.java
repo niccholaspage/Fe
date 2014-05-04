@@ -66,7 +66,13 @@ public abstract class Database {
 
     protected abstract void saveAccount(String name, double money);
 
-    public abstract void removeAccount(String name);
+    public void removeAccount(String name) {
+        Account account = getCachedAccount(name);
+
+        if (account != null) {
+            removeCachedAccount(account);
+        }
+    }
 
     public abstract void getConfigDefaults(ConfigurationSection section);
 

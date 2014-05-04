@@ -217,6 +217,8 @@ public abstract class SQLDB extends Database {
     }
 
     public void removeAccount(String name) {
+        super.removeAccount(name);
+
         checkConnection();
 
         PreparedStatement statement;

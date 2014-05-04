@@ -75,6 +75,8 @@ public class MongoDB extends Database {
     }
 
     public void removeAccount(String name) {
+        super.removeAccount(name);
+
         DBCollection collection = getDatabase().getCollection(ACCOUNTS_COLLECTION);
 
         DBObject oldUserObject = collection.findOne(new BasicDBObject("name", name));
