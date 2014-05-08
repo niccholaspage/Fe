@@ -1,7 +1,6 @@
 package org.melonbrew.fe.database.databases;
 
 import com.mongodb.*;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.database.Account;
@@ -47,9 +46,7 @@ public class MongoDB extends Database {
 
     @SuppressWarnings("deprecation")
     public Double loadAccountMoney(String name) {
-        OfflinePlayer player = plugin.getServer().getOfflinePlayer(name);
-
-        UUID uuid = player.getUniqueId();
+        UUID uuid = plugin.getUUID(name);
 
         DBObject query = getQueryFromNameOrUUID(name, uuid);
 
@@ -88,9 +85,7 @@ public class MongoDB extends Database {
 
     @SuppressWarnings("deprecation")
     public void saveAccount(String name, double money) {
-        OfflinePlayer player = plugin.getServer().getOfflinePlayer(name);
-
-        UUID uuid = player.getUniqueId();
+        UUID uuid = plugin.getUUID(name);
 
         DBObject query = getQueryFromNameOrUUID(name, uuid);
 

@@ -1,6 +1,5 @@
 package org.melonbrew.fe.database.databases;
 
-import org.bukkit.OfflinePlayer;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.database.Account;
 import org.melonbrew.fe.database.Database;
@@ -187,9 +186,7 @@ public abstract class SQLDB extends Database {
     public Double loadAccountMoney(String name) {
         checkConnection();
 
-        OfflinePlayer player = plugin.getServer().getOfflinePlayer(name);
-
-        UUID uuid = player.getUniqueId();
+        UUID uuid = plugin.getUUID(name);
 
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + accountsName + " WHERE " + accountsColumnUser + "=? OR " + accountsColumnUUID + "=?");
@@ -237,9 +234,7 @@ public abstract class SQLDB extends Database {
     protected void saveAccount(String name, double money) {
         checkConnection();
 
-        OfflinePlayer player = plugin.getServer().getOfflinePlayer(name);
-
-        UUID uuid = player.getUniqueId();
+        UUID uuid = plugin.getUUID(name);
 
         try {
             PreparedStatement statement = connection.prepareStatement("UPDATE " + accountsName + " SET " + accountsColumnMoney + "=?, " + accountsColumnUser + "=? WHERE " + accountsColumnUUID + "=? OR " + accountsColumnUser + "=?");

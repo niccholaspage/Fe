@@ -1,6 +1,7 @@
 package org.melonbrew.fe;
 
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -21,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class Fe extends JavaPlugin {
     private final Set<Database> databases;
@@ -365,5 +367,23 @@ public class Fe extends JavaPlugin {
         }
 
         getServer().getServicesManager().register(Economy.class, new VaultHandler(this), this, ServicePriority.Highest);
+    }
+
+    public UUID getUUID(String name) {
+        OfflinePlayer player = getServer().getOfflinePlayer(name);
+
+        UUID uuid = null;
+
+        if (!player.hasPlayedBefore()) {
+            try {
+                uuid = UUIDFetcher.getUUIDOf(name);
+            } catch (Exception e) {
+                uuid = player.getUniqueId();
+            }
+        } else {
+            uuid = player.getUniqueId();
+        }
+
+        return uuid;
     }
 }
