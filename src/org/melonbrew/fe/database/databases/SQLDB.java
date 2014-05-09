@@ -193,7 +193,7 @@ public abstract class SQLDB extends Database {
 
             statement.setString(1, name);
 
-            statement.setString(2, uuid.toString());
+            statement.setString(2, uuid + "");
 
             ResultSet set = statement.executeQuery();
 
@@ -243,7 +243,7 @@ public abstract class SQLDB extends Database {
 
             statement.setString(2, name);
 
-            statement.setString(3, uuid.toString());
+            statement.setString(3, uuid + "");
 
             statement.setString(4, name);
 
@@ -252,7 +252,7 @@ public abstract class SQLDB extends Database {
 
                 statement.setString(1, name);
 
-                statement.setString(2, uuid.toString());
+                statement.setString(2, uuid + "");
 
                 statement.setDouble(3, money);
 

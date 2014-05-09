@@ -60,7 +60,7 @@ public class MongoDB extends Database {
     private DBObject getQueryFromNameOrUUID(String name, UUID uuid) {
         DBObject nameClause = new BasicDBObject("name", name);
 
-        DBObject uuidClause = new BasicDBObject("uuid", uuid.toString());
+        DBObject uuidClause = new BasicDBObject("uuid", uuid + "");
 
         BasicDBList or = new BasicDBList();
 
@@ -95,7 +95,7 @@ public class MongoDB extends Database {
             collection.remove(query);
         }
 
-        collection.insert(new BasicDBObject("name", name).append("uuid", uuid.toString()).append("money", money));
+        collection.insert(new BasicDBObject("name", name).append("uuid", uuid + "").append("money", money));
     }
 
     @Override
