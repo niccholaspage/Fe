@@ -107,9 +107,9 @@ public class Fe extends JavaPlugin {
     }
 
     public double versionToDouble(String version) {
-        boolean isSnapshot = version.endsWith("-SNAPSHOT");
+        boolean isSnapshot = version.contains("-SNAPSHOT");
 
-        version = version.replace("-SNAPSHOT", "");
+        version = version.substring(0, version.indexOf("-SNAPSHOT"));
 
         String fixed = "";
 
