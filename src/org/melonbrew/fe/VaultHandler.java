@@ -1,6 +1,6 @@
 package org.melonbrew.fe;
 
-import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.AbstractEconomy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
 import org.bukkit.Bukkit;
@@ -15,7 +15,7 @@ import org.melonbrew.fe.database.Account;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VaultHandler implements Economy {
+public class VaultHandler extends AbstractEconomy {
     private final String name = "Fe";
 
     private Fe plugin;

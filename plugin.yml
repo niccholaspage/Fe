@@ -2,7 +2,7 @@ name: Fe
 
 main: org.melonbrew.fe.Fe
 
-version: ${project.version}
+version: ${project.version}-b${BUILD_NUMBER}
 
 load: startup
 
