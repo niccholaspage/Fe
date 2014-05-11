@@ -67,7 +67,7 @@ public abstract class Database {
     protected abstract void saveAccount(String name, String uuid, double money);
 
     public void removeAccount(String name, String uuid) {
-        Account account = getCachedAccount(name);
+        Account account = getCachedAccount(name, uuid);
 
         if (account != null) {
             removeCachedAccount(account);
@@ -97,7 +97,7 @@ public abstract class Database {
     }
 
     public Account getAccount(String name, String uuid) {
-        Account account = getCachedAccount(name);
+        Account account = getCachedAccount(name, uuid);
 
         if (account != null) {
             return account;
@@ -142,10 +142,16 @@ public abstract class Database {
         return cacheAccounts;
     }
 
-    public Account getCachedAccount(String name) {
+    public Account getCachedAccount(String name, String uuid) {
         for (Account account : cachedAccounts) {
             if (account.getName().equals(name)) {
                 return account;
+            } else {
+                String accountUUID = account.getUUID();
+
+                if (accountUUID != null && accountUUID.equals(uuid)) {
+                    return account;
+                }
             }
         }
 

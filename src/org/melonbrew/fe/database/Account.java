@@ -30,6 +30,10 @@ public class Account {
         return name;
     }
 
+    public String getUUID() {
+        return uuid;
+    }
+
     public Double getMoney() {
         if (money != null) {
             return money;
