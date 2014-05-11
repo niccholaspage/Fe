@@ -188,7 +188,7 @@ public abstract class SQLDB extends Database {
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + accountsName + " WHERE " + (uuid != null ? accountsColumnUUID : accountsColumnUser) + "=?");
 
-            statement.setString(1, name);
+            statement.setString(1, uuid != null ? uuid : name);
 
             ResultSet set = statement.executeQuery();
 
