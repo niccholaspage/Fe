@@ -1,9 +1,10 @@
 package org.melonbrew.fe;
 
-import net.milkbowl.vault.economy.AbstractEconomy;
+import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -15,7 +16,7 @@ import org.melonbrew.fe.database.Account;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VaultHandler extends AbstractEconomy {
+public class VaultHandler implements Economy {
     private final String name = "Fe";
 
     private Fe plugin;
@@ -55,24 +56,44 @@ public class VaultHandler extends AbstractEconomy {
 
     @Override
     public double getBalance(String playerName) {
-        if (plugin.getAPI().accountExists(playerName, null)) {
-            return plugin.getAPI().getAccount(playerName, null).getMoney();
-        } else {
+        return getAccountBalance(playerName, null);
+    }
+
+    @Override
+    public double getBalance(OfflinePlayer offlinePlayer) {
+        return getAccountBalance(offlinePlayer.getName(), offlinePlayer.getUniqueId().toString());
+    }
+
+    private double getAccountBalance(String playerName, String uuid) {
+        Account account = plugin.getAPI().getAccount(playerName, uuid);
+
+        if (account == null) {
             return 0;
         }
+
+        return account.getMoney();
     }
 
     @Override
     public EconomyResponse withdrawPlayer(String playerName, double amount) {
+        return withdraw(playerName, null, amount);
+    }
+
+    @Override
+    public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, double amount) {
+        return withdraw(offlinePlayer.getName(), offlinePlayer.getUniqueId().toString(), amount);
+    }
+
+    private EconomyResponse withdraw(String playerName, String uuid, double amount) {
         if (amount < 0) {
             return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot withdraw negative funds");
         }
 
-        if (!plugin.getAPI().accountExists(playerName, null)) {
+        Account account = plugin.getAPI().getAccount(playerName, uuid);
+
+        if (account == null) {
             return new EconomyResponse(0, 0, ResponseType.FAILURE, "Account doesn't exist");
         }
-
-        Account account = plugin.getAPI().getAccount(playerName, null);
 
         if (account.has(amount)) {
             account.withdraw(amount);
@@ -85,15 +106,24 @@ public class VaultHandler extends AbstractEconomy {
 
     @Override
     public EconomyResponse depositPlayer(String playerName, double amount) {
+        return deposit(playerName, null, amount);
+    }
+
+    @Override
+    public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, double amount) {
+        return deposit(offlinePlayer.getName(), offlinePlayer.getUniqueId().toString(), amount);
+    }
+
+    private EconomyResponse deposit(String playerName, String uuid, double amount) {
         if (amount < 0) {
             return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot deposit negative funds");
         }
 
-        if (!plugin.getAPI().accountExists(playerName, null)) {
+        Account account = plugin.getAPI().getAccount(playerName, uuid);
+
+        if (account == null) {
             return new EconomyResponse(0, 0, ResponseType.FAILURE, "Account doesn't exist");
         }
-
-        Account account = plugin.getAPI().getAccount(playerName, null);
 
         account.deposit(amount);
 
@@ -106,7 +136,17 @@ public class VaultHandler extends AbstractEconomy {
     }
 
     @Override
+    public boolean has(OfflinePlayer offlinePlayer, double amount) {
+        return getBalance(offlinePlayer) >= amount;
+    }
+
+    @Override
     public EconomyResponse createBank(String name, String player) {
+        return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
+    }
+
+    @Override
+    public EconomyResponse createBank(String name, OfflinePlayer offlinePlayer) {
         return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
     }
 
@@ -136,7 +176,17 @@ public class VaultHandler extends AbstractEconomy {
     }
 
     @Override
+    public EconomyResponse isBankOwner(String name, OfflinePlayer offlinePlayer) {
+        return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
+    }
+
+    @Override
     public EconomyResponse isBankMember(String name, String playerName) {
+        return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
+    }
+
+    @Override
+    public EconomyResponse isBankMember(String name, OfflinePlayer offlinePlayer) {
         return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
     }
 
@@ -161,12 +211,26 @@ public class VaultHandler extends AbstractEconomy {
     }
 
     @Override
+    public boolean hasAccount(OfflinePlayer offlinePlayer) {
+        return plugin.getAPI().accountExists(offlinePlayer.getName(), offlinePlayer.getUniqueId().toString());
+    }
+
+    @Override
     public boolean createPlayerAccount(String playerName) {
-        if (hasAccount(playerName)) {
+        return createAccount(playerName, null);
+    }
+
+    @Override
+    public boolean createPlayerAccount(OfflinePlayer offlinePlayer) {
+        return createAccount(offlinePlayer.getName(), offlinePlayer.getUniqueId().toString());
+    }
+
+    private boolean createAccount(String playerName, String uuid) {
+        if (hasAccount(playerName, uuid)) {
             return false;
         }
 
-        plugin.getAPI().createAccount(playerName, null);
+        plugin.getAPI().createAccount(playerName, uuid);
 
         return true;
     }
@@ -182,8 +246,18 @@ public class VaultHandler extends AbstractEconomy {
     }
 
     @Override
-    public double getBalance(String playerName, String world) {
+    public boolean hasAccount(OfflinePlayer offlinePlayer, String worldName) {
+        return hasAccount(offlinePlayer);
+    }
+
+    @Override
+    public double getBalance(String playerName, String worldName) {
         return getBalance(playerName);
+    }
+
+    @Override
+    public double getBalance(OfflinePlayer offlinePlayer, String worldName) {
+        return getBalance(offlinePlayer);
     }
 
     @Override
@@ -192,8 +266,18 @@ public class VaultHandler extends AbstractEconomy {
     }
 
     @Override
+    public boolean has(OfflinePlayer offlinePlayer, String worldName, double amount) {
+        return has(offlinePlayer, amount);
+    }
+
+    @Override
     public EconomyResponse withdrawPlayer(String playerName, String worldName, double amount) {
         return withdrawPlayer(playerName, amount);
+    }
+
+    @Override
+    public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, String worldName, double amount) {
+        return withdrawPlayer(offlinePlayer, amount);
     }
 
     @Override
@@ -202,8 +286,18 @@ public class VaultHandler extends AbstractEconomy {
     }
 
     @Override
+    public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, String worldName, double amount) {
+        return depositPlayer(offlinePlayer, amount);
+    }
+
+    @Override
     public boolean createPlayerAccount(String playerName, String worldName) {
         return createPlayerAccount(playerName);
+    }
+
+    @Override
+    public boolean createPlayerAccount(OfflinePlayer offlinePlayer, String worldName) {
+        return createPlayerAccount(offlinePlayer);
     }
 
     public class EconomyServerListener implements Listener {
