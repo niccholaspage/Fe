@@ -23,7 +23,7 @@ public class CreateCommand extends SubCommand {
 
         String name = args[0];
 
-        if (plugin.getAPI().accountExists(name)) {
+        if (plugin.getAPI().accountExists(name, null)) {
             Phrase.ACCOUNT_EXISTS.sendWithPrefix(sender);
 
             return true;
@@ -35,7 +35,7 @@ public class CreateCommand extends SubCommand {
             return true;
         }
 
-        plugin.getAPI().createAccount(name);
+        plugin.getAPI().createAccount(name, null);
 
         Phrase.ACCOUNT_CREATED.sendWithPrefix(sender, Phrase.PRIMARY_COLOR.parse() + plugin.getAPI().getReadName(name) + Phrase.SECONDARY_COLOR.parse());
 

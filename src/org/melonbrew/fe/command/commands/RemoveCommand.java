@@ -23,13 +23,13 @@ public class RemoveCommand extends SubCommand {
 
         String name = args[0];
 
-        if (!plugin.getAPI().accountExists(name)) {
+        if (!plugin.getAPI().accountExists(name, null)) {
             Phrase.ACCOUNT_DOES_NOT_EXIST.sendWithPrefix(sender);
 
             return true;
         }
 
-        plugin.getAPI().removeAccount(name);
+        plugin.getAPI().removeAccount(name, null);
 
         Phrase.ACCOUNT_REMOVED.sendWithPrefix(sender, Phrase.PRIMARY_COLOR.parse() + plugin.getAPI().getReadName(name) + Phrase.SECONDARY_COLOR.parse());
 

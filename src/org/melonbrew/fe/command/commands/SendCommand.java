@@ -44,7 +44,7 @@ public class SendCommand extends SubCommand {
             return true;
         }
 
-        Account account = plugin.getAPI().getAccount(sender.getName());
+        Account account = plugin.getAPI().getAccount(sender.getName(), null);
 
         if (!account.has(money)) {
             Phrase.NOT_ENOUGH_MONEY.sendWithPrefix(sender);

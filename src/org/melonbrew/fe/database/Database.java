@@ -62,11 +62,11 @@ public abstract class Database {
 
     public abstract List<Account> getAccounts();
 
-    public abstract Double loadAccountMoney(String name);
+    public abstract Double loadAccountMoney(String name, String uuid);
 
-    protected abstract void saveAccount(String name, double money);
+    protected abstract void saveAccount(String name, String uuid, double money);
 
-    public void removeAccount(String name) {
+    public void removeAccount(String name, String uuid) {
         Account account = getCachedAccount(name);
 
         if (account != null) {
@@ -96,34 +96,34 @@ public abstract class Database {
         return plugin.getConfig().getConfigurationSection(getConfigName());
     }
 
-    public Account getAccount(String name) {
+    public Account getAccount(String name, String uuid) {
         Account account = getCachedAccount(name);
 
         if (account != null) {
             return account;
         }
 
-        Double money = loadAccountMoney(name);
+        Double money = loadAccountMoney(name, uuid);
 
         if (money == null) {
             return null;
         } else {
-            return createAndAddAccount(name, money);
+            return createAndAddAccount(name, uuid, money);
         }
     }
 
-    public Account createAccount(String name) {
-        Account account = getAccount(name);
+    public Account createAccount(String name, String uuid) {
+        Account account = getAccount(name, uuid);
 
         if (account == null) {
-            account = createAndAddAccount(name, plugin.getAPI().getDefaultHoldings());
+            account = createAndAddAccount(name, uuid, plugin.getAPI().getDefaultHoldings());
         }
 
         return account;
     }
 
-    private Account createAndAddAccount(String name, double money) {
-        Account account = new Account(name, plugin, this);
+    private Account createAndAddAccount(String name, String uuid, double money) {
+        Account account = new Account(name, uuid, plugin, this);
 
         account.setMoney(money);
 
@@ -134,8 +134,8 @@ public abstract class Database {
         return account;
     }
 
-    public boolean accountExists(String name) {
-        return getAccount(name) != null;
+    public boolean accountExists(String name, String uuid) {
+        return getAccount(name, uuid) != null;
     }
 
     public boolean cacheAccounts() {

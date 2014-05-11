@@ -270,13 +270,13 @@ public class Fe extends JavaPlugin {
 
     @SuppressWarnings("deprecation")
     public Account getShortenedAccount(String name) {
-        Account account = getAPI().getAccount(name);
+        Account account = getAPI().getAccount(name, null);
 
         if (account == null) {
             Player player = getServer().getPlayer(name);
 
             if (player != null) {
-                account = getAPI().getAccount(player.getName());
+                account = getAPI().getAccount(player.getName(), null);
             }
         }
 
@@ -369,7 +369,7 @@ public class Fe extends JavaPlugin {
         getServer().getServicesManager().register(Economy.class, new VaultHandler(this), this, ServicePriority.Highest);
     }
 
-    public UUID getUUID(String name) {
+    public String getUUID(String name) {
         OfflinePlayer player = getServer().getOfflinePlayer(name);
 
         UUID uuid = null;
@@ -384,6 +384,6 @@ public class Fe extends JavaPlugin {
             uuid = player.getUniqueId();
         }
 
-        return uuid;
+        return uuid == null ? null : uuid.toString();
     }
 }

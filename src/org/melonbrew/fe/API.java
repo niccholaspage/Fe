@@ -68,20 +68,20 @@ public class API {
         return plugin.getConfig().getBoolean("cacheaccounts");
     }
 
-    public Account createAccount(String name) {
-        return plugin.getFeDatabase().createAccount(name.toLowerCase());
+    public Account createAccount(String name, String uuid) {
+        return plugin.getFeDatabase().createAccount(name.toLowerCase(), uuid);
     }
 
-    public void removeAccount(String name) {
-        plugin.getFeDatabase().removeAccount(name.toLowerCase());
+    public void removeAccount(String name, String uuid) {
+        plugin.getFeDatabase().removeAccount(name.toLowerCase(), uuid);
     }
 
-    public Account getAccount(String name) {
-        return plugin.getFeDatabase().getAccount(name.toLowerCase());
+    public Account getAccount(String name, String uuid) {
+        return plugin.getFeDatabase().getAccount(name.toLowerCase(), uuid);
     }
 
-    public boolean accountExists(String name) {
-        return plugin.getFeDatabase().accountExists(name.toLowerCase());
+    public boolean accountExists(String name, String uuid) {
+        return plugin.getFeDatabase().accountExists(name.toLowerCase(), uuid);
     }
 
     public String formatNoColor(double amount) {

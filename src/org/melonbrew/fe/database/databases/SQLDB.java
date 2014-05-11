@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public abstract class SQLDB extends Database {
     private final Fe plugin;
@@ -147,7 +146,7 @@ public abstract class SQLDB extends Database {
             ResultSet set = connection.createStatement().executeQuery(sql);
 
             while (set.next()) {
-                Account account = new Account(set.getString(accountsColumnUser).toLowerCase(), plugin, this);
+                Account account = new Account(set.getString(accountsColumnUser).toLowerCase(), set.getString(accountsColumnUUID), plugin, this);
 
                 account.setMoney(set.getDouble(accountsColumnMoney));
 
@@ -169,7 +168,7 @@ public abstract class SQLDB extends Database {
             ResultSet set = connection.createStatement().executeQuery("SELECT * from " + accountsName);
 
             while (set.next()) {
-                Account account = new Account(set.getString(accountsColumnUser).toLowerCase(), plugin, this);
+                Account account = new Account(set.getString(accountsColumnUser).toLowerCase(), set.getString(accountsColumnUUID), plugin, this);
 
                 account.setMoney(set.getDouble(accountsColumnMoney));
 
@@ -183,17 +182,13 @@ public abstract class SQLDB extends Database {
     }
 
     @SuppressWarnings("deprecation")
-    public Double loadAccountMoney(String name) {
+    public Double loadAccountMoney(String name, String uuid) {
         checkConnection();
 
-        UUID uuid = plugin.getUUID(name);
-
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + accountsName + " WHERE " + accountsColumnUser + "=? OR " + accountsColumnUUID + "=?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + accountsName + " WHERE " + (uuid != null ? accountsColumnUUID : accountsColumnUser) + "=?");
 
             statement.setString(1, name);
-
-            statement.setString(2, uuid + "");
 
             ResultSet set = statement.executeQuery();
 
@@ -213,14 +208,14 @@ public abstract class SQLDB extends Database {
         }
     }
 
-    public void removeAccount(String name) {
-        super.removeAccount(name);
+    public void removeAccount(String name, String uuid) {
+        super.removeAccount(name, uuid);
 
         checkConnection();
 
         PreparedStatement statement;
         try {
-            statement = connection.prepareStatement("DELETE FROM " + accountsName + " WHERE " + accountsColumnUser + "=?");
+            statement = connection.prepareStatement("DELETE FROM " + accountsName + " WHERE " + (uuid != null ? accountsColumnUUID : accountsColumnUser) + "=?");
 
             statement.setString(1, name);
 
@@ -231,28 +226,36 @@ public abstract class SQLDB extends Database {
     }
 
     @SuppressWarnings("deprecation")
-    protected void saveAccount(String name, double money) {
+    protected void saveAccount(String name, String uuid, double money) {
         checkConnection();
 
-        UUID uuid = plugin.getUUID(name);
-
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE " + accountsName + " SET " + accountsColumnMoney + "=?, " + accountsColumnUser + "=? WHERE " + accountsColumnUUID + "=? OR " + accountsColumnUser + "=?");
+            String sql = "UPDATE " + accountsName + " SET " + accountsColumnMoney + "=?, " + accountsColumnUser + "=? WHERE ";
+
+            if (uuid != null) {
+                sql += accountsColumnUUID;
+            } else {
+                sql += accountsColumnUser;
+            }
+
+            PreparedStatement statement = connection.prepareStatement(sql + "=?");
 
             statement.setDouble(1, money);
 
             statement.setString(2, name);
 
-            statement.setString(3, uuid + "");
-
-            statement.setString(4, name);
+            if (uuid != null) {
+                statement.setString(3, uuid);
+            } else {
+                statement.setString(3, name);
+            }
 
             if (statement.executeUpdate() == 0) {
                 statement = connection.prepareStatement("INSERT INTO " + accountsName + " (" + accountsColumnUser + ", " + accountsColumnUUID + ", " + accountsColumnMoney + ") VALUES (?, ?, ?)");
 
                 statement.setString(1, name);
 
-                statement.setString(2, uuid + "");
+                statement.setString(2, uuid);
 
                 statement.setDouble(3, money);
 

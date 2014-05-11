@@ -9,7 +9,6 @@ import org.melonbrew.fe.database.Database;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class MongoDB extends Database {
     private static final String ACCOUNTS_COLLECTION = "accounts";
@@ -45,38 +44,22 @@ public class MongoDB extends Database {
     }
 
     @SuppressWarnings("deprecation")
-    public Double loadAccountMoney(String name) {
-        UUID uuid = plugin.getUUID(name);
+    public Double loadAccountMoney(String name, String uuid) {
+        DBObject userObject = getDatabase().getCollection(ACCOUNTS_COLLECTION).findOne(new BasicDBObject(uuid != null ? "uuid" : "name", name));
 
-        DBObject query = getQueryFromNameOrUUID(name, uuid);
-
-        if (query == null) {
+        if (userObject == null) {
             return null;
         }
 
-        return ((BasicDBObject) query).getDouble("money");
+        return ((BasicDBObject) userObject).getDouble("money");
     }
 
-    private DBObject getQueryFromNameOrUUID(String name, UUID uuid) {
-        DBObject nameClause = new BasicDBObject("name", name);
-
-        DBObject uuidClause = new BasicDBObject("uuid", uuid + "");
-
-        BasicDBList or = new BasicDBList();
-
-        or.add(nameClause);
-
-        or.add(uuidClause);
-
-        return getDatabase().getCollection(ACCOUNTS_COLLECTION).findOne(new BasicDBObject("$or", or));
-    }
-
-    public void removeAccount(String name) {
-        super.removeAccount(name);
+    public void removeAccount(String name, String uuid) {
+        super.removeAccount(name, uuid);
 
         DBCollection collection = getDatabase().getCollection(ACCOUNTS_COLLECTION);
 
-        DBObject oldUserObject = collection.findOne(new BasicDBObject("name", name));
+        DBObject oldUserObject = collection.findOne(new BasicDBObject(uuid != null ? "uuid" : "name", name));
 
         if (oldUserObject != null) {
             collection.remove(oldUserObject);
@@ -84,18 +67,16 @@ public class MongoDB extends Database {
     }
 
     @SuppressWarnings("deprecation")
-    public void saveAccount(String name, double money) {
-        UUID uuid = plugin.getUUID(name);
-
-        DBObject query = getQueryFromNameOrUUID(name, uuid);
-
+    public void saveAccount(String name, String uuid, double money) {
         DBCollection collection = getDatabase().getCollection(ACCOUNTS_COLLECTION);
+
+        DBObject query = collection.findOne(new BasicDBObject(uuid != null ? "uuid" : "name", name));
 
         if (query != null) {
             collection.remove(query);
         }
 
-        collection.insert(new BasicDBObject("name", name).append("uuid", uuid + "").append("money", money));
+        collection.insert(new BasicDBObject("name", name).append("uuid", uuid).append("money", money));
     }
 
     @Override
@@ -125,7 +106,7 @@ public class MongoDB extends Database {
         for (DBObject aCursor : cursor) {
             BasicDBObject topAccountObject = (BasicDBObject) aCursor;
 
-            Account account = new Account(topAccountObject.getString("name"), plugin, this);
+            Account account = new Account(topAccountObject.getString("name"), topAccountObject.getString("uuid"), plugin, this);
 
             account.setMoney(topAccountObject.getDouble("money"));
 
@@ -144,7 +125,7 @@ public class MongoDB extends Database {
         for (DBObject aCursor : cursor) {
             BasicDBObject accountObject = (BasicDBObject) aCursor;
 
-            Account account = new Account(accountObject.getString("name"), plugin, this);
+            Account account = new Account(accountObject.getString("name"), accountObject.getString("uuid"), plugin, this);
 
             account.setMoney(accountObject.getDouble("money"));
 

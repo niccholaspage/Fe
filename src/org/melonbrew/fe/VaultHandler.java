@@ -55,8 +55,8 @@ public class VaultHandler extends AbstractEconomy {
 
     @Override
     public double getBalance(String playerName) {
-        if (plugin.getAPI().accountExists(playerName)) {
-            return plugin.getAPI().getAccount(playerName).getMoney();
+        if (plugin.getAPI().accountExists(playerName, null)) {
+            return plugin.getAPI().getAccount(playerName, null).getMoney();
         } else {
             return 0;
         }
@@ -68,11 +68,11 @@ public class VaultHandler extends AbstractEconomy {
             return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot withdraw negative funds");
         }
 
-        if (!plugin.getAPI().accountExists(playerName)) {
+        if (!plugin.getAPI().accountExists(playerName, null)) {
             return new EconomyResponse(0, 0, ResponseType.FAILURE, "Account doesn't exist");
         }
 
-        Account account = plugin.getAPI().getAccount(playerName);
+        Account account = plugin.getAPI().getAccount(playerName, null);
 
         if (account.has(amount)) {
             account.withdraw(amount);
@@ -89,11 +89,11 @@ public class VaultHandler extends AbstractEconomy {
             return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot deposit negative funds");
         }
 
-        if (!plugin.getAPI().accountExists(playerName)) {
+        if (!plugin.getAPI().accountExists(playerName, null)) {
             return new EconomyResponse(0, 0, ResponseType.FAILURE, "Account doesn't exist");
         }
 
-        Account account = plugin.getAPI().getAccount(playerName);
+        Account account = plugin.getAPI().getAccount(playerName, null);
 
         account.deposit(amount);
 
@@ -157,7 +157,7 @@ public class VaultHandler extends AbstractEconomy {
 
     @Override
     public boolean hasAccount(String playerName) {
-        return plugin.getAPI().accountExists(playerName);
+        return plugin.getAPI().accountExists(playerName, null);
     }
 
     @Override
@@ -166,7 +166,7 @@ public class VaultHandler extends AbstractEconomy {
             return false;
         }
 
-        plugin.getAPI().createAccount(playerName);
+        plugin.getAPI().createAccount(playerName, null);
 
         return true;
     }

@@ -6,14 +6,18 @@ import org.melonbrew.fe.Fe;
 public class Account {
     private final String name;
 
+    private final String uuid;
+
     private final API api;
 
     private final Database database;
 
     private Double money;
 
-    public Account(String name, Fe plugin, Database database) {
+    public Account(String name, String uuid, Fe plugin, Database database) {
         this.name = name;
+
+        this.uuid = uuid;
 
         this.api = plugin.getAPI();
 
@@ -27,17 +31,17 @@ public class Account {
     }
 
     public Double getMoney() {
-        if (database.cacheAccounts()) {
-            if (money != null) {
-                return money;
-            }
-
-            money = database.loadAccountMoney(name);
-
+        if (money != null) {
             return money;
         }
 
-        return database.loadAccountMoney(name);
+        if (uuid != null) {
+            money = database.loadAccountMoney(name, uuid);
+        } else {
+            money = database.loadAccountMoney(name, uuid);
+        }
+
+        return money;
     }
 
     public void setMoney(double money) {
@@ -82,7 +86,7 @@ public class Account {
     }
 
     public void save(double money) {
-        database.saveAccount(name, money);
+        database.saveAccount(name, uuid, money);
     }
 
     @Override
