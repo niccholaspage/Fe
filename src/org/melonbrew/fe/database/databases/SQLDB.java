@@ -217,7 +217,7 @@ public abstract class SQLDB extends Database {
         try {
             statement = connection.prepareStatement("DELETE FROM " + accountsName + " WHERE " + (uuid != null ? accountsColumnUUID : accountsColumnUser) + "=?");
 
-            statement.setString(1, name);
+            statement.setString(1, uuid != null ? uuid : name);
 
             statement.execute();
         } catch (SQLException e) {

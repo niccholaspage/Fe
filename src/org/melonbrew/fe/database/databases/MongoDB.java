@@ -45,7 +45,7 @@ public class MongoDB extends Database {
 
     @SuppressWarnings("deprecation")
     public Double loadAccountMoney(String name, String uuid) {
-        DBObject userObject = getDatabase().getCollection(ACCOUNTS_COLLECTION).findOne(new BasicDBObject(uuid != null ? "uuid" : "name", name));
+        DBObject userObject = getDatabase().getCollection(ACCOUNTS_COLLECTION).findOne(new BasicDBObject(uuid != null ? "uuid" : "name", uuid != null ? uuid : name));
 
         if (userObject == null) {
             return null;
@@ -59,7 +59,7 @@ public class MongoDB extends Database {
 
         DBCollection collection = getDatabase().getCollection(ACCOUNTS_COLLECTION);
 
-        DBObject oldUserObject = collection.findOne(new BasicDBObject(uuid != null ? "uuid" : "name", name));
+        DBObject oldUserObject = collection.findOne(new BasicDBObject(uuid != null ? "uuid" : "name", uuid != null ? uuid : name));
 
         if (oldUserObject != null) {
             collection.remove(oldUserObject);
@@ -70,7 +70,7 @@ public class MongoDB extends Database {
     public void saveAccount(String name, String uuid, double money) {
         DBCollection collection = getDatabase().getCollection(ACCOUNTS_COLLECTION);
 
-        DBObject query = collection.findOne(new BasicDBObject(uuid != null ? "uuid" : "name", name));
+        DBObject query = collection.findOne(new BasicDBObject(uuid != null ? "uuid" : "name", uuid != null ? uuid : name));
 
         if (query != null) {
             collection.remove(query);
