@@ -144,14 +144,18 @@ public abstract class Database {
 
     public Account getCachedAccount(String name, String uuid) {
         for (Account account : cachedAccounts) {
+            String accountUUID = account.getUUID();
+
+            if (accountUUID != null) {
+                if (accountUUID.equals(uuid)) {
+                    return account;
+                } else {
+                    return null;
+                }
+            }
+
             if (account.getName().equals(name)) {
                 return account;
-            } else {
-                String accountUUID = account.getUUID();
-
-                if (accountUUID != null && accountUUID.equals(uuid)) {
-                    return account;
-                }
             }
         }
 
