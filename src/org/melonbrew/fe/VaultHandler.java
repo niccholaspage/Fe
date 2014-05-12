@@ -24,7 +24,7 @@ public class VaultHandler implements Economy {
     public VaultHandler(Fe plugin) {
         this.plugin = plugin;
 
-        Bukkit.getServer().getPluginManager().registerEvents(new EconomyServerListener(this), plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new EconomyServerListener(), plugin);
 
         plugin.log("Vault support enabled.");
     }
@@ -301,12 +301,6 @@ public class VaultHandler implements Economy {
     }
 
     public class EconomyServerListener implements Listener {
-        VaultHandler economy = null;
-
-        public EconomyServerListener(VaultHandler economy) {
-            this.economy = economy;
-        }
-
         @EventHandler(priority = EventPriority.MONITOR)
         public void onPluginEnable(PluginEnableEvent event) {
             if (plugin == null) {

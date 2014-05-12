@@ -39,11 +39,7 @@ public class Account {
             return money;
         }
 
-        if (uuid != null) {
-            money = database.loadAccountMoney(name, uuid);
-        } else {
-            money = database.loadAccountMoney(name, uuid);
-        }
+        money = database.loadAccountMoney(name, uuid);
 
         return money;
     }
@@ -100,6 +96,12 @@ public class Account {
         }
 
         Account account = (Account) object;
+
+        String uuid = getUUID();
+
+        if (uuid != null) {
+            return uuid.equals(account.getUUID());
+        }
 
         return account.getName().equals(getName());
     }
