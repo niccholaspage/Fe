@@ -2,6 +2,7 @@ package org.melonbrew.fe.command.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.Phrase;
 import org.melonbrew.fe.command.CommandType;
@@ -31,7 +32,9 @@ public class BalanceCommand extends SubCommand {
 
             Phrase.ACCOUNT_HAS.sendWithPrefix(sender, plugin.getAPI().getReadName(account), plugin.getAPI().format(account));
         } else {
-            account = plugin.getAPI().getAccount(sender.getName(), null);
+            Player player = plugin.getServer().getPlayer(sender.getName());
+
+            account = plugin.getAPI().getAccount(sender.getName(), player != null ? player.getUniqueId().toString() : null);
 
             if (account == null) {
                 Phrase.YOUR_ACCOUNT_DOES_NOT_EXIST.sendWithPrefix(sender);
