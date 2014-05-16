@@ -97,12 +97,6 @@ public class Account {
 
         Account account = (Account) object;
 
-        String uuid = getUUID();
-
-        if (uuid != null) {
-            return uuid.equals(account.getUUID());
-        }
-
         return account.getName().equals(getName());
     }
 }
