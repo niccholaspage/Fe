@@ -4,6 +4,8 @@ import org.melonbrew.fe.API;
 import org.melonbrew.fe.Fe;
 
 public class Account {
+    private final Fe plugin;
+
     private final String name;
 
     private final String uuid;
@@ -14,7 +16,9 @@ public class Account {
 
     private Double money;
 
-    public Account(String name, String uuid, Fe plugin, Database database) {
+    public Account(Fe plugin, String name, String uuid, Database database) {
+        this.plugin = plugin;
+
         this.name = name;
 
         this.uuid = uuid;
@@ -39,7 +43,11 @@ public class Account {
             return money;
         }
 
-        money = database.loadAccountMoney(name, uuid);
+        Double money = database.loadAccountMoney(name, uuid);
+
+        if (database.cacheAccounts()) {
+            this.money = money;
+        }
 
         return money;
     }
@@ -63,7 +71,7 @@ public class Account {
 
         if (!database.cacheAccounts()) {
             save(currentMoney);
-        } else {
+        } else if (plugin.getServer().getPlayer(getName()) != null) {
             this.money = currentMoney;
         }
     }

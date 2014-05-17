@@ -106,7 +106,7 @@ public class MongoDB extends Database {
         for (DBObject aCursor : cursor) {
             BasicDBObject topAccountObject = (BasicDBObject) aCursor;
 
-            Account account = new Account(topAccountObject.getString("name"), topAccountObject.getString("uuid"), plugin, this);
+            Account account = new Account(plugin, topAccountObject.getString("name"), topAccountObject.getString("uuid"), this);
 
             account.setMoney(topAccountObject.getDouble("money"));
 
@@ -125,7 +125,7 @@ public class MongoDB extends Database {
         for (DBObject aCursor : cursor) {
             BasicDBObject accountObject = (BasicDBObject) aCursor;
 
-            Account account = new Account(accountObject.getString("name"), accountObject.getString("uuid"), plugin, this);
+            Account account = new Account(plugin, accountObject.getString("name"), accountObject.getString("uuid"), this);
 
             account.setMoney(accountObject.getDouble("money"));
 

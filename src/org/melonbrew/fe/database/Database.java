@@ -1,6 +1,7 @@
 package org.melonbrew.fe.database;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.melonbrew.fe.Fe;
 
 import java.util.*;
@@ -123,12 +124,16 @@ public abstract class Database {
     }
 
     private Account createAndAddAccount(String name, String uuid, double money) {
-        Account account = new Account(name, uuid, plugin, this);
+        Account account = new Account(plugin, name, uuid, this);
 
         account.setMoney(money);
 
         if (cacheAccounts()) {
-            cachedAccounts.add(account);
+            Player player = plugin.getServer().getPlayer(name);
+
+            if (player != null) {
+                cachedAccounts.add(account);
+            }
         }
 
         return account;
