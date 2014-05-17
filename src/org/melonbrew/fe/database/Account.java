@@ -69,9 +69,9 @@ public class Account {
             currentMoney = api.getMoneyRounded(api.getMaxHoldings());
         }
 
-        if (!database.cacheAccounts()) {
+        if (!database.cacheAccounts() || plugin.getServer().getPlayerExact(getName()) == null) {
             save(currentMoney);
-        } else if (plugin.getServer().getPlayer(getName()) != null) {
+        } else {
             this.money = currentMoney;
         }
     }

@@ -129,7 +129,7 @@ public abstract class Database {
         account.setMoney(money);
 
         if (cacheAccounts()) {
-            Player player = plugin.getServer().getPlayer(name);
+            Player player = plugin.getServer().getPlayerExact(name);
 
             if (player != null) {
                 cachedAccounts.add(account);
