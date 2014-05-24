@@ -3,6 +3,8 @@ package org.melonbrew.fe.database;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.melonbrew.fe.Fe;
+import org.melonbrew.fe.Phrase;
+import org.melonbrew.fe.UUIDFetcher;
 
 import java.util.*;
 
@@ -78,6 +80,70 @@ public abstract class Database {
     public abstract void getConfigDefaults(ConfigurationSection section);
 
     public abstract void clean();
+
+    public void removeAllAccounts() {
+        for (Account account : new HashSet<Account>(cachedAccounts)) {
+            cachedAccounts.remove(account);
+        }
+    }
+
+    protected boolean convertToUUID() {
+        if (!plugin.getServer().getOnlineMode()) {
+            //Disable plugin?
+        }
+
+        plugin.log(Phrase.STARTING_UUID_CONVERSION);
+
+        List<Account> accounts = getAccounts();
+
+        Map<String, Double> accountMonies = new HashMap<String, Double>();
+
+        for (Account account : accounts) {
+            accountMonies.put(account.getName(), account.getMoney());
+        }
+
+        List<String> names = new ArrayList<String>();
+
+        for (Account account : accounts) {
+            names.add(account.getName());
+        }
+
+        UUIDFetcher fetcher = new UUIDFetcher(names);
+
+        Map<String, UUID> response;
+
+        try {
+            response = fetcher.call();
+
+            removeAllAccounts();
+
+            for (String name : response.keySet()) {
+                for (String accountName : new HashMap<String, Double>(accountMonies).keySet()) {
+                    if (accountName.equalsIgnoreCase(name)) {
+                        saveAccount(name, response.get(name).toString(), accountMonies.get(accountName));
+
+                        accountMonies.remove(accountName);
+                    }
+                }
+            }
+
+            for (String accountName : accountMonies.keySet()) {
+                saveAccount(accountName, null, accountMonies.get(accountName));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            plugin.log(Phrase.UUID_CONVERSION_FAILED);
+
+            plugin.getServer().getPluginManager().disablePlugin(plugin);
+
+            return false;
+        }
+
+        plugin.log(Phrase.UUID_CONVERSION_SUCCEEDED);
+
+        return true;
+    }
 
     public void close() {
         for (Account account : new HashSet<Account>(cachedAccounts)) {
@@ -160,4 +226,8 @@ public abstract class Database {
     public boolean removeCachedAccount(Account account) {
         return cachedAccounts.remove(account);
     }
+
+    public abstract int getVersion();
+
+    public abstract void setVersion(int version);
 }

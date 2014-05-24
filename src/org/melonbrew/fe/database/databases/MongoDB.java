@@ -12,6 +12,7 @@ import java.util.List;
 
 public class MongoDB extends Database {
     private static final String ACCOUNTS_COLLECTION = "accounts";
+    private static final String VERSION_COLLECTION = "version";
     private final Fe plugin;
     private MongoClient mongoClient;
 
@@ -31,8 +32,19 @@ public class MongoDB extends Database {
             return false;
         }
 
-        return !(getDatabase() == null || !getDatabase().isAuthenticated());
+        if (getDatabase() == null || !getDatabase().isAuthenticated()) {
+            return false;
+        }
 
+        if (getVersion() == 0) {
+            if (!convertToUUID()) {
+                return false;
+            }
+
+            setVersion(1);
+        }
+
+        return true;
     }
 
     private DB getDatabase() {
@@ -98,6 +110,22 @@ public class MongoDB extends Database {
     }
 
     @Override
+    public int getVersion() {
+        DBCollection collection = getDatabase().getCollection(VERSION_COLLECTION);
+
+        BasicDBObject query = (BasicDBObject) collection.findOne(new BasicDBObject());
+
+        return query.getInt("version", 0);
+    }
+
+    @Override
+    public void setVersion(int version) {
+        DBCollection collection = getDatabase().getCollection(VERSION_COLLECTION);
+
+        collection.findAndRemove(new BasicDBObject());
+    }
+
+    @Override
     public List<Account> loadTopAccounts(int size) {
         DBCursor cursor = getDatabase().getCollection(ACCOUNTS_COLLECTION).find().sort(new BasicDBObject("money", -1)).limit(size);
 
@@ -141,5 +169,10 @@ public class MongoDB extends Database {
         for (DBObject aCursor : cursor) {
             getDatabase().getCollection(ACCOUNTS_COLLECTION).remove(aCursor);
         }
+    }
+
+    @Override
+    public void removeAllAccounts() {
+        getDatabase().getCollection(VERSION_COLLECTION).findAndRemove(new BasicDBObject());
     }
 }

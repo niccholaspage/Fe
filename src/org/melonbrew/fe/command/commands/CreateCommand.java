@@ -6,6 +6,7 @@ import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.Phrase;
 import org.melonbrew.fe.command.CommandType;
 import org.melonbrew.fe.command.SubCommand;
+import org.melonbrew.fe.database.Account;
 
 public class CreateCommand extends SubCommand {
     private final Fe plugin;
@@ -35,9 +36,9 @@ public class CreateCommand extends SubCommand {
             return true;
         }
 
-        plugin.getAPI().createAccount(name, null);
+        Account account = plugin.getAPI().createAccount(name, null);
 
-        Phrase.ACCOUNT_CREATED.sendWithPrefix(sender, Phrase.PRIMARY_COLOR.parse() + plugin.getAPI().getReadName(name) + Phrase.SECONDARY_COLOR.parse());
+        Phrase.ACCOUNT_CREATED.sendWithPrefix(sender, Phrase.PRIMARY_COLOR.parse() + account.getName() + Phrase.SECONDARY_COLOR.parse());
 
         return true;
     }

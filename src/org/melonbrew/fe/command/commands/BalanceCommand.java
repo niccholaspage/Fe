@@ -30,7 +30,7 @@ public class BalanceCommand extends SubCommand {
                 return true;
             }
 
-            Phrase.ACCOUNT_HAS.sendWithPrefix(sender, plugin.getAPI().getReadName(account), plugin.getAPI().format(account));
+            Phrase.ACCOUNT_HAS.sendWithPrefix(sender, account.getName(), plugin.getAPI().format(account));
         } else {
             Player player = plugin.getServer().getPlayer(sender.getName());
 

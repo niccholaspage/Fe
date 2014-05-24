@@ -1,7 +1,6 @@
 package org.melonbrew.fe;
 
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.melonbrew.fe.database.Account;
 
 import java.text.DecimalFormat;
@@ -69,19 +68,19 @@ public class API {
     }
 
     public Account createAccount(String name, String uuid) {
-        return plugin.getFeDatabase().createAccount(name.toLowerCase(), uuid);
+        return plugin.getFeDatabase().createAccount(name, uuid);
     }
 
     public void removeAccount(String name, String uuid) {
-        plugin.getFeDatabase().removeAccount(name.toLowerCase(), uuid);
+        plugin.getFeDatabase().removeAccount(name, uuid);
     }
 
     public Account getAccount(String name, String uuid) {
-        return plugin.getFeDatabase().getAccount(name.toLowerCase(), uuid);
+        return plugin.getFeDatabase().getAccount(name, uuid);
     }
 
     public boolean accountExists(String name, String uuid) {
-        return plugin.getFeDatabase().accountExists(name.toLowerCase(), uuid);
+        return plugin.getFeDatabase().accountExists(name, uuid);
     }
 
     public String formatNoColor(double amount) {
@@ -148,22 +147,5 @@ public class API {
 
     public void clean() {
         plugin.getFeDatabase().clean();
-    }
-
-    public String getReadName(Account account) {
-        return getReadName(account.getName());
-    }
-
-    @SuppressWarnings("deprecation")
-    public String getReadName(String name) {
-        name = name.toLowerCase();
-
-        OfflinePlayer player = plugin.getServer().getOfflinePlayer(name);
-
-        if (player != null) {
-            name = player.getName();
-        }
-
-        return name;
     }
 }

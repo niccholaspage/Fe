@@ -52,10 +52,8 @@ public class SendCommand extends SubCommand {
             return true;
         }
 
-        String receiverName = plugin.getAPI().getReadName(receiver);
-
         if (!receiver.canReceive(money)) {
-            Phrase.MAX_BALANCE_REACHED.sendWithPrefix(sender, receiverName);
+            Phrase.MAX_BALANCE_REACHED.sendWithPrefix(sender, receiver.getName());
 
             return true;
         }
@@ -66,7 +64,7 @@ public class SendCommand extends SubCommand {
 
         receiver.deposit(money);
 
-        Phrase.MONEY_SENT.sendWithPrefix(sender, formattedMoney, receiverName);
+        Phrase.MONEY_SENT.sendWithPrefix(sender, formattedMoney, receiver.getName());
 
         Player receiverPlayer = plugin.getServer().getPlayerExact(receiver.getName());
 

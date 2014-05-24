@@ -39,15 +39,13 @@ public class DeductCommand extends SubCommand {
             return true;
         }
 
-        String victimName = plugin.getAPI().getReadName(victim);
-
         String formattedMoney = plugin.getAPI().format(money);
 
         victim.withdraw(money);
 
-        Phrase.PLAYER_DEDUCT_MONEY.sendWithPrefix(sender, formattedMoney, plugin.getAPI().getReadName(victim));
+        Phrase.PLAYER_DEDUCT_MONEY.sendWithPrefix(sender, formattedMoney, victim.getName());
 
-        Player receiverPlayer = plugin.getServer().getPlayerExact(victimName);
+        Player receiverPlayer = plugin.getServer().getPlayerExact(victim.getName());
 
         if (receiverPlayer != null) {
             Phrase.PLAYER_DEDUCTED_MONEY.sendWithPrefix(receiverPlayer, formattedMoney, sender.getName());

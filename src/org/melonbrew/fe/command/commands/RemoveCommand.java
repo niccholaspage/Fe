@@ -31,7 +31,7 @@ public class RemoveCommand extends SubCommand {
 
         plugin.getAPI().removeAccount(name, null);
 
-        Phrase.ACCOUNT_REMOVED.sendWithPrefix(sender, Phrase.PRIMARY_COLOR.parse() + plugin.getAPI().getReadName(name) + Phrase.SECONDARY_COLOR.parse());
+        Phrase.ACCOUNT_REMOVED.sendWithPrefix(sender, Phrase.PRIMARY_COLOR.parse() + name + Phrase.SECONDARY_COLOR.parse());
 
         return true;
     }

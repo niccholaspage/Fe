@@ -20,6 +20,8 @@ public abstract class SQLDB extends Database {
 
     private String accountsName;
 
+    private String versionName;
+
     private String accountsColumnUser;
 
     private String accountsColumnMoney;
@@ -34,6 +36,8 @@ public abstract class SQLDB extends Database {
         this.supportsModification = supportsModification;
 
         accountsName = "fe_accounts";
+
+        versionName = "fe_version";
 
         accountsColumnUser = "name";
 
@@ -59,8 +63,8 @@ public abstract class SQLDB extends Database {
         this.accountsName = accountsName;
     }
 
-    public String getAccountsName() {
-        return accountsName;
+    public void setVersionTable(String versionName) {
+        this.versionName = versionName;
     }
 
     public void setAccountsColumnUser(String accountsColumnUser) {
@@ -91,18 +95,40 @@ public abstract class SQLDB extends Database {
                     return false;
                 }
 
+                ResultSet set = connection.prepareStatement(supportsModification ? ("SHOW TABLES LIKE '" + accountsName + "'") : "SELECT name FROM sqlite_master WHERE type='table' AND name='" + accountsName + "'").executeQuery();
+
+                boolean newDatabase = set.next();
+
+                set.close();
+
                 query("CREATE TABLE IF NOT EXISTS " + accountsName + " (" + accountsColumnUser + " varchar(64) NOT NULL, " + accountsColumnUUID + " varchar(36), " + accountsColumnMoney + " double NOT NULL)");
 
-                if (supportsModification) {
-                    query("ALTER TABLE " + accountsName + " MODIFY " + accountsColumnUser + " varchar(64) NOT NULL");
+                query("CREATE TABLE IF NOT EXISTS " + versionName + " (version int NOT NULL)");
 
-                    query("ALTER TABLE " + accountsName + " MODIFY " + accountsColumnMoney + " double NOT NULL");
-                }
+                if (newDatabase) {
+                    int version = getVersion();
 
-                try {
-                    query("ALTER TABLE " + accountsName + " ADD " + accountsColumnUUID + " varchar(36);");
-                } catch (Exception e) {
+                    if (version == 0) {
+                        if (supportsModification) {
+                            query("ALTER TABLE " + accountsName + " MODIFY " + accountsColumnUser + " varchar(64) NOT NULL");
 
+                            query("ALTER TABLE " + accountsName + " MODIFY " + accountsColumnMoney + " double NOT NULL");
+                        }
+
+                        try {
+                            query("ALTER TABLE " + accountsName + " ADD " + accountsColumnUUID + " varchar(36);");
+                        } catch (Exception e) {
+
+                        }
+
+                        if (!convertToUUID()) {
+                            return false;
+                        }
+
+                        setVersion(1);
+                    }
+                } else {
+                    setVersion(1);
                 }
             }
         } catch (SQLException e) {
@@ -120,16 +146,46 @@ public abstract class SQLDB extends Database {
         return connection.createStatement().execute(sql);
     }
 
-    public Connection getConnection() {
-        return connection;
-    }
-
     public void close() {
         super.close();
 
         try {
             if (connection != null)
                 connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int getVersion() {
+        checkConnection();
+
+        int version = 0;
+
+        try {
+            ResultSet set = connection.prepareStatement("SELECT * from " + versionName).executeQuery();
+
+            if (set.next()) {
+                version = set.getInt("version");
+            }
+
+            set.close();
+
+            return version;
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return version;
+        }
+    }
+
+    public void setVersion(int version) {
+        checkConnection();
+
+        try {
+            connection.prepareStatement("DELETE FROM " + versionName).executeUpdate();
+
+            connection.prepareStatement("INSERT INTO " + versionName + " (version) VALUES (" + version + ")").executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -186,7 +242,7 @@ public abstract class SQLDB extends Database {
         checkConnection();
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + accountsName + " WHERE " + (uuid != null ? accountsColumnUUID : accountsColumnUser) + "=?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + accountsName + " WHERE UPPER(" + (uuid != null ? accountsColumnUUID : accountsColumnUser) + ") LIKE UPPER(?)");
 
             statement.setString(1, uuid != null ? uuid : name);
 
@@ -215,7 +271,7 @@ public abstract class SQLDB extends Database {
 
         PreparedStatement statement;
         try {
-            statement = connection.prepareStatement("DELETE FROM " + accountsName + " WHERE " + (uuid != null ? accountsColumnUUID : accountsColumnUser) + "=?");
+            statement = connection.prepareStatement("DELETE FROM " + accountsName + " WHERE UPPER(" + (uuid != null ? accountsColumnUUID : accountsColumnUser) + ") LIKE UPPER(?)");
 
             statement.setString(1, uuid != null ? uuid : name);
 
@@ -230,7 +286,7 @@ public abstract class SQLDB extends Database {
         checkConnection();
 
         try {
-            String sql = "UPDATE " + accountsName + " SET " + accountsColumnMoney + "=?, " + accountsColumnUser + "=? WHERE ";
+            String sql = "UPDATE " + accountsName + " SET " + accountsColumnMoney + "=?, " + accountsColumnUser + "=? WHERE UPPER(";
 
             if (uuid != null) {
                 sql += accountsColumnUUID;
@@ -238,7 +294,7 @@ public abstract class SQLDB extends Database {
                 sql += accountsColumnUser;
             }
 
-            PreparedStatement statement = connection.prepareStatement(sql + "=?");
+            PreparedStatement statement = connection.prepareStatement(sql + ") LIKE UPPER(?)");
 
             statement.setDouble(1, money);
 
@@ -296,6 +352,18 @@ public abstract class SQLDB extends Database {
             if (executeQuery) {
                 query(builder.toString());
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeAllAccounts() {
+        super.removeAllAccounts();
+
+        checkConnection();
+
+        try {
+            connection.prepareStatement("DELETE FROM " + accountsName).executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

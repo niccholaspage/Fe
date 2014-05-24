@@ -39,10 +39,8 @@ public class GrantCommand extends SubCommand {
             return true;
         }
 
-        String victimName = plugin.getAPI().getReadName(victim);
-
         if (!victim.canReceive(money)) {
-            Phrase.MAX_BALANCE_REACHED.sendWithPrefix(sender, victimName);
+            Phrase.MAX_BALANCE_REACHED.sendWithPrefix(sender, victim.getName());
             return true;
         }
 
@@ -50,9 +48,9 @@ public class GrantCommand extends SubCommand {
 
         victim.deposit(money);
 
-        Phrase.PLAYER_GRANT_MONEY.sendWithPrefix(sender, formattedMoney, plugin.getAPI().getReadName(victim));
+        Phrase.PLAYER_GRANT_MONEY.sendWithPrefix(sender, formattedMoney, victim.getName());
 
-        Player receiverPlayer = plugin.getServer().getPlayerExact(victimName);
+        Player receiverPlayer = plugin.getServer().getPlayerExact(victim.getName());
 
         if (receiverPlayer != null) {
             Phrase.PLAYER_GRANTED_MONEY.sendWithPrefix(receiverPlayer, formattedMoney, sender.getName());

@@ -35,7 +35,7 @@ public class TopCommand extends SubCommand {
 
             String two = Phrase.SECONDARY_COLOR.parse();
 
-            sender.sendMessage(two + (i + 1) + ". " + Phrase.PRIMARY_COLOR.parse() + plugin.getAPI().getReadName(account) + two + " - " + plugin.getAPI().format(account));
+            sender.sendMessage(two + (i + 1) + ". " + Phrase.PRIMARY_COLOR.parse() + account.getName() + two + " - " + plugin.getAPI().format(account));
         }
 
         sender.sendMessage(plugin.getEndEqualMessage(28));
