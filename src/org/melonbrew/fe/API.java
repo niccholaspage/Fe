@@ -106,7 +106,7 @@ public class API {
 
         String suffix = " ";
 
-        if (isMinorCurrencyEnabled() && amount < 1.0) {
+        if (isMinorCurrencyEnabled() && amount > 0.00 && amount < 1.0) {
             if (amount == 0.01) {
                 suffix += getCurrencyMinorSingle();
             } else if (amount < 1.0) {
