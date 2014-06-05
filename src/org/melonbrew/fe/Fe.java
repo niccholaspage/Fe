@@ -5,7 +5,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.melonbrew.fe.Metrics.Graph;
@@ -356,12 +355,6 @@ public class Fe extends JavaPlugin {
 
         if (vault == null) {
             return;
-        }
-
-        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
-
-        if (economyProvider != null) {
-            getServer().getServicesManager().unregister(economyProvider.getProvider());
         }
 
         getServer().getServicesManager().register(Economy.class, new VaultHandler(this), this, ServicePriority.Highest);
