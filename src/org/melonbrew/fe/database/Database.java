@@ -146,10 +146,14 @@ public abstract class Database {
     }
 
     public void close() {
-        for (Account account : new HashSet<Account>(cachedAccounts)) {
+        Iterator<Account> iterator = cachedAccounts.iterator();
+
+        while (iterator.hasNext()) {
+            Account account = iterator.next();
+
             account.save(account.getMoney());
 
-            removeCachedAccount(account);
+            iterator.remove();
         }
     }
 
