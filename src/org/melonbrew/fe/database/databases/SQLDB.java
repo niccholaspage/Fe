@@ -202,7 +202,7 @@ public abstract class SQLDB extends Database {
             ResultSet set = connection.createStatement().executeQuery(sql);
 
             while (set.next()) {
-                Account account = new Account(plugin, set.getString(accountsColumnUser).toLowerCase(), set.getString(accountsColumnUUID), this);
+                Account account = new Account(plugin, set.getString(accountsColumnUser), set.getString(accountsColumnUUID), this);
 
                 account.setMoney(set.getDouble(accountsColumnMoney));
 
@@ -224,7 +224,7 @@ public abstract class SQLDB extends Database {
             ResultSet set = connection.createStatement().executeQuery("SELECT * from " + accountsName);
 
             while (set.next()) {
-                Account account = new Account(plugin, set.getString(accountsColumnUser).toLowerCase(), set.getString(accountsColumnUUID), this);
+                Account account = new Account(plugin, set.getString(accountsColumnUser), set.getString(accountsColumnUUID), this);
 
                 account.setMoney(set.getDouble(accountsColumnMoney));
 
