@@ -1,0 +1,50 @@
+###############################################################################################
+#=== THE TRANSLATION FILE MADE BY YOSHI435 (MICRONUKE) PLEASE DO NOT REMOVE THIS COMMENTS. ===#
+###############################################################################################
+database_type_does_not_exist: That database type doesn't exist.
+database_failure_disable: Database initialization has failed, disabling Fe.
+command_needs_arguments: That command needs arguments.
+command_not_console: The command '$1' cannot be used in the console.
+no_permission_for_command: Sorry, you do not have permission to use that command.
+account_has: $1 has $2
+you_have: You have $1
+help: Fe Help
+help_arguments: $1 Required, $2 Optional
+rich: Rich List
+starting_uuid_conversion: Starting UUID conversion.
+uuid_conversion_failed: UUID conversion failed, disabling Fe!
+uuid_conversion_succeeded: UUID conversion has succeeded!
+config_reloaded: The config has been reloaded.
+not_enough_money: You don't have enough money.
+account_does_not_exist: Sorry, that account does not exist.
+your_account_does_not_exist: You don't have an account.
+account_exists: That account already exists.
+account_created: An account for $1 has been created.
+account_removed: An account for $1 has been removed.
+money_receive: You've received $1 from $2.
+money_sent: You've sent $1 to $2
+max_balance_reached: $1 has reached the maximum balance.
+player_set_money: You've set $1's balance to $2.
+player_grant_money: You've granted $1 to $2.
+player_granted_money: $2 granted you $1.
+player_deduct_money: You've deducted $1 from $2.
+player_deducted_money: $2 deducted $1 from your account.
+account_created_grant: Created an account for $1 and granted it $2
+no_accounts_exist: No accounts exist.
+name_too_long: Sorry that name is too long.
+account_cleaned: All accounts with the default balance have been removed.
+try_command: Try $1
+fe_outdated: Fe is outdated! The latest version is $1.
+command_balance: Checks your balance
+command_send: Sends another player money
+command_top: Checks the top 5 richest players
+command_help: Gives you help
+command_create: Creates an account
+command_remove: Removes an account
+command_set: Set a player's balance
+command_grant: Grants a player money
+command_deduct: Deducts money from a player
+command_clean: Cleans the accounts with default balance
+command_reload: Reloads the config
+### If you find bugs, please send mail to hage_biggest@yahoo.co.jp.
+### END ###
