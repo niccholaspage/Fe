@@ -25,11 +25,6 @@ public class Fe extends JavaPlugin {
     private final Set<Database> databases;
     private API api;
     private Database database;
-    private double currentVersion;
-
-    private double latestVersion;
-
-    private String latestVersionString;
 
     public Fe() {
         databases = new HashSet<Database>();
@@ -62,13 +57,11 @@ public class Fe extends JavaPlugin {
 
         getConfig().options().copyDefaults(true);
 
-        getConfig().options().header("Fe Config - okicore.com\n" +
+        getConfig().options().header("Fe Config - loyloy.io\n" +
                 "holdings - The amount of money that players will start out with\n" +
                 "prefix - The message prefix\n" +
                 "currency - The single and multiple names for the currency\n" +
-                "type - The type of database used (sqlite, mysql, or mongo)\n" +
-                "updatecheck - Checks if there is an update to Fe" +
-                "cacheaccounts - Caches players' balances when logged on to the server");
+                "type - The type of database used (sqlite, mysql, or mongo)");
 
         saveConfig();
 
@@ -78,14 +71,6 @@ public class Fe extends JavaPlugin {
             return;
         }
 
-        String currentVersionString = getDescription().getVersion();
-
-        currentVersion = versionToDouble(currentVersionString);
-
-        setLatestVersion(currentVersion);
-
-        setLatestVersionString(currentVersionString);
-
         getCommand("fe").setExecutor(new FeCommand(this));
 
         new FePlayerListener(this);
@@ -94,69 +79,11 @@ public class Fe extends JavaPlugin {
 
         loadMetrics();
 
-        if (getConfig().getBoolean("updatecheck")) {
-            getServer().getScheduler().runTaskAsynchronously(this, new UpdateCheck(this));
-        }
+        reloadConfig();
     }
 
     public void log(String message) {
-        getLogger().info("[Fe] " + message);
-    }
-
-    public double versionToDouble(String version) {
-        boolean isSnapshot = version.contains("-SNAPSHOT");
-
-        version = version.substring(0, version.indexOf("-SNAPSHOT"));
-
-        String fixed = "";
-
-        boolean doneFirst = false;
-
-        for (int i = 0; i < version.length(); i++) {
-            char c = version.charAt(i);
-
-            if (c == '.') {
-                if (doneFirst) {
-                    continue;
-                } else {
-                    doneFirst = true;
-                }
-            }
-
-            fixed += c;
-        }
-
-        try {
-            double ret = Double.parseDouble(fixed);
-
-            if (isSnapshot) {
-                ret -= 0.001;
-            }
-
-            return ret;
-        } catch (NumberFormatException e) {
-            return -1;
-        }
-    }
-
-    public double getLatestVersion() {
-        return latestVersion;
-    }
-
-    protected void setLatestVersion(double latestVersion) {
-        this.latestVersion = latestVersion;
-    }
-
-    public String getLatestVersionString() {
-        return latestVersionString;
-    }
-
-    protected void setLatestVersionString(String latestVersionString) {
-        this.latestVersionString = latestVersionString;
-    }
-
-    public boolean isUpdated() {
-        return currentVersion >= latestVersion;
+        getLogger().info( message );
     }
 
     public void onDisable() {
@@ -258,6 +185,16 @@ public class Fe extends JavaPlugin {
             getConfig().set("currency.major.multiple", oldCurrencyMultiple);
 
             getConfig().set("currency.multiple", null);
+        }
+
+        // Temporarily remove cache and updates.
+        if( getConfig().isSet( "cacheaccounts" ) )
+        {
+            getConfig().set( "cacheaccounts", null );
+        }
+        if( getConfig().getBoolean( "updatecheck" ) )
+        {
+            getConfig().set( "updatecheck", null );
         }
 
         setupPhrases();

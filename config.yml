@@ -19,6 +19,4 @@ currency:
 
 type: sqlite
 
-updatecheck: true
-
 cacheaccounts: true

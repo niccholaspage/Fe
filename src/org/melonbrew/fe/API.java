@@ -64,7 +64,8 @@ public class API {
     }
 
     public boolean getCacheAccounts() {
-        return plugin.getConfig().getBoolean("cacheaccounts");
+//        return plugin.getConfig().getBoolean("cacheaccounts");
+        return false;
     }
 
     public Account createAccount(String name, String uuid) {

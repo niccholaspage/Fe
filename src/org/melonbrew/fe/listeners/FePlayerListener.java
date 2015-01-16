@@ -4,11 +4,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.melonbrew.fe.Fe;
-import org.melonbrew.fe.Phrase;
 import org.melonbrew.fe.database.Account;
 import org.melonbrew.fe.database.Database;
 
@@ -26,15 +24,6 @@ public class FePlayerListener implements Listener {
         Player player = event.getPlayer();
 
         plugin.getAPI().createAccount(player.getName(), player.getUniqueId().toString());
-    }
-
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-
-        if (!plugin.isUpdated() && player.hasPermission("fe.notify")) {
-            Phrase.FE_OUTDATED.sendWithPrefix(player, plugin.getLatestVersionString());
-        }
     }
 
     @EventHandler
