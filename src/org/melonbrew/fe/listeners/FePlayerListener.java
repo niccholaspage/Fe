@@ -10,34 +10,38 @@ import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.database.Account;
 import org.melonbrew.fe.database.Database;
 
-public class FePlayerListener implements Listener {
+public class FePlayerListener implements Listener
+{
     private final Fe plugin;
 
-    public FePlayerListener(Fe plugin) {
+    public FePlayerListener( Fe plugin )
+    {
         this.plugin = plugin;
 
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        plugin.getServer().getPluginManager().registerEvents( this, plugin );
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerLogin(PlayerLoginEvent event) {
+    @EventHandler( priority = EventPriority.LOWEST )
+    public void onPlayerLogin( PlayerLoginEvent event )
+    {
         Player player = event.getPlayer();
-
-        plugin.getAPI().createAccount(player.getName(), player.getUniqueId().toString());
+        plugin.getAPI().updateAccount( player.getName(), player.getUniqueId().toString() );
     }
 
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
+    public void onPlayerQuit( PlayerQuitEvent event )
+    {
         Database database = plugin.getFeDatabase();
 
         Player player = event.getPlayer();
 
-        Account account = database.getCachedAccount(player.getName(), player.getUniqueId().toString());
+        Account account = database.getCachedAccount( player.getName(), player.getUniqueId().toString() );
 
-        if (account != null) {
-            account.save(account.getMoney());
+        if( account != null )
+        {
+            account.save( account.getMoney() );
 
-            database.removeCachedAccount(account);
+            database.removeCachedAccount( account );
         }
     }
 }

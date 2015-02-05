@@ -36,7 +36,7 @@ public class CreateCommand extends SubCommand {
             return true;
         }
 
-        Account account = plugin.getAPI().createAccount(name, null);
+        Account account = plugin.getAPI().updateAccount( name, null );
 
         Phrase.ACCOUNT_CREATED.sendWithPrefix(sender, Phrase.PRIMARY_COLOR.parse() + account.getName() + Phrase.SECONDARY_COLOR.parse());
 

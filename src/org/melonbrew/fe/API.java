@@ -39,6 +39,11 @@ public class API {
         return plugin.getConfig().getString("currency.prefix");
     }
 
+    public boolean isAutoClean()
+    {
+        return plugin.getConfig().getBoolean( "autoclean" );
+    }
+
     public boolean isCurrencyNegative() {
         return plugin.getConfig().getBoolean("currency.negative");
     }
@@ -68,8 +73,15 @@ public class API {
         return false;
     }
 
-    public Account createAccount(String name, String uuid) {
-        return plugin.getFeDatabase().createAccount(name, uuid);
+    public Account updateAccount( String name, String uuid )
+    {
+        return plugin.getFeDatabase().updateAccount( name, uuid );
+    }
+
+    @Deprecated
+    public Account createAccount( String name, String uuid )
+    {
+        return updateAccount( name, uuid );
     }
 
     public void removeAccount(String name, String uuid) {

@@ -19,4 +19,6 @@ currency:
 
 type: sqlite
 
+autoclean: true
+
 cacheaccounts: true

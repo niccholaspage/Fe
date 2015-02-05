@@ -5,6 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.melonbrew.fe.Metrics.Graph;
@@ -73,13 +74,21 @@ public class Fe extends JavaPlugin {
 
         getCommand("fe").setExecutor(new FeCommand(this));
 
-        new FePlayerListener(this);
+        PluginManager pm = getServer().getPluginManager();
+        pm.registerEvents( new FePlayerListener( this ), this );
 
         setupVault();
 
         loadMetrics();
 
         reloadConfig();
+
+        // Auto Clean On Startup
+        if( api.isAutoClean() )
+        {
+            api.clean();
+            log( Phrase.ACCOUNT_CLEANED );
+        }
     }
 
     public void log(String message) {
@@ -185,6 +194,11 @@ public class Fe extends JavaPlugin {
             getConfig().set("currency.major.multiple", oldCurrencyMultiple);
 
             getConfig().set("currency.multiple", null);
+        }
+
+        if( ! getConfig().isSet( "autoclean" ) )
+        {
+            getConfig().set( "autoclean", true );
         }
 
         // Temporarily remove cache and updates.

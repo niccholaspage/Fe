@@ -3,10 +3,11 @@ package org.melonbrew.fe.database;
 import org.melonbrew.fe.API;
 import org.melonbrew.fe.Fe;
 
-public class Account {
+public class Account
+{
     private final Fe plugin;
 
-    private final String name;
+    private String name;
 
     private final String uuid;
 
@@ -16,7 +17,8 @@ public class Account {
 
     private Double money;
 
-    public Account(Fe plugin, String name, String uuid, Database database) {
+    public Account( Fe plugin, String name, String uuid, Database database )
+    {
         this.plugin = plugin;
 
         this.name = name;
@@ -30,81 +32,122 @@ public class Account {
         this.money = null;
     }
 
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
-    public String getUUID() {
+    public void setName( String name )
+    {
+        this.name = name;
+
+        if( money == null )
+        {
+            this.money = getMoney();
+        }
+
+        database.saveAccount( name, uuid, money );
+    }
+
+    public String getUUID()
+    {
         return uuid;
     }
 
-    public Double getMoney() {
-        if (money != null) {
+    public Double getMoney()
+    {
+        if( money != null )
+        {
             return money;
         }
 
-        Double money = database.loadAccountMoney(name, uuid);
+        String money_string = database.loadAccountData( name, uuid ).get( "money" );
+        Double money;
 
-        if (database.cacheAccounts()) {
+        try
+        {
+            money = Double.parseDouble( money_string );
+        }
+        catch( Exception e )
+        {
+            return 0D;
+        }
+
+        if( database.cacheAccounts() )
+        {
             this.money = money;
         }
 
         return money;
     }
 
-    public void setMoney(double money) {
+    public void setMoney( double money )
+    {
         Double currentMoney = getMoney();
 
-        if (currentMoney != null && currentMoney == money) {
+        if( currentMoney != null && currentMoney == money )
+        {
             return;
         }
 
-        if (money < 0 && !api.isCurrencyNegative()) {
+        if( money < 0 && !api.isCurrencyNegative() )
+        {
             money = 0;
         }
 
-        currentMoney = api.getMoneyRounded(money);
+        currentMoney = api.getMoneyRounded( money );
 
-        if (api.getMaxHoldings() > 0 && currentMoney > api.getMaxHoldings()) {
-            currentMoney = api.getMoneyRounded(api.getMaxHoldings());
+        if( api.getMaxHoldings() > 0 && currentMoney > api.getMaxHoldings() )
+        {
+            currentMoney = api.getMoneyRounded( api.getMaxHoldings() );
         }
 
-        if (!database.cacheAccounts() || plugin.getServer().getPlayerExact(getName()) == null) {
-            save(currentMoney);
-        } else {
+        if( !database.cacheAccounts() || plugin.getServer().getPlayerExact( getName() ) == null )
+        {
+            save( currentMoney );
+        }
+        else
+        {
             this.money = currentMoney;
         }
     }
 
-    public void withdraw(double amount) {
-        setMoney(getMoney() - amount);
+    public void withdraw( double amount )
+    {
+        setMoney( getMoney() - amount );
     }
 
-    public void deposit(double amount) {
-        setMoney(getMoney() + amount);
+    public void deposit( double amount )
+    {
+        setMoney( getMoney() + amount );
     }
 
-    public boolean canReceive(double amount) {
+    public boolean canReceive( double amount )
+    {
         return api.getMaxHoldings() == -1 || amount + getMoney() < api.getMaxHoldings();
 
     }
 
-    public boolean has(double amount) {
+    public boolean has( double amount )
+    {
         return getMoney() >= amount;
     }
 
-    public void save(double money) {
-        database.saveAccount(name, uuid, money);
+    public void save( double money )
+    {
+        database.saveAccount( name, uuid, money );
     }
 
     @Override
-    public boolean equals(Object object) {
-        if (!(object instanceof Account)) {
+    public boolean equals( Object object )
+    {
+        if( !( object instanceof Account ) )
+        {
             return false;
         }
 
-        Account account = (Account) object;
+        Account account = ( Account ) object;
 
-        return account.getName().equals(getName());
+        return account.getName().equals( getName() );
     }
 }
