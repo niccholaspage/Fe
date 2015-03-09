@@ -36,6 +36,7 @@ public abstract class Database {
             List<Account> cachedTopAccounts = new ArrayList<Account>(cachedAccounts);
 
             Collections.sort(cachedTopAccounts, new Comparator<Account>() {
+                @Override
                 public int compare(Account account1, Account account2) {
                     return (int) (account2.getMoney() - account1.getMoney());
                 }
@@ -49,6 +50,7 @@ public abstract class Database {
         }
 
         Collections.sort(topAccounts, new Comparator<Account>() {
+            @Override
             public int compare(Account account1, Account account2) {
                 return (int) (account2.getMoney() - account1.getMoney());
             }

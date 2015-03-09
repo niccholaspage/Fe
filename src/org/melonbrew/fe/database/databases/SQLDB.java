@@ -79,6 +79,7 @@ public abstract class SQLDB extends Database {
         this.accountsColumnUUID = accountsColumnUUID;
     }
 
+    @Override
     public boolean init() {
         super.init();
 
@@ -146,6 +147,7 @@ public abstract class SQLDB extends Database {
         return connection.createStatement().execute(sql);
     }
 
+    @Override
     public void close() {
         super.close();
 
@@ -157,6 +159,7 @@ public abstract class SQLDB extends Database {
         }
     }
 
+    @Override
     public int getVersion() {
         checkConnection();
 
@@ -179,6 +182,7 @@ public abstract class SQLDB extends Database {
         }
     }
 
+    @Override
     public void setVersion(int version) {
         checkConnection();
 
@@ -191,6 +195,7 @@ public abstract class SQLDB extends Database {
         }
     }
 
+    @Override
     public List<Account> loadTopAccounts(int size) {
         checkConnection();
 
@@ -215,6 +220,7 @@ public abstract class SQLDB extends Database {
         return topAccounts;
     }
 
+    @Override
     public List<Account> getAccounts() {
         checkConnection();
 
@@ -238,6 +244,7 @@ public abstract class SQLDB extends Database {
     }
 
     @SuppressWarnings("deprecation")
+    @Override
     public Double loadAccountMoney(String name, String uuid) {
         checkConnection();
 
@@ -264,6 +271,7 @@ public abstract class SQLDB extends Database {
         }
     }
 
+    @Override
     public void removeAccount(String name, String uuid) {
         super.removeAccount(name, uuid);
 
@@ -282,6 +290,7 @@ public abstract class SQLDB extends Database {
     }
 
     @SuppressWarnings("deprecation")
+    @Override
     protected void saveAccount(String name, String uuid, double money) {
         checkConnection();
 
@@ -323,6 +332,7 @@ public abstract class SQLDB extends Database {
     }
 
     @SuppressWarnings("deprecation")
+    @Override
     public void clean() {
         checkConnection();
 
@@ -357,6 +367,7 @@ public abstract class SQLDB extends Database {
         }
     }
 
+    @Override
     public void removeAllAccounts() {
         super.removeAllAccounts();
 

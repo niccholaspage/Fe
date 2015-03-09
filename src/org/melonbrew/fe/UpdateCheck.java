@@ -15,6 +15,7 @@ public class UpdateCheck implements Runnable {
         this.plugin = plugin;
     }
 
+    @Override
     public void run() {
         String pluginUrlString = "http://dev.bukkit.org/server-mods/fe-economy/files.rss";
 

@@ -56,6 +56,7 @@ public class MongoDB extends Database {
     }
 
     @SuppressWarnings("deprecation")
+    @Override
     public Double loadAccountMoney(String name, String uuid) {
         DBObject userObject = getDatabase().getCollection(ACCOUNTS_COLLECTION).findOne(new BasicDBObject(uuid != null ? "uuid" : "name", uuid != null ? uuid : name));
 
@@ -66,6 +67,7 @@ public class MongoDB extends Database {
         return ((BasicDBObject) userObject).getDouble("money");
     }
 
+    @Override
     public void removeAccount(String name, String uuid) {
         super.removeAccount(name, uuid);
 
@@ -79,6 +81,7 @@ public class MongoDB extends Database {
     }
 
     @SuppressWarnings("deprecation")
+    @Override
     public void saveAccount(String name, String uuid, double money) {
         DBCollection collection = getDatabase().getCollection(ACCOUNTS_COLLECTION);
 
@@ -163,6 +166,7 @@ public class MongoDB extends Database {
         return accounts;
     }
 
+    @Override
     public void clean() {
         DBCursor cursor = getDatabase().getCollection(ACCOUNTS_COLLECTION).find((new BasicDBObject("money", plugin.getAPI().getDefaultHoldings())));
 

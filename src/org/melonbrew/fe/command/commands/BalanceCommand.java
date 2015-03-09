@@ -18,6 +18,7 @@ public class BalanceCommand extends SubCommand {
         this.plugin = plugin;
     }
 
+    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         Account account;
 

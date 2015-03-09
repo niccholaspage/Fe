@@ -19,6 +19,7 @@ public class GrantCommand extends SubCommand {
     }
 
     @SuppressWarnings("deprecation")
+    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (args.length < 2) {
             return false;
@@ -58,4 +59,4 @@ public class GrantCommand extends SubCommand {
 
         return true;
     }
-}	
+}   

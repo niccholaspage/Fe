@@ -78,6 +78,7 @@ public class FeCommand implements CommandExecutor {
         onCommand(sender, cmd, commandLabel, merge(new String[]{command}, args));
     }
 
+    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (args.length < 1) {
             sendDefaultCommand(sender, cmd, commandLabel, args);
