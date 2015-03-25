@@ -15,7 +15,7 @@ public class FeCommand implements CommandExecutor {
     private final List<SubCommand> commands;
 
     public FeCommand(Fe plugin) {
-        commands = new ArrayList<SubCommand>();
+        commands = new ArrayList<>();
 
         commands.add(new BalanceCommand(plugin));
         commands.add(new SendCommand(plugin));
@@ -78,6 +78,7 @@ public class FeCommand implements CommandExecutor {
         onCommand(sender, cmd, commandLabel, merge(new String[]{command}, args));
     }
 
+    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (args.length < 1) {
             sendDefaultCommand(sender, cmd, commandLabel, args);

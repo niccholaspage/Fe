@@ -16,6 +16,7 @@ public class SQLiteDB extends SQLDB {
         this.plugin = plugin;
     }
 
+    @Override
     public Connection getNewConnection() {
         try {
             Class.forName("org.sqlite.JDBC");
@@ -26,10 +27,12 @@ public class SQLiteDB extends SQLDB {
         }
     }
 
+    @Override
     public void getConfigDefaults(ConfigurationSection section) {
 
     }
 
+    @Override
     public String getName() {
         return "SQLite";
     }

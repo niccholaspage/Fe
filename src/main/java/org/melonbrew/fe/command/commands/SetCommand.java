@@ -17,6 +17,7 @@ public class SetCommand extends SubCommand {
         this.plugin = plugin;
     }
 
+    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (args.length < 2) {
             return false;

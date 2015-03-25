@@ -22,6 +22,7 @@ public class HelpCommand extends SubCommand {
         this.command = command;
     }
 
+    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         sender.sendMessage(plugin.getEqualMessage(Phrase.HELP.parse(), 10));
 

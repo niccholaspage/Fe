@@ -11,6 +11,7 @@ public class MySQLDB extends SQLDB {
         super(plugin, true);
     }
 
+    @Override
     protected Connection getNewConnection() {
         ConfigurationSection config = getConfigSection();
 
@@ -43,6 +44,7 @@ public class MySQLDB extends SQLDB {
         return child;
     }
 
+    @Override
     public void getConfigDefaults(ConfigurationSection section) {
         section.addDefault("host", "localhost");
 
@@ -69,6 +71,7 @@ public class MySQLDB extends SQLDB {
         columnsAccounts.addDefault("uuid", "uuid");
     }
 
+    @Override
     public String getName() {
         return "MySQL";
     }

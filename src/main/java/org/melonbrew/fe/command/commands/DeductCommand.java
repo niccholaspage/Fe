@@ -9,16 +9,17 @@ import org.melonbrew.fe.command.CommandType;
 import org.melonbrew.fe.command.SubCommand;
 import org.melonbrew.fe.database.Account;
 
-public class GrantCommand extends SubCommand {
+public class DeductCommand extends SubCommand {
     private final Fe plugin;
 
-    public GrantCommand(Fe plugin) {
-        super("grant", "fe.grant", "grant [name] [amount]", Phrase.COMMAND_GRANT, CommandType.CONSOLE);
+    public DeductCommand(Fe plugin) {
+        super("deduct", "fe.deduct", "deduct [name] [amount]", Phrase.COMMAND_DEDUCT, CommandType.CONSOLE);
 
         this.plugin = plugin;
     }
 
     @SuppressWarnings("deprecation")
+    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (args.length < 2) {
             return false;
@@ -39,23 +40,18 @@ public class GrantCommand extends SubCommand {
             return true;
         }
 
-        if (!victim.canReceive(money)) {
-            Phrase.MAX_BALANCE_REACHED.sendWithPrefix(sender, victim.getName());
-            return true;
-        }
-
         String formattedMoney = plugin.getAPI().format(money);
 
-        victim.deposit(money);
+        victim.withdraw(money);
 
-        Phrase.PLAYER_GRANT_MONEY.sendWithPrefix(sender, formattedMoney, victim.getName());
+        Phrase.PLAYER_DEDUCT_MONEY.sendWithPrefix(sender, formattedMoney, victim.getName());
 
         Player receiverPlayer = plugin.getServer().getPlayerExact(victim.getName());
 
         if (receiverPlayer != null) {
-            Phrase.PLAYER_GRANTED_MONEY.sendWithPrefix(receiverPlayer, formattedMoney, sender.getName());
+            Phrase.PLAYER_DEDUCTED_MONEY.sendWithPrefix(receiverPlayer, formattedMoney, sender.getName());
         }
 
         return true;
     }
-}	
+}   

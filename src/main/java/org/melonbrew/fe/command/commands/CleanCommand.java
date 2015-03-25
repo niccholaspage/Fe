@@ -16,6 +16,7 @@ public class CleanCommand extends SubCommand {
         this.plugin = plugin;
     }
 
+    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         plugin.getAPI().clean();
 

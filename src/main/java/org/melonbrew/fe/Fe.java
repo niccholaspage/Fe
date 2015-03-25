@@ -8,8 +8,9 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.melonbrew.fe.Metrics.Graph;
-import org.melonbrew.fe.Metrics.Plotter;
+import org.mcstats.Metrics;
+import org.mcstats.Metrics.Graph;
+import org.mcstats.Metrics.Plotter;
 import org.melonbrew.fe.database.Account;
 import org.melonbrew.fe.database.Database;
 import org.melonbrew.fe.database.databases.MongoDB;
@@ -28,9 +29,10 @@ public class Fe extends JavaPlugin {
     private Database database;
 
     public Fe() {
-        databases = new HashSet<Database>();
+        databases = new HashSet<>();
     }
 
+    @Override
     public void onEnable() {
         getDataFolder().mkdirs();
 
@@ -40,8 +42,8 @@ public class Fe extends JavaPlugin {
         databases.add(new SQLiteDB(this));
         databases.add(new MongoDB(this));
 
-        for (Database database : databases) {
-            String name = database.getConfigName();
+        for (Database db : databases) {
+            String name = db.getConfigName();
 
             ConfigurationSection section = getConfig().getConfigurationSection(name);
 
@@ -49,7 +51,7 @@ public class Fe extends JavaPlugin {
                 section = getConfig().createSection(name);
             }
 
-            database.getConfigDefaults(section);
+            db.getConfigDefaults(section);
 
             if (section.getKeys(false).isEmpty()) {
                 getConfig().set(name, null);
@@ -95,6 +97,7 @@ public class Fe extends JavaPlugin {
         getLogger().info( message );
     }
 
+    @Override
     public void onDisable() {
         getServer().getScheduler().cancelTasks(this);
 
@@ -114,7 +117,7 @@ public class Fe extends JavaPlugin {
     }
 
     public Set<Database> getDatabases() {
-        return new HashSet<Database>(databases);
+        return new HashSet<>(databases);
     }
 
     public API getAPI() {
@@ -126,9 +129,9 @@ public class Fe extends JavaPlugin {
 
         database = null;
 
-        for (Database database : databases) {
-            if (type.equalsIgnoreCase(database.getConfigName())) {
-                this.database = database;
+        for (Database db : databases) {
+            if (type.equalsIgnoreCase(db.getConfigName())) {
+                this.database = db;
 
                 break;
             }
@@ -177,6 +180,7 @@ public class Fe extends JavaPlugin {
         }
     }
 
+    @Override
     public void reloadConfig() {
         super.reloadConfig();
 
@@ -268,6 +272,7 @@ public class Fe extends JavaPlugin {
             Graph databaseGraph = metrics.createGraph("Database Engine");
 
             databaseGraph.addPlotter(new Plotter(getFeDatabase().getName()) {
+                @Override
                 public int getValue() {
                     return 1;
                 }
@@ -276,6 +281,7 @@ public class Fe extends JavaPlugin {
             Graph defaultHoldings = metrics.createGraph("Default Holdings");
 
             defaultHoldings.addPlotter(new Plotter(getAPI().getDefaultHoldings() + "") {
+                @Override
                 public int getValue() {
                     return 1;
                 }
@@ -290,6 +296,7 @@ public class Fe extends JavaPlugin {
             }
 
             maxHoldings.addPlotter(new Plotter(maxHolding) {
+                @Override
                 public int getValue() {
                     return 1;
                 }
