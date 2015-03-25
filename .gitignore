@@ -5,6 +5,7 @@
 
 # Netbeans
 /nbproject
+nb-configuration.xml
 
 # We use maven!
 /build.xml
