@@ -8,6 +8,7 @@ import org.melonbrew.fe.database.Database;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MongoDB extends Database {
@@ -56,14 +57,19 @@ public class MongoDB extends Database {
     }
 
     @SuppressWarnings("deprecation")
-    public Double loadAccountMoney(String name, String uuid) {
+    public HashMap<String, String> loadAccountData(String name, String uuid) {
         DBObject userObject = getDatabase().getCollection(ACCOUNTS_COLLECTION).findOne(new BasicDBObject(uuid != null ? "uuid" : "name", uuid != null ? uuid : name));
 
         if (userObject == null) {
             return null;
         }
 
-        return ((BasicDBObject) userObject).getDouble("money");
+        HashMap<String, String> data = new HashMap<String, String>();
+
+        data.put( "money", ((BasicDBObject) userObject).getString( "money" ) );
+        data.put( "name", ((BasicDBObject) userObject).getString( "name" ) );
+
+        return data;
     }
 
     public void removeAccount(String name, String uuid) {
@@ -113,9 +119,9 @@ public class MongoDB extends Database {
     public int getVersion() {
         DBCollection collection = getDatabase().getCollection(VERSION_COLLECTION);
 
-        BasicDBObject query = (BasicDBObject) collection.findOne(new BasicDBObject());
+        BasicDBObject query = (BasicDBObject) collection.findOne();
 
-        return query.getInt("version", 0);
+        return query.getInt( "version", 0 );
     }
 
     @Override

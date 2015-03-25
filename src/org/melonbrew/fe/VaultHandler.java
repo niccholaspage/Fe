@@ -230,7 +230,7 @@ public class VaultHandler implements Economy {
             return false;
         }
 
-        plugin.getAPI().createAccount(playerName, uuid);
+        plugin.getAPI().updateAccount( playerName, uuid );
 
         return true;
     }

@@ -37,7 +37,6 @@ public enum Phrase {
     NAME_TOO_LONG("Sorry that name is too long."),
     ACCOUNT_CLEANED("All accounts with the default balance have been removed."),
     TRY_COMMAND("Try $1"),
-    FE_OUTDATED("Fe is outdated! The latest version is $1."),
     PRIMARY_COLOR(ChatColor.GOLD.toString()),
     SECONDARY_COLOR(ChatColor.GRAY.toString()),
     TERTIARY_COLOR(ChatColor.DARK_GRAY.toString()),
