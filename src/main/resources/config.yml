@@ -19,6 +19,6 @@ currency:
 
 type: sqlite
 
-updatecheck: true
+autoclean: true
 
 cacheaccounts: true
