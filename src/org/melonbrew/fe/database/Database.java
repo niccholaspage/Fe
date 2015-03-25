@@ -16,7 +16,7 @@ public abstract class Database {
     public Database(Fe plugin) {
         this.plugin = plugin;
 
-        this.cachedAccounts = new HashSet<Account>();
+        this.cachedAccounts = new HashSet<>();
     }
 
     public boolean init() {
@@ -33,7 +33,7 @@ public abstract class Database {
                 topAccounts.remove(account);
             }
 
-            List<Account> cachedTopAccounts = new ArrayList<Account>(cachedAccounts);
+            List<Account> cachedTopAccounts = new ArrayList<>(cachedAccounts);
 
             Collections.sort(cachedTopAccounts, new Comparator<Account>() {
                 @Override
@@ -84,7 +84,7 @@ public abstract class Database {
     public abstract void clean();
 
     public void removeAllAccounts() {
-        for (Account account : new HashSet<Account>(cachedAccounts)) {
+        for (Account account : new HashSet<>(cachedAccounts)) {
             cachedAccounts.remove(account);
         }
     }
@@ -98,13 +98,13 @@ public abstract class Database {
 
         List<Account> accounts = getAccounts();
 
-        Map<String, Double> accountMonies = new HashMap<String, Double>();
+        Map<String, Double> accountMonies = new HashMap<>();
 
         for (Account account : accounts) {
             accountMonies.put(account.getName(), account.getMoney());
         }
 
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
 
         for (Account account : accounts) {
             names.add(account.getName());
@@ -120,7 +120,7 @@ public abstract class Database {
             removeAllAccounts();
 
             for (String name : response.keySet()) {
-                for (String accountName : new HashMap<String, Double>(accountMonies).keySet()) {
+                for (String accountName : new HashMap<>(accountMonies).keySet()) {
                     if (accountName.equalsIgnoreCase(name)) {
                         saveAccount(name, response.get(name).toString(), accountMonies.get(accountName));
 

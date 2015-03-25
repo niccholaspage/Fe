@@ -132,7 +132,7 @@ public class MongoDB extends Database {
     public List<Account> loadTopAccounts(int size) {
         DBCursor cursor = getDatabase().getCollection(ACCOUNTS_COLLECTION).find().sort(new BasicDBObject("money", -1)).limit(size);
 
-        List<Account> topAccounts = new ArrayList<Account>();
+        List<Account> topAccounts = new ArrayList<>();
 
         for (DBObject aCursor : cursor) {
             BasicDBObject topAccountObject = (BasicDBObject) aCursor;
@@ -151,7 +151,7 @@ public class MongoDB extends Database {
     public List<Account> getAccounts() {
         DBCursor cursor = getDatabase().getCollection(ACCOUNTS_COLLECTION).find().sort(new BasicDBObject("money", -1));
 
-        List<Account> accounts = new ArrayList<Account>();
+        List<Account> accounts = new ArrayList<>();
 
         for (DBObject aCursor : cursor) {
             BasicDBObject accountObject = (BasicDBObject) aCursor;

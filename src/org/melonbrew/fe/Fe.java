@@ -33,7 +33,7 @@ public class Fe extends JavaPlugin {
     private String latestVersionString;
 
     public Fe() {
-        databases = new HashSet<Database>();
+        databases = new HashSet<>();
     }
 
     @Override
@@ -46,8 +46,8 @@ public class Fe extends JavaPlugin {
         databases.add(new SQLiteDB(this));
         databases.add(new MongoDB(this));
 
-        for (Database database : databases) {
-            String name = database.getConfigName();
+        for (Database db : databases) {
+            String name = db.getConfigName();
 
             ConfigurationSection section = getConfig().getConfigurationSection(name);
 
@@ -55,7 +55,7 @@ public class Fe extends JavaPlugin {
                 section = getConfig().createSection(name);
             }
 
-            database.getConfigDefaults(section);
+            db.getConfigDefaults(section);
 
             if (section.getKeys(false).isEmpty()) {
                 getConfig().set(name, null);
@@ -181,7 +181,7 @@ public class Fe extends JavaPlugin {
     }
 
     public Set<Database> getDatabases() {
-        return new HashSet<Database>(databases);
+        return new HashSet<>(databases);
     }
 
     public API getAPI() {
@@ -193,9 +193,9 @@ public class Fe extends JavaPlugin {
 
         database = null;
 
-        for (Database database : databases) {
-            if (type.equalsIgnoreCase(database.getConfigName())) {
-                this.database = database;
+        for (Database db : databases) {
+            if (type.equalsIgnoreCase(db.getConfigName())) {
+                this.database = db;
 
                 break;
             }

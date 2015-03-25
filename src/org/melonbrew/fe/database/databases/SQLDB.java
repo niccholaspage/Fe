@@ -201,7 +201,7 @@ public abstract class SQLDB extends Database {
 
         String sql = "SELECT * FROM " + accountsName + " ORDER BY money DESC limit " + size;
 
-        List<Account> topAccounts = new ArrayList<Account>();
+        List<Account> topAccounts = new ArrayList<>();
 
         try {
             ResultSet set = connection.createStatement().executeQuery(sql);
@@ -224,7 +224,7 @@ public abstract class SQLDB extends Database {
     public List<Account> getAccounts() {
         checkConnection();
 
-        List<Account> accounts = new ArrayList<Account>();
+        List<Account> accounts = new ArrayList<>();
 
         try {
             ResultSet set = connection.createStatement().executeQuery("SELECT * from " + accountsName);

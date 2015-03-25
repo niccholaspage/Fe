@@ -197,7 +197,7 @@ public class VaultHandler implements Economy {
 
     @Override
     public List<String> getBanks() {
-        return new ArrayList<String>();
+        return new ArrayList<>();
     }
 
     @Override
