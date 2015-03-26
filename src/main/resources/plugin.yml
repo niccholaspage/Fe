@@ -1,10 +1,7 @@
-name: Fe
-
-main: org.melonbrew.fe.Fe
-
+name:    ${project.name}
+main:    ${project.groupId}.${project.artifactId}.${project.name}
 version: ${project.version}
-
-load: startup
+load:    startup
 
 commands:
   fe:
