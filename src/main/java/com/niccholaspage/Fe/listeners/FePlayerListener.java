@@ -12,36 +12,28 @@ import com.niccholaspage.Fe.database.Database;
 
 public class FePlayerListener implements Listener
 {
-    private final Fe plugin;
-
-    public FePlayerListener( Fe plugin )
-    {
-        this.plugin = plugin;
-
-        plugin.getServer().getPluginManager().registerEvents( (Listener)this, plugin );
-    }
-
-    @EventHandler( priority = EventPriority.LOWEST )
-    public void onPlayerLogin( PlayerLoginEvent event )
-    {
-        Player player = event.getPlayer();
-        plugin.getAPI().updateAccount( player.getName(), player.getUniqueId().toString() );
-    }
-
-    @EventHandler
-    public void onPlayerQuit( PlayerQuitEvent event )
-    {
-        Database database = plugin.getFeDatabase();
-
-        Player player = event.getPlayer();
-
-        Account account = database.getCachedAccount( player.getName(), player.getUniqueId().toString() );
-
-        if( account != null )
-        {
-            account.save( account.getMoney() );
-
-            database.removeCachedAccount( account );
-        }
-    }
+	private final Fe plugin;
+	public FePlayerListener(Fe plugin)
+	{
+		this.plugin = plugin;
+		plugin.getServer().getPluginManager().registerEvents((Listener)this, plugin);
+	}
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerLogin(PlayerLoginEvent event)
+	{
+		Player player = event.getPlayer();
+		plugin.getAPI().updateAccount(player.getName(), player.getUniqueId().toString());
+	}
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent event)
+	{
+		Database database = plugin.getFeDatabase();
+		Player player = event.getPlayer();
+		Account account = database.getCachedAccount(player.getName(), player.getUniqueId().toString());
+		if(account != null)
+		{
+			account.save(account.getMoney());
+			database.removeCachedAccount(account);
+		}
+	}
 }
