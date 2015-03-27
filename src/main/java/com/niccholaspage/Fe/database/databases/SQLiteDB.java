@@ -9,11 +9,9 @@ import java.sql.SQLException;
 
 public class SQLiteDB extends SQLDB
 {
-	private final Fe plugin;
 	public SQLiteDB(Fe plugin)
 	{
 		super(plugin, false);
-		this.plugin = plugin;
 	}
 	@Override
 	public Connection getNewConnection()

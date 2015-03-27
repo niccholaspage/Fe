@@ -63,7 +63,7 @@ public abstract class Database
 	{
 		if(!plugin.getServer().getOnlineMode())
 		{
-			//Disable plugin?
+			// Disable plugin?
 		}
 		plugin.log(Phrase.STARTING_UUID_CONVERSION);
 		List<Account> accounts = getAccounts();

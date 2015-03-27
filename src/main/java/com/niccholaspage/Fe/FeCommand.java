@@ -58,7 +58,7 @@ public class FeCommand implements CommandExecutor
 	private void sendDefaultCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)
 	{
 		String command = "balance";
-		if( ! (sender instanceof Player) && args.length < 1)
+		if(!(sender instanceof Player) && args.length < 1)
 			command = "help";
 		onCommand(sender, cmd, commandLabel, merge(new String[]
 					 {
@@ -79,7 +79,7 @@ public class FeCommand implements CommandExecutor
 			sendDefaultCommand(sender, cmd, commandLabel, args);
 			return true;
 		}
-		boolean console =  ! (sender instanceof Player);
+		boolean console = !(sender instanceof Player);
 		if(console && args.length < 2 && command.getCommandType() == CommandType.CONSOLE_WITH_ARGUMENTS)
 		{
 			Phrase.COMMAND_NEEDS_ARGUMENTS.sendWithPrefix(sender);
@@ -90,7 +90,7 @@ public class FeCommand implements CommandExecutor
 			Phrase.COMMAND_NOT_CONSOLE.sendWithPrefix(sender, commandLabel);
 			return true;
 		}
-		if( ! sender.hasPermission(command.getPermission()))
+		if(!sender.hasPermission(command.getPermission()))
 		{
 			Phrase.NO_PERMISSION_FOR_COMMAND.sendWithPrefix(sender);
 			return true;
@@ -98,7 +98,7 @@ public class FeCommand implements CommandExecutor
 		String[] realArgs = new String[args.length - 1];
 		for(int i = 1; i < args.length; i ++)
 			realArgs[i - 1] = args[i];
-		if( ! command.onCommand(sender, cmd, commandLabel, realArgs))
+		if(!command.onCommand(sender, cmd, commandLabel, realArgs))
 			Phrase.TRY_COMMAND.sendWithPrefix(sender, parse(commandLabel, command));
 		return true;
 	}
@@ -108,7 +108,7 @@ public class FeCommand implements CommandExecutor
 		String operatorsColor = Phrase.PRIMARY_COLOR.parse();
 		String argumentColor = Phrase.ARGUMENT_COLOR.parse();
 		StringBuilder builder = new StringBuilder(commandColor).append("/").append(label);
-		if( ! command.getFirstName().equalsIgnoreCase("balance"))
+		if(!command.getFirstName().equalsIgnoreCase("balance"))
 			builder.append(" ").append(command.getFirstName()).append(" ");
 		String[] split = command.getUsage().split(" ");
 		if(split[0].equalsIgnoreCase(command.getFirstName()))

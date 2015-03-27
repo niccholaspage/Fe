@@ -13,24 +13,19 @@ import java.util.List;
 
 public abstract class SQLDB extends Database
 {
-	private final Fe plugin;
+	protected final Fe plugin;
 	private final boolean supportsModification;
+	private String accountsName        = "fe_accounts";
+	private String versionName         = "fe_version";
+	private String accountsColumnUser  = "name";
+	private String accountsColumnMoney = "money";
+	private String accountsColumnUUID  = "uuid";
 	private Connection connection;
-	private String accountsName;
-	private String versionName;
-	private String accountsColumnUser;
-	private String accountsColumnMoney;
-	private String accountsColumnUUID;
 	public SQLDB(Fe plugin, boolean supportsModification)
 	{
 		super(plugin);
 		this.plugin = plugin;
 		this.supportsModification = supportsModification;
-		accountsName = "fe_accounts";
-		versionName = "fe_version";
-		accountsColumnUser = "name";
-		accountsColumnMoney = "money";
-		accountsColumnUUID = "uuid";
 		plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable()
 		{
 			@Override
@@ -38,7 +33,7 @@ public abstract class SQLDB extends Database
 			{
 				try
 				{
-					if(connection != null &&  ! connection.isClosed())
+					if(connection != null && !connection.isClosed())
 						connection.createStatement().execute("/* ping */ SELECT 1");
 				} catch(SQLException e) {
 					connection = getNewConnection();
@@ -98,7 +93,7 @@ public abstract class SQLDB extends Database
 						}
 						try
 						{
-							query("ALTER TABLE " + accountsName + " ADD " + accountsColumnUUID + " varchar(36);");
+							query("ALTER TABLE " + accountsName + " ADD " + accountsColumnUUID + " char(36);");
 						} catch(Exception e) {
 						}
 						if(!convertToUUID())

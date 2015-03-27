@@ -55,7 +55,7 @@ public class Fe extends JavaPlugin
 		+ "type - The type of database used (sqlite, mysql, or mongo)");
 		saveConfig();
 		api = new API(this);
-		if( ! setupDatabase())
+		if(!setupDatabase())
 			return;
 		getCommand("fe").setExecutor(new FeCommand(this));
 		PluginManager pm = getServer().getPluginManager();
@@ -115,7 +115,7 @@ public class Fe extends JavaPlugin
 			log(Phrase.DATABASE_TYPE_DOES_NOT_EXIST);
 			return false;
 		}
-		if( ! database.init())
+		if(!database.init())
 		{
 			log(Phrase.DATABASE_FAILURE_DISABLE);
 			setEnabled(false);
@@ -128,7 +128,7 @@ public class Fe extends JavaPlugin
 		File phrasesFile = new File(getDataFolder(), "phrases.yml");
 		for(Phrase phrase : Phrase.values())
 			phrase.reset();
-		if( ! phrasesFile.exists())
+		if(!phrasesFile.exists())
 			return;
 		YamlConfiguration phrasesConfig = YamlConfiguration.loadConfiguration(phrasesFile);
 		for(Phrase phrase : Phrase.values())
@@ -156,7 +156,7 @@ public class Fe extends JavaPlugin
 			getConfig().set("currency.major.multiple", oldCurrencyMultiple);
 			getConfig().set("currency.multiple", null);
 		}
-		if( ! getConfig().isSet("autoclean"))
+		if(!getConfig().isSet("autoclean"))
 			getConfig().set("autoclean", true);
 		// Temporarily remove cache and updates.
 		if(getConfig().isSet("cacheaccounts"))
