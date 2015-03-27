@@ -3,7 +3,7 @@
    <modelVersion>4.0.0</modelVersion>
    <groupId>com.niccholaspage</groupId>
    <artifactId>Fe</artifactId>
-   <version>0.8.3</version>
+   <version>0.8.4</version>
    <name>Fe</name>
  
    <properties>
@@ -44,11 +44,6 @@
          <version>R8-SNAPSHOT</version>
          <scope>compile</scope>
       </dependency>
-      <dependency>
-         <groupId>org.mongodb</groupId>
-         <artifactId>mongo-java-driver</artifactId>
-         <version>2.13.0</version>
-      </dependency>
    </dependencies>
 
    <build>
@@ -83,7 +78,6 @@
                      <artifactSet>
                         <includes>
                            <include>org.mcstats.bukkit:metrics</include>
-                           <include>org.mongodb:mongo-java-driver</include>
                         </includes>
                      </artifactSet>
                   </configuration>

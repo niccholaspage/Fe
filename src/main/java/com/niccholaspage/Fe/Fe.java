@@ -13,7 +13,6 @@ import org.mcstats.Metrics.Graph;
 import org.mcstats.Metrics.Plotter;
 import com.niccholaspage.Fe.database.Account;
 import com.niccholaspage.Fe.database.Database;
-import com.niccholaspage.Fe.database.databases.MongoDB;
 import com.niccholaspage.Fe.database.databases.MySQLDB;
 import com.niccholaspage.Fe.database.databases.SQLiteDB;
 import com.niccholaspage.Fe.listeners.FePlayerListener;
@@ -40,7 +39,6 @@ public class Fe extends JavaPlugin {
 
         databases.add(new MySQLDB(this));
         databases.add(new SQLiteDB(this));
-        databases.add(new MongoDB(this));
 
         for (Database db : databases) {
             String name = db.getConfigName();
