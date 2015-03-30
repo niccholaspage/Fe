@@ -2,7 +2,7 @@ package com.niccholaspage.Fe.command.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import com.niccholaspage.Fe.Fe2;
+import com.niccholaspage.Fe.Fe;
 import com.niccholaspage.Fe.Phrase;
 import com.niccholaspage.Fe.command.CommandType;
 import com.niccholaspage.Fe.command.SubCommand;
@@ -11,9 +11,9 @@ import com.niccholaspage.Fe.database.Account;
 import java.util.List;
 
 public class TopCommand extends SubCommand {
-    private final Fe2 plugin;
+    private final Fe plugin;
 
-    public TopCommand(Fe2 plugin) {
+    public TopCommand(Fe plugin) {
         super("top", "fe.top", "top", Phrase.COMMAND_TOP, CommandType.CONSOLE);
 
         this.plugin = plugin;

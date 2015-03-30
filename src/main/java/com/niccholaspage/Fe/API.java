@@ -9,8 +9,8 @@ import java.util.Locale;
 
 public class API
 {
-	private final Fe2 plugin;
-	public API(Fe2 plugin)
+	private final Fe plugin;
+	public API(Fe plugin)
 	{
 		this.plugin = plugin;
 	}

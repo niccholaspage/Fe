@@ -3,16 +3,16 @@ package com.niccholaspage.Fe.command.commands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import com.niccholaspage.Fe.Fe2;
+import com.niccholaspage.Fe.Fe;
 import com.niccholaspage.Fe.Phrase;
 import com.niccholaspage.Fe.command.CommandType;
 import com.niccholaspage.Fe.command.SubCommand;
 import com.niccholaspage.Fe.database.Account;
 
 public class DeductCommand extends SubCommand {
-    private final Fe2 plugin;
+    private final Fe plugin;
 
-    public DeductCommand(Fe2 plugin) {
+    public DeductCommand(Fe plugin) {
         super("deduct", "fe.deduct", "deduct [name] [amount]", Phrase.COMMAND_DEDUCT, CommandType.CONSOLE);
 
         this.plugin = plugin;

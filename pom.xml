@@ -4,10 +4,11 @@
    <groupId>com.niccholaspage</groupId>
    <artifactId>Fe</artifactId>
    <version>0.8.4</version>
-   <name>Fe2</name>
+   <name>Fe</name>
  
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.bukkitpluginname>Fe2</project.bukkitpluginname>
    </properties>
 
    <repositories>

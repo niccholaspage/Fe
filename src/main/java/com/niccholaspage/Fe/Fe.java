@@ -21,12 +21,12 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Fe2 extends JavaPlugin
+public class Fe extends JavaPlugin
 {
 	private final Set<Database> databases;
 	private API api;
 	private Database database;
-	public Fe2()
+	public Fe()
 	{
 		databases = new HashSet<>();
 	}

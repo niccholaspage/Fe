@@ -1,17 +1,17 @@
 package com.niccholaspage.Fe.database;
 
 import com.niccholaspage.Fe.API;
-import com.niccholaspage.Fe.Fe2;
+import com.niccholaspage.Fe.Fe;
 
 public class Account implements Comparable<Account>
 {
-	private final Fe2 plugin;
+	private final Fe plugin;
 	private String name;
 	private final String uuid;
 	private final API api;
 	private final Database database;
 	private Double money;
-	public Account(Fe2 plugin, String name, String uuid, Database database)
+	public Account(Fe plugin, String name, String uuid, Database database)
 	{
 		this.plugin = plugin;
 		this.name = name;

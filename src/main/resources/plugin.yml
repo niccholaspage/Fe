@@ -1,4 +1,4 @@
-name:    ${project.name}
+name:    ${project.bukkitpluginname}
 main:    ${project.groupId}.${project.artifactId}.${project.name}
 version: ${project.version}
 load:    startup
