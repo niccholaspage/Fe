@@ -3,16 +3,16 @@ package com.niccholaspage.Fe.command.commands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import com.niccholaspage.Fe.Fe;
+import com.niccholaspage.Fe.Fe2;
 import com.niccholaspage.Fe.Phrase;
 import com.niccholaspage.Fe.command.CommandType;
 import com.niccholaspage.Fe.command.SubCommand;
 import com.niccholaspage.Fe.database.Account;
 
 public class BalanceCommand extends SubCommand {
-    private final Fe plugin;
+    private final Fe2 plugin;
 
-    public BalanceCommand(Fe plugin) {
+    public BalanceCommand(Fe2 plugin) {
         super("balance,bal", "fe.balance", "(name)", Phrase.COMMAND_BALANCE, CommandType.CONSOLE_WITH_ARGUMENTS);
 
         this.plugin = plugin;

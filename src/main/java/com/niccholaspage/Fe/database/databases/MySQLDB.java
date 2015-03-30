@@ -1,13 +1,13 @@
 package com.niccholaspage.Fe.database.databases;
 import org.bukkit.configuration.ConfigurationSection;
-import com.niccholaspage.Fe.Fe;
+import com.niccholaspage.Fe.Fe2;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class MySQLDB extends SQLDB
 {
-	public MySQLDB(Fe plugin)
+	public MySQLDB(Fe2 plugin)
 	{
 		super(plugin, true);
 	}

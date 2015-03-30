@@ -6,14 +6,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import com.niccholaspage.Fe.Fe;
+import com.niccholaspage.Fe.Fe2;
 import com.niccholaspage.Fe.database.Account;
 import com.niccholaspage.Fe.database.Database;
 
 public class FePlayerListener implements Listener
 {
-	private final Fe plugin;
-	public FePlayerListener(Fe plugin)
+	private final Fe2 plugin;
+	public FePlayerListener(Fe2 plugin)
 	{
 		this.plugin = plugin;
 		plugin.getServer().getPluginManager().registerEvents((Listener)this, plugin);

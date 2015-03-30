@@ -2,14 +2,14 @@ package com.niccholaspage.Fe.database;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import com.niccholaspage.Fe.Fe;
+import com.niccholaspage.Fe.Fe2;
 import com.niccholaspage.Fe.Phrase;
 import com.niccholaspage.Fe.UUIDFetcher;
 import java.util.*;
 
 public abstract class Database
 {
-	private final Fe plugin;
+	private final Fe2 plugin;
 	private final Set<Account> cachedAccounts = new HashSet<>();
 	protected boolean cacheAccounts;
 	public abstract List<Account> getAccounts();
@@ -21,7 +21,7 @@ public abstract class Database
 	public abstract void   setVersion(int version);
 	public abstract void   clean();
 	protected abstract void saveAccount(String name, String uuid, double money);
-	public Database(Fe plugin)
+	public Database(Fe2 plugin)
 	{
 		this.plugin = plugin;
 	}

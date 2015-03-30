@@ -54,7 +54,7 @@ public enum Phrase
 	COMMAND_CLEAN("Cleans the accounts with default balance", true),
 	COMMAND_RELOAD("Reloads the config", true),
 	;
-	private static Fe plugin;
+	private static Fe2 plugin;
 	private final String defaultMessage;
 	private final boolean categorized;
 	private String message;
@@ -68,7 +68,7 @@ public enum Phrase
 		this.categorized = categorized;
 		message = defaultMessage + "";
 	}
-	public static void init(Fe instance)
+	public static void init(Fe2 instance)
 	{
 		plugin = instance;
 	}

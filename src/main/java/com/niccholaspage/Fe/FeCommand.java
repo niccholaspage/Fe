@@ -13,7 +13,7 @@ import java.util.List;
 public class FeCommand implements CommandExecutor
 {
 	private final List<SubCommand> commands;
-	public FeCommand(Fe plugin)
+	public FeCommand(Fe2 plugin)
 	{
 		commands = new ArrayList<>();
 		commands.add(new BalanceCommand(plugin));

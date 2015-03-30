@@ -2,16 +2,16 @@ package com.niccholaspage.Fe.command.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import com.niccholaspage.Fe.Fe;
+import com.niccholaspage.Fe.Fe2;
 import com.niccholaspage.Fe.Phrase;
 import com.niccholaspage.Fe.command.CommandType;
 import com.niccholaspage.Fe.command.SubCommand;
 import com.niccholaspage.Fe.database.Account;
 
 public class SetCommand extends SubCommand {
-    private final Fe plugin;
+    private final Fe2 plugin;
 
-    public SetCommand(Fe plugin) {
+    public SetCommand(Fe2 plugin) {
         super("set", "fe.set", "set [name] [amount]", Phrase.COMMAND_SET, CommandType.CONSOLE);
 
         this.plugin = plugin;

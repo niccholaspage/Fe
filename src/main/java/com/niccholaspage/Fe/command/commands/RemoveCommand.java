@@ -2,15 +2,15 @@ package com.niccholaspage.Fe.command.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import com.niccholaspage.Fe.Fe;
+import com.niccholaspage.Fe.Fe2;
 import com.niccholaspage.Fe.Phrase;
 import com.niccholaspage.Fe.command.CommandType;
 import com.niccholaspage.Fe.command.SubCommand;
 
 public class RemoveCommand extends SubCommand {
-    private final Fe plugin;
+    private final Fe2 plugin;
 
-    public RemoveCommand(Fe plugin) {
+    public RemoveCommand(Fe2 plugin) {
         super("remove", "fe.remove", "remove [name]", Phrase.COMMAND_REMOVE, CommandType.CONSOLE);
 
         this.plugin = plugin;

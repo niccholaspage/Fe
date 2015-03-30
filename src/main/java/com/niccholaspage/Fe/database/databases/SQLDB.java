@@ -1,6 +1,6 @@
 package com.niccholaspage.Fe.database.databases;
 
-import com.niccholaspage.Fe.Fe;
+import com.niccholaspage.Fe.Fe2;
 import com.niccholaspage.Fe.database.Account;
 import com.niccholaspage.Fe.database.Database;
 import java.sql.Connection;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public abstract class SQLDB extends Database
 {
-	protected final Fe plugin;
+	protected final Fe2 plugin;
 	private final boolean supportsModification;
 	private String accountsName        = "fe_accounts";
 	private String versionName         = "fe_version";
@@ -21,7 +21,7 @@ public abstract class SQLDB extends Database
 	private String accountsColumnMoney = "money";
 	private String accountsColumnUUID  = "uuid";
 	private Connection connection;
-	public SQLDB(Fe plugin, boolean supportsModification)
+	public SQLDB(Fe2 plugin, boolean supportsModification)
 	{
 		super(plugin);
 		this.plugin = plugin;

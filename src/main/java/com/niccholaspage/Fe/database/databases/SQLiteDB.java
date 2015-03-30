@@ -1,7 +1,7 @@
 package com.niccholaspage.Fe.database.databases;
 
 import org.bukkit.configuration.ConfigurationSection;
-import com.niccholaspage.Fe.Fe;
+import com.niccholaspage.Fe.Fe2;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 public class SQLiteDB extends SQLDB
 {
-	public SQLiteDB(Fe plugin)
+	public SQLiteDB(Fe2 plugin)
 	{
 		super(plugin, false);
 	}

@@ -18,8 +18,8 @@ import java.util.List;
 public class VaultHandler implements Economy
 {
 	private final String name = "Fe";
-	private Fe plugin;
-	public VaultHandler(Fe plugin)
+	private Fe2 plugin;
+	public VaultHandler(Fe2 plugin)
 	{
 		this.plugin = plugin;
 		Bukkit.getServer().getPluginManager().registerEvents(new EconomyServerListener(), plugin);
@@ -288,7 +288,7 @@ public class VaultHandler implements Economy
 				Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("Fe");
 				if(plugin != null && plugin.isEnabled())
 				{
-					VaultHandler.this.plugin = (Fe)plugin;
+					VaultHandler.this.plugin = (Fe2)plugin;
 					VaultHandler.this.plugin.log("Vault support enabled.");
 				}
 			}
