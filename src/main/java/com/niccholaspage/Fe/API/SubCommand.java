@@ -1,4 +1,4 @@
-package com.niccholaspage.Fe.command;
+package com.niccholaspage.Fe.API;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

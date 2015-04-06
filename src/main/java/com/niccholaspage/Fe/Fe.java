@@ -1,5 +1,6 @@
 package com.niccholaspage.Fe;
 
+import com.niccholaspage.Fe.API.API;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -11,11 +12,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 import org.mcstats.Metrics.Graph;
 import org.mcstats.Metrics.Plotter;
-import com.niccholaspage.Fe.database.Account;
-import com.niccholaspage.Fe.database.Database;
-import com.niccholaspage.Fe.database.databases.MySQLDB;
-import com.niccholaspage.Fe.database.databases.SQLiteDB;
-import com.niccholaspage.Fe.listeners.FePlayerListener;
+import com.niccholaspage.Fe.API.Account;
+import com.niccholaspage.Fe.API.Database;
+import com.niccholaspage.Fe.Databases.MySQLDB;
+import com.niccholaspage.Fe.Databases.SQLiteDB;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
@@ -57,7 +57,7 @@ public class Fe extends JavaPlugin
 		api = new API(this);
 		if(!setupDatabase())
 			return;
-		getCommand("fe").setExecutor(new FeCommand(this));
+		getCommand("fe").setExecutor(new FeCommands(this));
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(new FePlayerListener(this), this);
 		setupVault();

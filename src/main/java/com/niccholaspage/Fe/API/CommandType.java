@@ -1,4 +1,4 @@
-package com.niccholaspage.Fe.command;
+package com.niccholaspage.Fe.API;
 
 public enum CommandType
 {

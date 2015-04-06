@@ -1,6 +1,6 @@
-package com.niccholaspage.Fe.database;
+package com.niccholaspage.Fe.API;
 
-import com.niccholaspage.Fe.API;
+import com.niccholaspage.Fe.API.API;
 import com.niccholaspage.Fe.Fe;
 
 public class Account implements Comparable<Account>

@@ -1,20 +1,20 @@
-package com.niccholaspage.Fe.command.commands;
+package com.niccholaspage.Fe.Commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import com.niccholaspage.Fe.Fe;
-import com.niccholaspage.Fe.FeCommand;
+import com.niccholaspage.Fe.FeCommands;
 import com.niccholaspage.Fe.Phrase;
-import com.niccholaspage.Fe.command.CommandType;
-import com.niccholaspage.Fe.command.SubCommand;
+import com.niccholaspage.Fe.API.CommandType;
+import com.niccholaspage.Fe.API.SubCommand;
 
 public class HelpCommand extends SubCommand {
     private final Fe plugin;
 
-    private final FeCommand command;
+    private final FeCommands command;
 
-    public HelpCommand(Fe plugin, FeCommand command) {
+    public HelpCommand(Fe plugin, FeCommands command) {
         super("help,?", "fe.?", "help", Phrase.COMMAND_HELP, CommandType.CONSOLE);
 
         this.plugin = plugin;

@@ -1,19 +1,29 @@
 package com.niccholaspage.Fe;
 
+import com.niccholaspage.Fe.Commands.CreateCommand;
+import com.niccholaspage.Fe.Commands.HelpCommand;
+import com.niccholaspage.Fe.Commands.ReloadCommand;
+import com.niccholaspage.Fe.Commands.BalanceCommand;
+import com.niccholaspage.Fe.Commands.DeductCommand;
+import com.niccholaspage.Fe.Commands.GrantCommand;
+import com.niccholaspage.Fe.Commands.TopCommand;
+import com.niccholaspage.Fe.Commands.SendCommand;
+import com.niccholaspage.Fe.Commands.SetCommand;
+import com.niccholaspage.Fe.Commands.RemoveCommand;
+import com.niccholaspage.Fe.Commands.CleanCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import com.niccholaspage.Fe.command.CommandType;
-import com.niccholaspage.Fe.command.SubCommand;
-import com.niccholaspage.Fe.command.commands.*;
+import com.niccholaspage.Fe.API.CommandType;
+import com.niccholaspage.Fe.API.SubCommand;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FeCommand implements CommandExecutor
+public class FeCommands implements CommandExecutor
 {
 	private final List<SubCommand> commands;
-	public FeCommand(Fe plugin)
+	public FeCommands(Fe plugin)
 	{
 		commands = new ArrayList<>();
 		commands.add(new BalanceCommand(plugin));

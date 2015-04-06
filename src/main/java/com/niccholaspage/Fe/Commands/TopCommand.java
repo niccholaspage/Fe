@@ -1,12 +1,12 @@
-package com.niccholaspage.Fe.command.commands;
+package com.niccholaspage.Fe.Commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import com.niccholaspage.Fe.Fe;
 import com.niccholaspage.Fe.Phrase;
-import com.niccholaspage.Fe.command.CommandType;
-import com.niccholaspage.Fe.command.SubCommand;
-import com.niccholaspage.Fe.database.Account;
+import com.niccholaspage.Fe.API.CommandType;
+import com.niccholaspage.Fe.API.SubCommand;
+import com.niccholaspage.Fe.API.Account;
 
 import java.util.List;
 

@@ -1,13 +1,13 @@
-package com.niccholaspage.Fe.command.commands;
+package com.niccholaspage.Fe.Commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import com.niccholaspage.Fe.Fe;
 import com.niccholaspage.Fe.Phrase;
-import com.niccholaspage.Fe.command.CommandType;
-import com.niccholaspage.Fe.command.SubCommand;
-import com.niccholaspage.Fe.database.Account;
+import com.niccholaspage.Fe.API.CommandType;
+import com.niccholaspage.Fe.API.SubCommand;
+import com.niccholaspage.Fe.API.Account;
 
 public class SendCommand extends SubCommand {
     private final Fe plugin;

@@ -1,22 +1,24 @@
-package com.niccholaspage.Fe.command.commands;
+package com.niccholaspage.Fe.Commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import com.niccholaspage.Fe.Fe;
 import com.niccholaspage.Fe.Phrase;
-import com.niccholaspage.Fe.command.CommandType;
-import com.niccholaspage.Fe.command.SubCommand;
-import com.niccholaspage.Fe.database.Account;
+import com.niccholaspage.Fe.API.CommandType;
+import com.niccholaspage.Fe.API.SubCommand;
+import com.niccholaspage.Fe.API.Account;
 
-public class SetCommand extends SubCommand {
+public class GrantCommand extends SubCommand {
     private final Fe plugin;
 
-    public SetCommand(Fe plugin) {
-        super("set", "fe.set", "set [name] [amount]", Phrase.COMMAND_SET, CommandType.CONSOLE);
+    public GrantCommand(Fe plugin) {
+        super("grant", "fe.grant", "grant [name] [amount]", Phrase.COMMAND_GRANT, CommandType.CONSOLE);
 
         this.plugin = plugin;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (args.length < 2) {
@@ -45,10 +47,16 @@ public class SetCommand extends SubCommand {
 
         String formattedMoney = plugin.getAPI().format(money);
 
-        victim.setMoney(money);
+        victim.deposit(money);
 
-        Phrase.PLAYER_SET_MONEY.sendWithPrefix(sender, victim.getName(), formattedMoney);
+        Phrase.PLAYER_GRANT_MONEY.sendWithPrefix(sender, formattedMoney, victim.getName());
+
+        Player receiverPlayer = plugin.getServer().getPlayerExact(victim.getName());
+
+        if (receiverPlayer != null) {
+            Phrase.PLAYER_GRANTED_MONEY.sendWithPrefix(receiverPlayer, formattedMoney, sender.getName());
+        }
 
         return true;
     }
-}
+}   

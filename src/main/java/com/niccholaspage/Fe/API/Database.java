@@ -1,4 +1,4 @@
-package com.niccholaspage.Fe.database;
+package com.niccholaspage.Fe.API;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -73,11 +73,10 @@ public abstract class Database
 		List<String> names = new ArrayList<>();
 		for(Account account : accounts)
 			names.add(account.getName());
-		UUIDFetcher fetcher = new UUIDFetcher(names);
-		Map<String, UUID> response;
 		try
 		{
-			response = fetcher.call();
+			UUIDFetcher fetcher = new UUIDFetcher(names);
+			Map<String, UUID> response = fetcher.call();
 			removeAllAccounts();
 			for(String name : response.keySet())
 				for(String accountName : new HashMap<>(accountMonies).keySet())

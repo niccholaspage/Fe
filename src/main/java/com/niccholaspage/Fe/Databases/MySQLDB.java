@@ -1,4 +1,4 @@
-package com.niccholaspage.Fe.database.databases;
+package com.niccholaspage.Fe.Databases;
 import org.bukkit.configuration.ConfigurationSection;
 import com.niccholaspage.Fe.Fe;
 import java.sql.Connection;
