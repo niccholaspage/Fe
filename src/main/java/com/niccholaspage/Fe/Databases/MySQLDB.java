@@ -12,9 +12,14 @@ public class MySQLDB extends SQLDB
 		super(plugin, true);
 	}
 	@Override
+	public String getName()
+	{
+		return "MySQL";
+	}
+	@Override
 	protected Connection getNewConnection()
 	{
-		ConfigurationSection config = getConfigSection();
+		final ConfigurationSection config = getConfigSection();
 		setAccountTable       (config.getString("tables.accounts"));
 		setAccountsColumnUser (config.getString("columns.accounts.username"));
 		setAccountsColumnMoney(config.getString("columns.accounts.money"));
@@ -50,10 +55,5 @@ public class MySQLDB extends SQLDB
 		columnsAccounts.addDefault("username", "name");
 		columnsAccounts.addDefault("money", "money");
 		columnsAccounts.addDefault("uuid", "uuid");
-	}
-	@Override
-	public String getName()
-	{
-		return "MySQL";
 	}
 }

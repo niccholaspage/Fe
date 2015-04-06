@@ -15,7 +15,6 @@ public class FePlayerListener implements Listener
 	public FePlayerListener(Fe plugin)
 	{
 		this.plugin = plugin;
-		plugin.getServer().getPluginManager().registerEvents((Listener)this, plugin);
 	}
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerLogin(PlayerLoginEvent event)

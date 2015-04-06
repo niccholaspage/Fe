@@ -3,7 +3,6 @@ package com.niccholaspage.Fe;
 import com.niccholaspage.Fe.API.API;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -20,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import org.bukkit.event.Listener;
 
 public class Fe extends JavaPlugin
 {
@@ -33,12 +33,12 @@ public class Fe extends JavaPlugin
 	{
 		getDataFolder().mkdirs();
 		Phrase.init(this);
-		databases.add(new MySQLDB(this));
-		databases.add(new SQLiteDB(this));
 	}
 	@Override
 	public void onEnable()
 	{
+		databases.add(new MySQLDB(this));
+		databases.add(new SQLiteDB(this));
 		for(Database db : databases)
 		{
 			String name = db.getConfigName();
@@ -59,8 +59,7 @@ public class Fe extends JavaPlugin
 		if(!setupDatabase())
 			return;
 		getCommand("fe").setExecutor(commands);
-		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvents(listener, this);
+		getServer().getPluginManager().registerEvents(listener, this);
 		setupVault();
 		loadMetrics();
 		reloadConfig();
@@ -78,6 +77,38 @@ public class Fe extends JavaPlugin
 		getCurrentDatabase().close();
 		getServer().getServicesManager().unregisterAll(this);
 	}
+	@Override
+	public void reloadConfig()
+	{
+		super.reloadConfig();
+		final String oldCurrencySingle = getConfig().getString("currency.single");
+		final String oldCurrencyMultiple = getConfig().getString("currency.multiple");
+		if(oldCurrencySingle != null)
+		{
+			getConfig().set("currency.major.single", oldCurrencySingle);
+			getConfig().set("currency.single", null);
+		}
+		if(oldCurrencyMultiple != null)
+		{
+			getConfig().set("currency.major.multiple", oldCurrencyMultiple);
+			getConfig().set("currency.multiple", null);
+		}
+		if(!getConfig().isSet("autoclean"))
+			getConfig().set("autoclean", true);
+		// Remove old config nodes.
+		getConfig().set("cacheaccounts", null);
+		getConfig().set("updatecheck", null);
+		Phrase.setupPhrases(new File(getDataFolder(), "phrases.yml"));
+		saveConfig();
+	}
+	public API getAPI()
+	{
+		return api;
+	}
+	public Database getCurrentDatabase()
+	{
+		return database;
+	}
 	public void log(String message)
 	{
 		getLogger().info(message);
@@ -85,14 +116,6 @@ public class Fe extends JavaPlugin
 	public void log(Phrase phrase, String... args)
 	{
 		log(phrase.parse(args));
-	}
-	public Database getCurrentDatabase()
-	{
-		return database;
-	}
-	public API getAPI()
-	{
-		return api;
 	}
 	private boolean setupDatabase()
 	{
@@ -116,32 +139,6 @@ public class Fe extends JavaPlugin
 			return false;
 		}
 		return true;
-	}
-	@Override
-	public void reloadConfig()
-	{
-		super.reloadConfig();
-		String oldCurrencySingle = getConfig().getString("currency.single");
-		String oldCurrencyMultiple = getConfig().getString("currency.multiple");
-		if(oldCurrencySingle != null)
-		{
-			getConfig().set("currency.major.single", oldCurrencySingle);
-			getConfig().set("currency.single", null);
-		}
-		if(oldCurrencyMultiple != null)
-		{
-			getConfig().set("currency.major.multiple", oldCurrencyMultiple);
-			getConfig().set("currency.multiple", null);
-		}
-		if(!getConfig().isSet("autoclean"))
-			getConfig().set("autoclean", true);
-		// Temporarily remove cache and updates.
-		if(getConfig().isSet("cacheaccounts"))
-			getConfig().set("cacheaccounts", null);
-		if(getConfig().getBoolean("updatecheck"))
-			getConfig().set("updatecheck", null);
-		Phrase.setupPhrases(new File(getDataFolder(), "phrases.yml"));
-		saveConfig();
 	}
 	public Account getShortenedAccount(String name)
 	{
@@ -177,12 +174,18 @@ public class Fe extends JavaPlugin
 			message += "=";
 		return message;
 	}
+	private void setupVault()
+	{
+		final Plugin vault = getServer().getPluginManager().getPlugin("Vault");
+		if(vault != null)
+			getServer().getServicesManager().register(Economy.class, new VaultHandler(this), this, ServicePriority.Highest);
+	}
 	private void loadMetrics()
 	{
 		try
 		{
 			Metrics metrics = new Metrics(this);
-			Graph databaseGraph = metrics.createGraph("Database Engine");
+			final Graph databaseGraph = metrics.createGraph("Database Engine");
 			databaseGraph.addPlotter(new Plotter(getCurrentDatabase().getName())
 			{
 				@Override
@@ -191,8 +194,8 @@ public class Fe extends JavaPlugin
 					return 1;
 				}
 			});
-			Graph defaultHoldings = metrics.createGraph("Default Holdings");
-			defaultHoldings.addPlotter(new Plotter(getAPI().getDefaultHoldings() + "")
+			final Graph defaultHoldings = metrics.createGraph("Default Holdings");
+			defaultHoldings.addPlotter(new Plotter(Double.toString(getAPI().getDefaultHoldings()))
 			{
 				@Override
 				public int getValue()
@@ -200,8 +203,8 @@ public class Fe extends JavaPlugin
 					return 1;
 				}
 			});
-			Graph maxHoldings = metrics.createGraph("Max Holdings");
-			String maxHolding = getAPI().getMaxHoldings() + "";
+			final Graph maxHoldings = metrics.createGraph("Max Holdings");
+			String maxHolding = Double.toString(getAPI().getMaxHoldings());
 			if(getAPI().getMaxHoldings() == -1)
 				maxHolding = "Unlimited";
 			maxHoldings.addPlotter(new Plotter(maxHolding)
@@ -215,12 +218,5 @@ public class Fe extends JavaPlugin
 			metrics.start();
 		} catch(IOException e) {
 		}
-	}
-	private void setupVault()
-	{
-		Plugin vault = getServer().getPluginManager().getPlugin("Vault");
-		if(vault == null)
-			return;
-		getServer().getServicesManager().register(Economy.class, new VaultHandler(this), this, ServicePriority.Highest);
 	}
 }

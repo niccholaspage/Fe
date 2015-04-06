@@ -15,11 +15,12 @@ public abstract class SQLDB extends Database
 {
 	protected final Fe plugin;
 	private final boolean supportsModification;
-	private String accountsName        = "fe_accounts";
-	private String versionName         = "fe_version";
-	private String accountsColumnUser  = "name";
-	private String accountsColumnMoney = "money";
-	private String accountsColumnUUID  = "uuid";
+	private final long pingDelay       = 60 * 20;
+	private String tableAccounts       = "fe_accounts";
+	private String tableVersion        = "fe_version";
+	private String columnAccountsUser  = "name";
+	private String columnAccountsMoney = "money";
+	private String columnAccountsUUID  = "uuid";
 	private Connection connection;
 	public SQLDB(Fe plugin, boolean supportsModification)
 	{
@@ -39,27 +40,27 @@ public abstract class SQLDB extends Database
 					connection = getNewConnection();
 				}
 			}
-		}, 60 * 20, 60 * 20);
+		}, pingDelay, pingDelay);
 	}
 	public void setAccountTable(String accountsName)
 	{
-		this.accountsName = accountsName;
+		this.tableAccounts = accountsName;
 	}
 	public void setVersionTable(String versionName)
 	{
-		this.versionName = versionName;
+		this.tableVersion = versionName;
 	}
 	public void setAccountsColumnUser(String accountsColumnUser)
 	{
-		this.accountsColumnUser = accountsColumnUser;
+		this.columnAccountsUser = accountsColumnUser;
 	}
 	public void setAccountsColumnMoney(String accountsColumnMoney)
 	{
-		this.accountsColumnMoney = accountsColumnMoney;
+		this.columnAccountsMoney = accountsColumnMoney;
 	}
 	public void setAccountsColumnUUID(String accountsColumnUUID)
 	{
-		this.accountsColumnUUID = accountsColumnUUID;
+		this.columnAccountsUUID = accountsColumnUUID;
 	}
 	@Override
 	public boolean init()
@@ -76,11 +77,11 @@ public abstract class SQLDB extends Database
 				connection = getNewConnection();
 				if(connection == null || connection.isClosed())
 					return false;
-				ResultSet set = connection.prepareStatement(supportsModification ? ("SHOW TABLES LIKE '" + accountsName + "'") : "SELECT name FROM sqlite_master WHERE type='table' AND name='" + accountsName + "'").executeQuery();
+				ResultSet set = connection.prepareStatement(supportsModification ? ("SHOW TABLES LIKE '" + tableAccounts + "'") : "SELECT name FROM sqlite_master WHERE type='table' AND name='" + tableAccounts + "'").executeQuery();
 				boolean newDatabase = set.next();
 				set.close();
-				query("CREATE TABLE IF NOT EXISTS " + accountsName + " (" + accountsColumnUser + " varchar(64) NOT NULL, " + accountsColumnUUID + " varchar(36), " + accountsColumnMoney + " double NOT NULL)");
-				query("CREATE TABLE IF NOT EXISTS " + versionName + " (version int NOT NULL)");
+				query("CREATE TABLE IF NOT EXISTS " + tableAccounts + " (" + columnAccountsUser + " varchar(64) NOT NULL, " + columnAccountsUUID + " varchar(36), " + columnAccountsMoney + " double NOT NULL)");
+				query("CREATE TABLE IF NOT EXISTS " + tableVersion + " (version int NOT NULL)");
 				if(newDatabase)
 				{
 					int version = getVersion();
@@ -88,12 +89,12 @@ public abstract class SQLDB extends Database
 					{
 						if(supportsModification)
 						{
-							query("ALTER TABLE " + accountsName + " MODIFY " + accountsColumnUser + " varchar(64) NOT NULL");
-							query("ALTER TABLE " + accountsName + " MODIFY " + accountsColumnMoney + " double NOT NULL");
+							query("ALTER TABLE " + tableAccounts + " MODIFY " + columnAccountsUser + " varchar(64) NOT NULL");
+							query("ALTER TABLE " + tableAccounts + " MODIFY " + columnAccountsMoney + " double NOT NULL");
 						}
 						try
 						{
-							query("ALTER TABLE " + accountsName + " ADD " + accountsColumnUUID + " char(36);");
+							query("ALTER TABLE " + tableAccounts + " ADD " + columnAccountsUUID + " char(36);");
 						} catch(Exception e) {
 						}
 						if(!convertToUUID())
@@ -133,7 +134,7 @@ public abstract class SQLDB extends Database
 		int version = 0;
 		try
 		{
-			ResultSet set = connection.prepareStatement("SELECT * from " + versionName).executeQuery();
+			ResultSet set = connection.prepareStatement("SELECT * from " + tableVersion).executeQuery();
 			if(set.next())
 				version = set.getInt("version");
 			set.close();
@@ -149,8 +150,8 @@ public abstract class SQLDB extends Database
 		checkConnection();
 		try
 		{
-			connection.prepareStatement("DELETE FROM " + versionName).executeUpdate();
-			connection.prepareStatement("INSERT INTO " + versionName + " (version) VALUES (" + version + ")").executeUpdate();
+			connection.prepareStatement("DELETE FROM " + tableVersion).executeUpdate();
+			connection.prepareStatement("INSERT INTO " + tableVersion + " (version) VALUES (" + version + ")").executeUpdate();
 		} catch(SQLException e) {
 			System.out.println(e);
 		}
@@ -159,15 +160,15 @@ public abstract class SQLDB extends Database
 	public List<Account> loadTopAccounts(int size)
 	{
 		checkConnection();
-		String sql = "SELECT * FROM " + accountsName + " ORDER BY money DESC limit " + size;
+		String sql = "SELECT * FROM " + tableAccounts + " ORDER BY money DESC limit " + size;
 		List<Account> topAccounts = new ArrayList<>();
 		try
 		{
 			ResultSet set = connection.createStatement().executeQuery(sql);
 			while(set.next())
 			{
-				Account account = new Account(plugin, set.getString(accountsColumnUser), set.getString(accountsColumnUUID), this);
-				account.setMoney(set.getDouble(accountsColumnMoney));
+				Account account = new Account(plugin, set.getString(columnAccountsUser), set.getString(columnAccountsUUID), this);
+				account.setMoney(set.getDouble(columnAccountsMoney));
 				topAccounts.add(account);
 			}
 		} catch(SQLException e) {
@@ -182,11 +183,11 @@ public abstract class SQLDB extends Database
 		List<Account> accounts = new ArrayList<>();
 		try
 		{
-			ResultSet set = connection.createStatement().executeQuery("SELECT * from " + accountsName);
+			ResultSet set = connection.createStatement().executeQuery("SELECT * from " + tableAccounts);
 			while(set.next())
 			{
-				Account account = new Account(plugin, set.getString(accountsColumnUser), set.getString(accountsColumnUUID), this);
-				account.setMoney(set.getDouble(accountsColumnMoney));
+				Account account = new Account(plugin, set.getString(columnAccountsUser), set.getString(columnAccountsUUID), this);
+				account.setMoney(set.getDouble(columnAccountsMoney));
 				accounts.add(account);
 			}
 		} catch(SQLException e) {
@@ -200,14 +201,14 @@ public abstract class SQLDB extends Database
 		checkConnection();
 		try
 		{
-			PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + accountsName + " WHERE UPPER(" + (uuid != null ? accountsColumnUUID : accountsColumnUser) + ") LIKE UPPER(?)");
+			PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + tableAccounts + " WHERE UPPER(" + (uuid != null ? columnAccountsUUID : columnAccountsUser) + ") LIKE UPPER(?)");
 			statement.setString(1, uuid != null ? uuid : name);
 			ResultSet set = statement.executeQuery();
 			HashMap<String, String> data = new HashMap<>();
 			while(set.next())
 			{
-				data.put("money", set.getString(accountsColumnMoney));
-				data.put("name", set.getString(accountsColumnUser));
+				data.put("money", set.getString(columnAccountsMoney));
+				data.put("name", set.getString(columnAccountsUser));
 			}
 			set.close();
 			return data;
@@ -224,7 +225,7 @@ public abstract class SQLDB extends Database
 		PreparedStatement statement;
 		try
 		{
-			statement = connection.prepareStatement("DELETE FROM " + accountsName + " WHERE UPPER(" + (uuid != null ? accountsColumnUUID : accountsColumnUser) + ") LIKE UPPER(?)");
+			statement = connection.prepareStatement("DELETE FROM " + tableAccounts + " WHERE UPPER(" + (uuid != null ? columnAccountsUUID : columnAccountsUser) + ") LIKE UPPER(?)");
 			statement.setString(1, uuid != null ? uuid : name);
 			statement.execute();
 		} catch(SQLException e) {
@@ -232,26 +233,22 @@ public abstract class SQLDB extends Database
 		}
 	}
 	@Override
-	protected void saveAccount(String name, String uuid, double money)
+	public void saveAccount(String name, String uuid, double money)
 	{
 		checkConnection();
 		try
 		{
-			String sql = "UPDATE " + accountsName + " SET " + accountsColumnMoney + "=?, " + accountsColumnUser + "=? WHERE UPPER(";
-			if(uuid != null)
-				sql += accountsColumnUUID;
-			else
-				sql += accountsColumnUser;
-			PreparedStatement statement = connection.prepareStatement(sql + ") LIKE UPPER(?)");
+			PreparedStatement statement = connection.prepareStatement(
+				"UPDATE " + tableAccounts + " SET " + columnAccountsMoney + "=?, " + columnAccountsUser + "=? WHERE UPPER("
+				+ (uuid != null ? columnAccountsUUID : columnAccountsUser)
+				+ ") LIKE UPPER(?)");
 			statement.setDouble(1, money);
 			statement.setString(2, name);
-			if(uuid != null)
-				statement.setString(3, uuid);
-			else
-				statement.setString(3, name);
+			statement.setString(3, uuid != null ? uuid : name);
 			if(statement.executeUpdate() == 0)
 			{
-				statement = connection.prepareStatement("INSERT INTO " + accountsName + " (" + accountsColumnUser + ", " + accountsColumnUUID + ", " + accountsColumnMoney + ") VALUES (?, ?, ?)");
+				statement = connection.prepareStatement(
+					"INSERT INTO " + tableAccounts + " (" + columnAccountsUser + ", " + columnAccountsUUID + ", " + columnAccountsMoney + ") VALUES (?, ?, ?)");
 				statement.setString(1, name);
 				statement.setString(2, uuid);
 				statement.setDouble(3, money);
@@ -267,12 +264,12 @@ public abstract class SQLDB extends Database
 		checkConnection();
 		try
 		{
-			ResultSet set = connection.prepareStatement("SELECT * from " + accountsName + " WHERE " + accountsColumnMoney + "=" + plugin.getAPI().getDefaultHoldings()).executeQuery();
+			ResultSet set = connection.prepareStatement("SELECT * from " + tableAccounts + " WHERE " + columnAccountsMoney + "=" + plugin.getAPI().getDefaultHoldings()).executeQuery();
 			boolean executeQuery = false;
-			StringBuilder builder = new StringBuilder("DELETE FROM " + accountsName + " WHERE " + accountsColumnUser + " IN (");
+			StringBuilder builder = new StringBuilder("DELETE FROM " + tableAccounts + " WHERE " + columnAccountsUser + " IN (");
 			while(set.next())
 			{
-				String name = set.getString(accountsColumnUser);
+				String name = set.getString(columnAccountsUser);
 				if(plugin.getServer().getPlayerExact(name) != null)
 					continue;
 				executeQuery = true;
@@ -293,7 +290,7 @@ public abstract class SQLDB extends Database
 		checkConnection();
 		try
 		{
-			connection.prepareStatement("DELETE FROM " + accountsName).executeUpdate();
+			connection.prepareStatement("DELETE FROM " + tableAccounts).executeUpdate();
 		} catch(SQLException e) {
 			System.out.println(e);
 		}

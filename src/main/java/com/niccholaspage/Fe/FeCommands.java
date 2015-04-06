@@ -22,10 +22,9 @@ import java.util.List;
 
 public class FeCommands implements CommandExecutor
 {
-	private final List<SubCommand> commands;
+	private final List<SubCommand> commands = new ArrayList<>();
 	public FeCommands(Fe plugin)
 	{
-		commands = new ArrayList<>();
 		commands.add(new BalanceCommand(plugin));
 		commands.add(new SendCommand(plugin));
 		commands.add(new TopCommand(plugin));
@@ -70,10 +69,7 @@ public class FeCommands implements CommandExecutor
 		String command = "balance";
 		if(!(sender instanceof Player) && args.length < 1)
 			command = "help";
-		onCommand(sender, cmd, commandLabel, merge(new String[]
-					 {
-						 command
-		}, args));
+		onCommand(sender, cmd, commandLabel, merge(new String[] { command }, args));
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)
@@ -136,11 +132,7 @@ public class FeCommands implements CommandExecutor
 	{
 		String operator = argument.substring(0, 1);
 		argument = argument.substring(1, argument.length());
-		String reverse;
-		if(operator.equals("["))
-			reverse = "]";
-		else
-			reverse = ")";
+		String reverse = operator.equals("[") ? "]" : ")";
 		argument = argument.substring(0, argument.length() - 1);
 		argument = operatorsColor + operator + argumentColor + argument + operatorsColor + reverse;
 		return argument;

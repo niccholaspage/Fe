@@ -14,6 +14,11 @@ public class SQLiteDB extends SQLDB
 		super(plugin, false);
 	}
 	@Override
+	public String getName()
+	{
+		return "SQLite";
+	}
+	@Override
 	public Connection getNewConnection()
 	{
 		try
@@ -27,10 +32,5 @@ public class SQLiteDB extends SQLDB
 	@Override
 	public void getConfigDefaults(ConfigurationSection section)
 	{
-	}
-	@Override
-	public String getName()
-	{
-		return "SQLite";
 	}
 }

@@ -14,13 +14,13 @@ public abstract class Database
 	protected boolean cacheAccounts;
 	public abstract List<Account> getAccounts();
 	public abstract List<Account> loadTopAccounts(int size);
-	public abstract HashMap<String, String> loadAccountData(String name, String uuid);
+	public abstract Map<String, String> loadAccountData(String name, String uuid);
 	public abstract void   getConfigDefaults(ConfigurationSection section);
 	public abstract String getName();
 	public abstract int    getVersion();
 	public abstract void   setVersion(int version);
 	public abstract void   clean();
-	protected abstract void saveAccount(String name, String uuid, double money);
+	public abstract void   saveAccount(String name, String uuid, double money);
 	public Database(Fe plugin)
 	{
 		this.plugin = plugin;
@@ -120,7 +120,7 @@ public abstract class Database
 		Account account = getCachedAccount(name, uuid);
 		if(account != null)
 			return account;
-		HashMap<String, String> data = loadAccountData(name, uuid);
+		Map<String, String> data = loadAccountData(name, uuid);
 		String money_string = data.get("money");
 		Double data_money;
 		try
@@ -148,7 +148,7 @@ public abstract class Database
 	private Account createAndAddAccount(String name, String uuid, double money)
 	{
 		Account account = new Account(plugin, name, uuid, this);
-		account.setMoney(money);
+		account.save(money);
 		if(cacheAccounts())
 		{
 			Player player = plugin.getServer().getPlayerExact(name);
