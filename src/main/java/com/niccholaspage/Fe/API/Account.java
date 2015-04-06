@@ -1,23 +1,20 @@
 package com.niccholaspage.Fe.API;
 
-import com.niccholaspage.Fe.API.API;
 import com.niccholaspage.Fe.Fe;
 
 public class Account implements Comparable<Account>
 {
 	private final Fe plugin;
+	private final Database database;
 	private String name;
 	private final String uuid;
-	private final API api;
-	private final Database database;
 	private Double money;
 	public Account(Fe plugin, String name, String uuid, Database database)
 	{
 		this.plugin = plugin;
+		this.database = database;
 		this.name = name;
 		this.uuid = uuid;
-		this.api = plugin.getAPI();
-		this.database = database;
 		this.money = null;
 	}
 	public String getName()
@@ -55,11 +52,11 @@ public class Account implements Comparable<Account>
 		Double currentMoney = getMoney();
 		if(currentMoney != null && currentMoney == money)
 			return;
-		if(money < 0 && !api.isCurrencyNegative())
+		if(money < 0 && !plugin.getAPI().isCurrencyNegative())
 			money = 0;
-		currentMoney = api.getMoneyRounded(money);
-		if(api.getMaxHoldings() > 0 && currentMoney > api.getMaxHoldings())
-			currentMoney = api.getMoneyRounded(api.getMaxHoldings());
+		currentMoney = plugin.getAPI().getMoneyRounded(money);
+		if(plugin.getAPI().getMaxHoldings() > 0 && currentMoney > plugin.getAPI().getMaxHoldings())
+			currentMoney = plugin.getAPI().getMoneyRounded(plugin.getAPI().getMaxHoldings());
 		if(!database.cacheAccounts() || plugin.getServer().getPlayerExact(getName()) == null)
 			save(currentMoney);
 		else
@@ -75,7 +72,7 @@ public class Account implements Comparable<Account>
 	}
 	public boolean canReceive(double amount)
 	{
-		return api.getMaxHoldings() == -1 || amount + getMoney() < api.getMaxHoldings();
+		return plugin.getAPI().getMaxHoldings() == -1 || amount + getMoney() < plugin.getAPI().getMaxHoldings();
 	}
 	public boolean has(double amount)
 	{

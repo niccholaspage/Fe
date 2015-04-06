@@ -23,20 +23,22 @@ import java.util.Set;
 
 public class Fe extends JavaPlugin
 {
-	private final Set<Database> databases;
-	private API api;
+	private final API api = new API(this);
+	private final Set<Database> databases = new HashSet<>();
+	private final FeCommands commands = new FeCommands(this);
+	private final FePlayerListener listener = new FePlayerListener(this);
 	private Database database;
-	public Fe()
-	{
-		databases = new HashSet<>();
-	}
 	@Override
-	public void onEnable()
+	public void onLoad()
 	{
 		getDataFolder().mkdirs();
 		Phrase.init(this);
 		databases.add(new MySQLDB(this));
 		databases.add(new SQLiteDB(this));
+	}
+	@Override
+	public void onEnable()
+	{
 		for(Database db : databases)
 		{
 			String name = db.getConfigName();
@@ -49,17 +51,16 @@ public class Fe extends JavaPlugin
 		}
 		getConfig().options().copyDefaults(true);
 		getConfig().options().header("Fe Config - loyloy.io\n"
-		+ "holdings - The amount of money that players will start out with\n"
-		+ "prefix - The message prefix\n"
-		+ "currency - The single and multiple names for the currency\n"
-		+ "type - The type of database used (sqlite, mysql, or mongo)");
+			+ "holdings - The amount of money that players will start out with\n"
+			+ "prefix - The message prefix\n"
+			+ "currency - The single and multiple names for the currency\n"
+			+ "type - The type of database used (sqlite, mysql, or mongo)");
 		saveConfig();
-		api = new API(this);
 		if(!setupDatabase())
 			return;
-		getCommand("fe").setExecutor(new FeCommands(this));
+		getCommand("fe").setExecutor(commands);
 		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvents(new FePlayerListener(this), this);
+		pm.registerEvents(listener, this);
 		setupVault();
 		loadMetrics();
 		reloadConfig();
@@ -70,31 +71,24 @@ public class Fe extends JavaPlugin
 			log(Phrase.ACCOUNT_CLEANED);
 		}
 	}
-	public void log(String message)
-	{
-		getLogger().info(message);
-	}
 	@Override
 	public void onDisable()
 	{
 		getServer().getScheduler().cancelTasks(this);
-		getFeDatabase().close();
+		getCurrentDatabase().close();
+		getServer().getServicesManager().unregisterAll(this);
+	}
+	public void log(String message)
+	{
+		getLogger().info(message);
 	}
 	public void log(Phrase phrase, String... args)
 	{
 		log(phrase.parse(args));
 	}
-	public Database getFeDatabase()
+	public Database getCurrentDatabase()
 	{
 		return database;
-	}
-	public boolean addDatabase(Database database)
-	{
-		return databases.add(database);
-	}
-	public Set<Database> getDatabases()
-	{
-		return new HashSet<>(databases);
 	}
 	public API getAPI()
 	{
@@ -123,23 +117,6 @@ public class Fe extends JavaPlugin
 		}
 		return true;
 	}
-	private void setupPhrases()
-	{
-		File phrasesFile = new File(getDataFolder(), "phrases.yml");
-		for(Phrase phrase : Phrase.values())
-			phrase.reset();
-		if(!phrasesFile.exists())
-			return;
-		YamlConfiguration phrasesConfig = YamlConfiguration.loadConfiguration(phrasesFile);
-		for(Phrase phrase : Phrase.values())
-		{
-			String phraseConfigName = phrase.getConfigName();
-			String phraseMessage = phrasesConfig.getString(phraseConfigName);
-			if(phraseMessage == null)
-				phraseMessage = phrase.parse();
-			phrase.setMessage(phraseMessage);
-		}
-	}
 	@Override
 	public void reloadConfig()
 	{
@@ -163,10 +140,9 @@ public class Fe extends JavaPlugin
 			getConfig().set("cacheaccounts", null);
 		if(getConfig().getBoolean("updatecheck"))
 			getConfig().set("updatecheck", null);
-		setupPhrases();
+		Phrase.setupPhrases(new File(getDataFolder(), "phrases.yml"));
 		saveConfig();
 	}
-	@SuppressWarnings("deprecation")
 	public Account getShortenedAccount(String name)
 	{
 		Account account = getAPI().getAccount(name, null);
@@ -207,7 +183,7 @@ public class Fe extends JavaPlugin
 		{
 			Metrics metrics = new Metrics(this);
 			Graph databaseGraph = metrics.createGraph("Database Engine");
-			databaseGraph.addPlotter(new Plotter(getFeDatabase().getName())
+			databaseGraph.addPlotter(new Plotter(getCurrentDatabase().getName())
 			{
 				@Override
 				public int getValue()

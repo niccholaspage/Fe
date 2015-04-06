@@ -1,7 +1,9 @@
 package com.niccholaspage.Fe;
 
+import java.io.File;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 public enum Phrase
 {
@@ -114,5 +116,21 @@ public enum Phrase
 	public void sendWithPrefix(CommandSender sender, String... params)
 	{
 		sender.sendMessage(parseWithPrefix(params));
+	}
+	public static void setupPhrases(File phrasesFile)
+	{
+		for(Phrase phrase : Phrase.values())
+			phrase.reset();
+		if(!phrasesFile.exists())
+			return;
+		YamlConfiguration phrasesConfig = YamlConfiguration.loadConfiguration(phrasesFile);
+		for(Phrase phrase : Phrase.values())
+		{
+			String phraseConfigName = phrase.getConfigName();
+			String phraseMessage = phrasesConfig.getString(phraseConfigName);
+			if(phraseMessage == null)
+				phraseMessage = phrase.parse();
+			phrase.setMessage(phraseMessage);
+		}
 	}
 }

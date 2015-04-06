@@ -17,15 +17,15 @@ public class API
 	}
 	public List<Account> getTopAccounts()
 	{
-		return plugin.getFeDatabase().getTopAccounts(plugin.getConfig().getInt("topsize"));
+		return plugin.getCurrentDatabase().getTopAccounts(plugin.getConfig().getInt("topsize"));
 	}
 	public List<Account> getTopAccounts(int size)
 	{
-		return plugin.getFeDatabase().getTopAccounts(size);
+		return plugin.getCurrentDatabase().getTopAccounts(size);
 	}
 	public List<Account> getAccounts()
 	{
-		return plugin.getFeDatabase().getAccounts();
+		return plugin.getCurrentDatabase().getAccounts();
 	}
 	public double getDefaultHoldings()
 	{
@@ -78,19 +78,19 @@ public class API
 	}
 	public Account updateAccount(String name, String uuid)
 	{
-		return plugin.getFeDatabase().updateAccount(name, uuid);
+		return plugin.getCurrentDatabase().updateAccount(name, uuid);
 	}
 	public void removeAccount(String name, String uuid)
 	{
-		plugin.getFeDatabase().removeAccount(name, uuid);
+		plugin.getCurrentDatabase().removeAccount(name, uuid);
 	}
 	public Account getAccount(String name, String uuid)
 	{
-		return plugin.getFeDatabase().getAccount(name, uuid);
+		return plugin.getCurrentDatabase().getAccount(name, uuid);
 	}
 	public boolean accountExists(String name, String uuid)
 	{
-		return plugin.getFeDatabase().accountExists(name, uuid);
+		return plugin.getCurrentDatabase().accountExists(name, uuid);
 	}
 	public String formatNoColor(double amount)
 	{
@@ -142,6 +142,6 @@ public class API
 	}
 	public void clean()
 	{
-		plugin.getFeDatabase().clean();
+		plugin.getCurrentDatabase().clean();
 	}
 }

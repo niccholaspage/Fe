@@ -194,7 +194,6 @@ public abstract class SQLDB extends Database
 		}
 		return accounts;
 	}
-	@SuppressWarnings("deprecation")
 	@Override
 	public HashMap<String, String> loadAccountData(String name, String uuid)
 	{
@@ -232,7 +231,6 @@ public abstract class SQLDB extends Database
 			System.out.println(e);
 		}
 	}
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void saveAccount(String name, String uuid, double money)
 	{
@@ -263,7 +261,6 @@ public abstract class SQLDB extends Database
 			System.out.println(e);
 		}
 	}
-	@SuppressWarnings("deprecation")
 	@Override
 	public void clean()
 	{
