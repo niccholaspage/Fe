@@ -15,7 +15,8 @@ import java.util.concurrent.Callable;
 public class UUIDFetcher implements Callable<Map<String, UUID>>
 {
 	private static final double PROFILES_PER_REQUEST = 100;
-	private static final String PROFILE_URL = "https://api.mojang.com/profiles/minecraft";
+	private static final String PROFILE_URL_ORIGINAL = "https://api.mojang.com/profiles/minecraft";
+	private String PROFILE_URL = PROFILE_URL_ORIGINAL;
 	private final JSONParser jsonParser = new JSONParser();
 	private final List<String> names;
 	private final boolean rateLimiting;
@@ -27,6 +28,10 @@ public class UUIDFetcher implements Callable<Map<String, UUID>>
 	public UUIDFetcher(List<String> names)
 	{
 		this(names, true);
+	}
+	public void setNewFetchMethodURL(String newURL)
+	{
+		this.PROFILE_URL = (newURL != null && !newURL.isEmpty()) ? newURL : PROFILE_URL_ORIGINAL;
 	}
 	@Override
 	public Map<String, UUID> call() throws Exception
@@ -54,12 +59,13 @@ public class UUIDFetcher implements Callable<Map<String, UUID>>
 	}
 	private static void writeBody(HttpURLConnection connection, String body) throws Exception
 	{
-		OutputStream stream = connection.getOutputStream();
-		stream.write(body.getBytes());
-		stream.flush();
-		stream.close();
+		try(OutputStream stream = connection.getOutputStream())
+		{
+			stream.write(body.getBytes());
+			stream.flush();
+		}
 	}
-	private static HttpURLConnection createConnection() throws Exception
+	private HttpURLConnection createConnection() throws Exception
 	{
 		URL url = new URL(PROFILE_URL);
 		HttpURLConnection connection = (HttpURLConnection)url.openConnection();

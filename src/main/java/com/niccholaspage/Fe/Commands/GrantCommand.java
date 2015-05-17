@@ -4,7 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import com.niccholaspage.Fe.Fe;
-import com.niccholaspage.Fe.Phrase;
+import com.niccholaspage.Fe.Phrases;
 import com.niccholaspage.Fe.API.CommandType;
 import com.niccholaspage.Fe.API.SubCommand;
 import com.niccholaspage.Fe.API.Account;
@@ -14,7 +14,7 @@ public class GrantCommand extends SubCommand
 	private final Fe plugin;
 	public GrantCommand(Fe plugin)
 	{
-		super("grant", "fe.grant", "grant [name] [amount]", Phrase.COMMAND_GRANT, CommandType.CONSOLE);
+		super("grant", "fe.grant", "grant [name] [amount]", Phrases.COMMAND_GRANT, CommandType.CONSOLE);
 		this.plugin = plugin;
 	}
 	@Override
@@ -33,20 +33,20 @@ public class GrantCommand extends SubCommand
 		Account victim = plugin.getShortenedAccount(args[0]);
 		if(victim == null)
 		{
-			Phrase.ACCOUNT_DOES_NOT_EXIST.sendWithPrefix(sender);
+			Phrases.ACCOUNT_DOES_NOT_EXIST.sendWithPrefix(sender);
 			return true;
 		}
 		if(!victim.canReceive(money))
 		{
-			Phrase.MAX_BALANCE_REACHED.sendWithPrefix(sender, victim.getName());
+			Phrases.MAX_BALANCE_REACHED.sendWithPrefix(sender, victim.getName());
 			return true;
 		}
 		String formattedMoney = plugin.getAPI().format(money);
 		victim.deposit(money);
-		Phrase.PLAYER_GRANT_MONEY.sendWithPrefix(sender, formattedMoney, victim.getName());
+		Phrases.PLAYER_GRANT_MONEY.sendWithPrefix(sender, formattedMoney, victim.getName());
 		Player receiverPlayer = plugin.getServer().getPlayerExact(victim.getName());
 		if(receiverPlayer != null)
-			Phrase.PLAYER_GRANTED_MONEY.sendWithPrefix(receiverPlayer, formattedMoney, sender.getName());
+			Phrases.PLAYER_GRANTED_MONEY.sendWithPrefix(receiverPlayer, formattedMoney, sender.getName());
 		return true;
 	}
 }

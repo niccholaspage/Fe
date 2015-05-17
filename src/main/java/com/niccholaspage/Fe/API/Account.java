@@ -82,15 +82,9 @@ public class Account implements Comparable<Account>
 	{
 		database.saveAccount(name, uuid, money);
 	}
-	@Override
-	public boolean equals(Object object)
+	public boolean equals(Account other)
 	{
-		if(object instanceof Account)
-		{
-			Account account = (Account)object;
-			return account.getName().equals(getName());
-		}
-		return false;
+		return other.getName().equals(getName());
 	}
 	@Override
 	public int compareTo(Account other)

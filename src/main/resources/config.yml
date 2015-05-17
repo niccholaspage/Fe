@@ -1,18 +1,31 @@
-holdings: 10.00
-maxholdings: -1
-prefix: Fe
-topsize: 10
-
-currency:
-  negative: false
-  major:
-    single: Fe
-    multiple: Fe
-  minor:
-    enabled: false
-    single: Fe
-    multiple: Fe
-  prefix: ""
-
-type: sqlite
-autoclean: true
+settings:
+  new-player-holdings: 10.00
+  maximum-holdings: -1.0
+  show-top: 10
+  prefix: Fe
+  currency:
+     prefix: ''
+     negative: false
+     major:
+       single:   Fe
+       multiple: Fe
+     minor:
+       enabled: false
+       single:   Fe
+       multiple: Fe
+  database-type: sqlite
+  mysql:
+    database: 'localhost:3306/minecraft'
+    username: '<FeUserDB>'
+    password: '<FePassDB>'
+    database: 
+    tables:
+      accounts: fe_accounts
+    columns:
+      accounts:
+        uuid:     uuid
+        username: name
+        money:    money
+  autoclean: true
+internal:
+  version: 1

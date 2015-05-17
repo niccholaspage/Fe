@@ -88,31 +88,31 @@ public class FeCommands implements CommandExecutor
 		boolean console = !(sender instanceof Player);
 		if(console && args.length < 2 && command.getCommandType() == CommandType.CONSOLE_WITH_ARGUMENTS)
 		{
-			Phrase.COMMAND_NEEDS_ARGUMENTS.sendWithPrefix(sender);
+			Phrases.COMMAND_NEEDS_ARGUMENTS.sendWithPrefix(sender);
 			return true;
 		}
 		if(console && command.getCommandType() == CommandType.PLAYER)
 		{
-			Phrase.COMMAND_NOT_CONSOLE.sendWithPrefix(sender, commandLabel);
+			Phrases.COMMAND_NOT_CONSOLE.sendWithPrefix(sender, commandLabel);
 			return true;
 		}
 		if(!sender.hasPermission(command.getPermission()))
 		{
-			Phrase.NO_PERMISSION_FOR_COMMAND.sendWithPrefix(sender);
+			Phrases.NO_PERMISSION_FOR_COMMAND.sendWithPrefix(sender);
 			return true;
 		}
 		String[] realArgs = new String[args.length - 1];
 		for(int i = 1; i < args.length; i ++)
 			realArgs[i - 1] = args[i];
 		if(!command.onCommand(sender, cmd, commandLabel, realArgs))
-			Phrase.TRY_COMMAND.sendWithPrefix(sender, parse(commandLabel, command));
+			Phrases.TRY_COMMAND.sendWithPrefix(sender, parse(commandLabel, command));
 		return true;
 	}
 	public String parse(String label, SubCommand command)
 	{
-		String commandColor = Phrase.PRIMARY_COLOR.parse();
-		String operatorsColor = Phrase.PRIMARY_COLOR.parse();
-		String argumentColor = Phrase.ARGUMENT_COLOR.parse();
+		String commandColor = Phrases.PRIMARY_COLOR.parse();
+		String operatorsColor = Phrases.PRIMARY_COLOR.parse();
+		String argumentColor = Phrases.ARGUMENT_COLOR.parse();
 		StringBuilder builder = new StringBuilder(commandColor).append("/").append(label);
 		if(!command.getFirstName().equalsIgnoreCase("balance"))
 			builder.append(" ").append(command.getFirstName()).append(" ");

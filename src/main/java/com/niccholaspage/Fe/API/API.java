@@ -1,7 +1,7 @@
 package com.niccholaspage.Fe.API;
 
 import com.niccholaspage.Fe.Fe;
-import com.niccholaspage.Fe.Phrase;
+import com.niccholaspage.Fe.Phrases;
 import org.bukkit.ChatColor;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -17,7 +17,7 @@ public class API
 	}
 	public List<Account> getTopAccounts()
 	{
-		return plugin.getCurrentDatabase().getTopAccounts(plugin.getConfig().getInt("topsize"));
+		return plugin.getCurrentDatabase().getTopAccounts(plugin.settings.getShowTop());
 	}
 	public List<Account> getTopAccounts(int size)
 	{
@@ -29,47 +29,43 @@ public class API
 	}
 	public double getDefaultHoldings()
 	{
-		return plugin.getConfig().getDouble("holdings");
+		return plugin.settings.getDefaultHoldings();
 	}
 	public double getMaxHoldings()
 	{
-		return plugin.getConfig().getDouble("maxholdings");
-	}
-	public String getCurrencyPrefix()
-	{
-		return plugin.getConfig().getString("currency.prefix");
+		return plugin.settings.getMaximumHoldings();
 	}
 	public boolean isAutoClean()
 	{
-		return plugin.getConfig().getBoolean("autoclean");
+		return plugin.settings.isAutoClean();
+	}
+	public String getCurrencyPrefix()
+	{
+		return plugin.settings.getCurrencyPrefix();
 	}
 	public boolean isCurrencyNegative()
 	{
-		return plugin.getConfig().getBoolean("currency.negative");
+		return plugin.settings.isCurrencyNegative();
 	}
 	public String getCurrencyMajorSingle()
 	{
-		return plugin.getConfig().getString("currency.major.single");
+		return plugin.settings.getCurrencyMajorSingle();
 	}
 	public String getCurrencyMajorMultiple()
 	{
-		return plugin.getConfig().getString("currency.major.multiple");
+		return plugin.settings.getCurrencyMajorMultiple();
 	}
 	public boolean isMinorCurrencyEnabled()
 	{
-		return plugin.getConfig().getBoolean("currency.minor.enabled");
+		return plugin.settings.isMinorCurrencyEnabled();
 	}
 	public String getCurrencyMinorSingle()
 	{
-		return plugin.getConfig().getString("currency.minor.single");
+		return plugin.settings.getCurrencyMinorSingle();
 	}
 	public String getCurrencyMinorMultiple()
 	{
-		return plugin.getConfig().getString("currency.minor.multiple");
-	}
-	public boolean getCacheAccounts()
-	{
-		return false;
+		return plugin.settings.getCurrencyMinorMultiple();
 	}
 	@Deprecated
 	public Account createAccount(String name, String uuid)
@@ -123,7 +119,7 @@ public class API
 				suffix += getCurrencyMajorMultiple();
 		if(suffix.equalsIgnoreCase(" "))
 			suffix = "";
-		return Phrase.SECONDARY_COLOR.parse() + getCurrencyPrefix() + Phrase.PRIMARY_COLOR.parse() + formatValue(amount) + Phrase.SECONDARY_COLOR.parse() + suffix;
+		return Phrases.SECONDARY_COLOR.parse() + getCurrencyPrefix() + Phrases.PRIMARY_COLOR.parse() + formatValue(amount) + Phrases.SECONDARY_COLOR.parse() + suffix;
 	}
 	public double getMoneyRounded(double amount)
 	{

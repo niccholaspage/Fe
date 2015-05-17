@@ -5,7 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public enum Phrase
+public enum Phrases
 {
 	DATABASE_TYPE_DOES_NOT_EXIST("That database type doesn't exist."),
 	DATABASE_FAILURE_DISABLE("Database initialization has failed, disabling Fe."),
@@ -60,11 +60,11 @@ public enum Phrase
 	private final String defaultMessage;
 	private final boolean categorized;
 	private String message;
-	private Phrase(String defaultMessage)
+	private Phrases(String defaultMessage)
 	{
 		this(defaultMessage, false);
 	}
-	private Phrase(String defaultMessage, boolean categorized)
+	private Phrases(String defaultMessage, boolean categorized)
 	{
 		this.defaultMessage = defaultMessage;
 		this.categorized = categorized;
@@ -107,7 +107,7 @@ public enum Phrase
 	}
 	private String parseWithPrefix(String... params)
 	{
-		return plugin.getMessagePrefix().replace("$1", plugin.getConfig().getString("prefix")) + parse(params);
+		return plugin.getMessagePrefix().replace("$1", plugin.settings.getPrefix()) + parse(params);
 	}
 	public void send(CommandSender sender, String... params)
 	{
@@ -119,12 +119,12 @@ public enum Phrase
 	}
 	public static void setupPhrases(File phrasesFile)
 	{
-		for(Phrase phrase : Phrase.values())
+		for(Phrases phrase : Phrases.values())
 			phrase.reset();
 		if(!phrasesFile.exists())
 			return;
 		YamlConfiguration phrasesConfig = YamlConfiguration.loadConfiguration(phrasesFile);
-		for(Phrase phrase : Phrase.values())
+		for(Phrases phrase : Phrases.values())
 		{
 			String phraseConfigName = phrase.getConfigName();
 			String phraseMessage = phrasesConfig.getString(phraseConfigName);

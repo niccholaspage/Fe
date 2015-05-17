@@ -2,10 +2,7 @@ package com.niccholaspage.Fe;
 
 import com.niccholaspage.Fe.API.API;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
@@ -13,13 +10,13 @@ import org.mcstats.Metrics.Graph;
 import org.mcstats.Metrics.Plotter;
 import com.niccholaspage.Fe.API.Account;
 import com.niccholaspage.Fe.API.Database;
+import com.niccholaspage.Fe.API.Settings;
 import com.niccholaspage.Fe.Databases.MySQLDB;
 import com.niccholaspage.Fe.Databases.SQLiteDB;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-import org.bukkit.event.Listener;
 
 public class Fe extends JavaPlugin
 {
@@ -27,37 +24,30 @@ public class Fe extends JavaPlugin
 	private final Set<Database> databases = new HashSet<>();
 	private final FeCommands commands = new FeCommands(this);
 	private final FePlayerListener listener = new FePlayerListener(this);
+	public  final Settings settings = new Settings(this);
 	private Database database;
 	@Override
 	public void onLoad()
 	{
-		getDataFolder().mkdirs();
-		Phrase.init(this);
+		settings.onLoad();
+		Phrases.init(this);
 	}
 	@Override
 	public void onEnable()
 	{
-		databases.add(new MySQLDB(this));
+		settings.onEnable();
+		Phrases.setupPhrases(new File(getDataFolder(), "phrases.yml"));
 		databases.add(new SQLiteDB(this));
+		databases.add(new MySQLDB(this));
 		for(Database db : databases)
-		{
-			String name = db.getConfigName();
-			ConfigurationSection section = getConfig().getConfigurationSection(name);
-			if(section == null)
-				section = getConfig().createSection(name);
-			db.getConfigDefaults(section);
-			if(section.getKeys(false).isEmpty())
-				getConfig().set(name, null);
-		}
-		getConfig().options().copyDefaults(true);
-		getConfig().options().header("Fe Config - loyloy.io\n"
-			+ "holdings - The amount of money that players will start out with\n"
-			+ "prefix - The message prefix\n"
-			+ "currency - The single and multiple names for the currency\n"
-			+ "type - The type of database used (sqlite, mysql, or mongo)");
+			db.getConfigDefaults(db.getConfigSection());
+		getConfig().options().header(null);
 		saveConfig();
 		if(!setupDatabase())
+		{
+			getServer().getPluginManager().disablePlugin(this);
 			return;
+		}
 		getCommand("fe").setExecutor(commands);
 		getServer().getPluginManager().registerEvents(listener, this);
 		setupVault();
@@ -67,8 +57,36 @@ public class Fe extends JavaPlugin
 		if(api.isAutoClean())
 		{
 			api.clean();
-			log(Phrase.ACCOUNT_CLEANED);
+			log(Phrases.ACCOUNT_CLEANED);
 		}
+	}
+	private boolean setupDatabase()
+	{
+		String type = settings.getDatabase();
+		database = null;
+		for(Database db : databases)
+			if(type.equalsIgnoreCase(db.getConfigName()))
+			{
+				this.database = db;
+				break;
+			}
+		if(database == null)
+		{
+			log(Phrases.DATABASE_TYPE_DOES_NOT_EXIST);
+			return false;
+		}
+		if(!database.init())
+		{
+			log(Phrases.DATABASE_FAILURE_DISABLE);
+			setEnabled(false);
+			return false;
+		}
+		return true;
+	}
+	private void setupVault()
+	{
+		if(getServer().getPluginManager().getPlugin("Vault") != null)
+			getServer().getServicesManager().register(Economy.class, new VaultHandler(this), this, ServicePriority.Highest);
 	}
 	@Override
 	public void onDisable()
@@ -76,30 +94,6 @@ public class Fe extends JavaPlugin
 		getServer().getScheduler().cancelTasks(this);
 		getCurrentDatabase().close();
 		getServer().getServicesManager().unregisterAll(this);
-	}
-	@Override
-	public void reloadConfig()
-	{
-		super.reloadConfig();
-		final String oldCurrencySingle = getConfig().getString("currency.single");
-		final String oldCurrencyMultiple = getConfig().getString("currency.multiple");
-		if(oldCurrencySingle != null)
-		{
-			getConfig().set("currency.major.single", oldCurrencySingle);
-			getConfig().set("currency.single", null);
-		}
-		if(oldCurrencyMultiple != null)
-		{
-			getConfig().set("currency.major.multiple", oldCurrencyMultiple);
-			getConfig().set("currency.multiple", null);
-		}
-		if(!getConfig().isSet("autoclean"))
-			getConfig().set("autoclean", true);
-		// Remove old config nodes.
-		getConfig().set("cacheaccounts", null);
-		getConfig().set("updatecheck", null);
-		Phrase.setupPhrases(new File(getDataFolder(), "phrases.yml"));
-		saveConfig();
 	}
 	public API getAPI()
 	{
@@ -113,32 +107,9 @@ public class Fe extends JavaPlugin
 	{
 		getLogger().info(message);
 	}
-	public void log(Phrase phrase, String... args)
+	public void log(Phrases phrase, String... args)
 	{
 		log(phrase.parse(args));
-	}
-	private boolean setupDatabase()
-	{
-		String type = getConfig().getString("type");
-		database = null;
-		for(Database db : databases)
-			if(type.equalsIgnoreCase(db.getConfigName()))
-			{
-				this.database = db;
-				break;
-			}
-		if(database == null)
-		{
-			log(Phrase.DATABASE_TYPE_DOES_NOT_EXIST);
-			return false;
-		}
-		if(!database.init())
-		{
-			log(Phrase.DATABASE_FAILURE_DISABLE);
-			setEnabled(false);
-			return false;
-		}
-		return true;
 	}
 	public Account getShortenedAccount(String name)
 	{
@@ -153,8 +124,8 @@ public class Fe extends JavaPlugin
 	}
 	public String getMessagePrefix()
 	{
-		String third = Phrase.TERTIARY_COLOR.parse();
-		return third + "[" + Phrase.PRIMARY_COLOR.parse() + "$1" + third + "] " + Phrase.SECONDARY_COLOR.parse();
+		String third = Phrases.TERTIARY_COLOR.parse();
+		return third + "[" + Phrases.PRIMARY_COLOR.parse() + "$1" + third + "] " + Phrases.SECONDARY_COLOR.parse();
 	}
 	public String getEqualMessage(String inBetween, int length)
 	{
@@ -164,21 +135,15 @@ public class Fe extends JavaPlugin
 	{
 		String equals = getEndEqualMessage(length);
 		String end = getEndEqualMessage(length2);
-		String third = Phrase.TERTIARY_COLOR.parse();
-		return equals + third + "[" + Phrase.PRIMARY_COLOR.parse() + inBetween + third + "]" + end;
+		String third = Phrases.TERTIARY_COLOR.parse();
+		return equals + third + "[" + Phrases.PRIMARY_COLOR.parse() + inBetween + third + "]" + end;
 	}
 	public String getEndEqualMessage(int length)
 	{
-		String message = Phrase.SECONDARY_COLOR.parse() + "";
+		String message = Phrases.SECONDARY_COLOR.parse() + "";
 		for(int i = 0; i < length; i ++)
 			message += "=";
 		return message;
-	}
-	private void setupVault()
-	{
-		final Plugin vault = getServer().getPluginManager().getPlugin("Vault");
-		if(vault != null)
-			getServer().getServicesManager().register(Economy.class, new VaultHandler(this), this, ServicePriority.Highest);
 	}
 	private void loadMetrics()
 	{

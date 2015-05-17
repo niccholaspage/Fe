@@ -3,7 +3,7 @@ package com.niccholaspage.Fe.API;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import com.niccholaspage.Fe.Fe;
-import com.niccholaspage.Fe.Phrase;
+import com.niccholaspage.Fe.Phrases;
 import com.niccholaspage.Fe.UUIDFetcher;
 import java.util.*;
 
@@ -11,7 +11,7 @@ public abstract class Database
 {
 	private final Fe plugin;
 	private final Set<Account> cachedAccounts = new HashSet<>();
-	protected boolean cacheAccounts;
+	protected boolean cacheAccounts = true;
 	public abstract List<Account> getAccounts();
 	public abstract List<Account> loadTopAccounts(int size);
 	public abstract Map<String, String> loadAccountData(String name, String uuid);
@@ -27,7 +27,6 @@ public abstract class Database
 	}
 	public boolean init()
 	{
-		this.cacheAccounts = plugin.getAPI().getCacheAccounts();
 		return false;
 	}
 	public List<Account> getTopAccounts(int size)
@@ -65,7 +64,7 @@ public abstract class Database
 		{
 			// Disable plugin?
 		}
-		plugin.log(Phrase.STARTING_UUID_CONVERSION);
+		plugin.log(Phrases.STARTING_UUID_CONVERSION);
 		List<Account> accounts = getAccounts();
 		Map<String, Double> accountMonies = new HashMap<>();
 		for(Account account : accounts)
@@ -90,11 +89,11 @@ public abstract class Database
 		} catch(Exception e)
 		{
 			System.out.println(e);
-			plugin.log(Phrase.UUID_CONVERSION_FAILED);
+			plugin.log(Phrases.UUID_CONVERSION_FAILED);
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
 			return false;
 		}
-		plugin.log(Phrase.UUID_CONVERSION_SUCCEEDED);
+		plugin.log(Phrases.UUID_CONVERSION_SUCCEEDED);
 		return true;
 	}
 	public void close()
@@ -109,11 +108,11 @@ public abstract class Database
 	}
 	public String getConfigName()
 	{
-		return getName().toLowerCase().replace(" ", "");
+		return getName().replace(" ", "").toLowerCase();
 	}
 	public ConfigurationSection getConfigSection()
 	{
-		return plugin.getConfig().getConfigurationSection(getConfigName());
+		return plugin.settings.getDatabaseSection(getConfigName());
 	}
 	public Account getAccount(String name, String uuid)
 	{
@@ -126,8 +125,7 @@ public abstract class Database
 		try
 		{
 			data_money = Double.parseDouble(money_string);
-		} catch(Exception e)
-		{
+		} catch(Exception e) {
 			data_money = null;
 		}
 		String data_name = data.get("name");

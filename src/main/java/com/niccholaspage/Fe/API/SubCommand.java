@@ -2,17 +2,17 @@ package com.niccholaspage.Fe.API;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import com.niccholaspage.Fe.Phrase;
+import com.niccholaspage.Fe.Phrases;
 
 public abstract class SubCommand
 {
 	private final String name;
 	private final String permission;
 	private final String usage;
-	private final Phrase description;
+	private final Phrases description;
 	private final CommandType commandType;
 	public abstract boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args);
-	public SubCommand(String name, String permission, String usage, Phrase description, CommandType commandType)
+	public SubCommand(String name, String permission, String usage, Phrases description, CommandType commandType)
 	{
 		this.name = name;
 		this.permission = permission;
@@ -36,7 +36,7 @@ public abstract class SubCommand
 	{
 		return usage;
 	}
-	public Phrase getDescription()
+	public Phrases getDescription()
 	{
 		return description;
 	}

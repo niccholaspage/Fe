@@ -3,7 +3,7 @@ package com.niccholaspage.Fe.Commands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import com.niccholaspage.Fe.Fe;
-import com.niccholaspage.Fe.Phrase;
+import com.niccholaspage.Fe.Phrases;
 import com.niccholaspage.Fe.API.CommandType;
 import com.niccholaspage.Fe.API.SubCommand;
 import com.niccholaspage.Fe.API.Account;
@@ -14,7 +14,7 @@ public class SetCommand extends SubCommand
 
 	public SetCommand(Fe plugin)
 	{
-		super("set", "fe.set", "set [name] [amount]", Phrase.COMMAND_SET, CommandType.CONSOLE);
+		super("set", "fe.set", "set [name] [amount]", Phrases.COMMAND_SET, CommandType.CONSOLE);
 		this.plugin = plugin;
 	}
 	@Override
@@ -32,17 +32,17 @@ public class SetCommand extends SubCommand
 		Account victim = plugin.getShortenedAccount(args[0]);
 		if(victim == null)
 		{
-			Phrase.ACCOUNT_DOES_NOT_EXIST.sendWithPrefix(sender);
+			Phrases.ACCOUNT_DOES_NOT_EXIST.sendWithPrefix(sender);
 			return true;
 		}
 		if(!victim.canReceive(money))
 		{
-			Phrase.MAX_BALANCE_REACHED.sendWithPrefix(sender, victim.getName());
+			Phrases.MAX_BALANCE_REACHED.sendWithPrefix(sender, victim.getName());
 			return true;
 		}
 		String formattedMoney = plugin.getAPI().format(money);
 		victim.setMoney(money);
-		Phrase.PLAYER_SET_MONEY.sendWithPrefix(sender, victim.getName(), formattedMoney);
+		Phrases.PLAYER_SET_MONEY.sendWithPrefix(sender, victim.getName(), formattedMoney);
 		return true;
 	}
 }

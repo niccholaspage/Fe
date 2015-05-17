@@ -35,7 +35,7 @@ public abstract class SQLDB extends Database
 				try
 				{
 					if(connection != null && !connection.isClosed())
-						connection.createStatement().execute("/* ping */ SELECT 1");
+						connection.createStatement().execute("/* ping */ SELECT 1;");
 				} catch(SQLException e) {
 					connection = getNewConnection();
 				}
@@ -203,15 +203,16 @@ public abstract class SQLDB extends Database
 		{
 			PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + tableAccounts + " WHERE UPPER(" + (uuid != null ? columnAccountsUUID : columnAccountsUser) + ") LIKE UPPER(?)");
 			statement.setString(1, uuid != null ? uuid : name);
-			ResultSet set = statement.executeQuery();
-			HashMap<String, String> data = new HashMap<>();
-			while(set.next())
+			try(ResultSet set = statement.executeQuery())
 			{
-				data.put("money", set.getString(columnAccountsMoney));
-				data.put("name", set.getString(columnAccountsUser));
-			}
-			set.close();
+				HashMap<String, String> data = new HashMap<>();
+				while(set.next())
+				{
+					data.put("money", set.getString(columnAccountsMoney));
+					data.put("name", set.getString(columnAccountsUser));
+				}
 			return data;
+			}
 		} catch(SQLException e) {
 			System.out.println(e);
 			return null;
