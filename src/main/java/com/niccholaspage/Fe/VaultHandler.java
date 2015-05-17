@@ -38,50 +38,44 @@ public class VaultHandler implements Economy
 	@Override
 	public String format(double amount)
 	{
-		return plugin.getAPI().formatNoColor(amount);
+		return plugin.api.formatNoColor(amount);
 	}
 	@Override
 	public String currencyNameSingular()
 	{
-		return plugin.getAPI().getCurrencyMajorSingle();
+		return plugin.api.getCurrencyMajorSingle();
 	}
 	@Override
 	public String currencyNamePlural()
 	{
-		return plugin.getAPI().getCurrencyMajorMultiple();
+		return plugin.api.getCurrencyMajorMultiple();
 	}
 	@Override
 	public double getBalance(String playerName)
 	{
-		return getAccountBalance(playerName, null);
+		return plugin.getDB().getAccount(playerName).getMoney();
 	}
 	@Override
 	public double getBalance(OfflinePlayer offlinePlayer)
 	{
-		return getAccountBalance(offlinePlayer.getName(), offlinePlayer.getUniqueId().toString());
-	}
-	private double getAccountBalance(String playerName, String uuid)
-	{
-		Account account = plugin.getAPI().getAccount(playerName, uuid);
-		if(account == null)
-			return 0;
-		return account.getMoney();
+		return plugin.getDB().getAccount(offlinePlayer.getUniqueId()).getMoney();
 	}
 	@Override
 	public EconomyResponse withdrawPlayer(String playerName, double amount)
 	{
-		return withdraw(playerName, null, amount);
+		final Account account = plugin.getDB().getAccount(playerName);
+		return withdraw(account, amount);
 	}
 	@Override
 	public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, double amount)
 	{
-		return withdraw(offlinePlayer.getName(), offlinePlayer.getUniqueId().toString(), amount);
+		final Account account = plugin.getDB().getAccount(offlinePlayer.getUniqueId());
+		return withdraw(account, amount);
 	}
-	private EconomyResponse withdraw(String playerName, String uuid, double amount)
+	private EconomyResponse withdraw(Account account, double amount)
 	{
 		if(amount < 0)
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot withdraw negative funds");
-		Account account = plugin.getAPI().getAccount(playerName, uuid);
 		if(account == null)
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Account doesn't exist");
 		if(account.has(amount))
@@ -94,18 +88,19 @@ public class VaultHandler implements Economy
 	@Override
 	public EconomyResponse depositPlayer(String playerName, double amount)
 	{
-		return deposit(playerName, null, amount);
+		final Account account = plugin.getDB().getAccount(playerName);
+		return deposit(account, amount);
 	}
 	@Override
 	public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, double amount)
 	{
-		return deposit(offlinePlayer.getName(), offlinePlayer.getUniqueId().toString(), amount);
+		final Account account = plugin.getDB().getAccount(offlinePlayer.getUniqueId());
+		return deposit(account, amount);
 	}
-	private EconomyResponse deposit(String playerName, String uuid, double amount)
+	private EconomyResponse deposit(Account account, double amount)
 	{
 		if(amount < 0)
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot deposit negative funds");
-		Account account = plugin.getAPI().getAccount(playerName, uuid);
 		if(account == null)
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Account doesn't exist");
 		account.deposit(amount);
@@ -189,28 +184,24 @@ public class VaultHandler implements Economy
 	@Override
 	public boolean hasAccount(String playerName)
 	{
-		return plugin.getAPI().accountExists(playerName, null);
+		return plugin.api.accountExists(playerName);
 	}
 	@Override
 	public boolean hasAccount(OfflinePlayer offlinePlayer)
 	{
-		return plugin.getAPI().accountExists(offlinePlayer.getName(), offlinePlayer.getUniqueId().toString());
+		return plugin.api.accountExists(offlinePlayer.getUniqueId());
 	}
 	@Override
 	public boolean createPlayerAccount(String playerName)
 	{
-		return createAccount(playerName, null);
+		return plugin.getDB().getAccount(playerName) != null;
 	}
 	@Override
 	public boolean createPlayerAccount(OfflinePlayer offlinePlayer)
 	{
-		return createAccount(offlinePlayer.getName(), offlinePlayer.getUniqueId().toString());
-	}
-	private boolean createAccount(String playerName, String uuid)
-	{
-		if(hasAccount(playerName, uuid))
-			return false;
-		plugin.getAPI().updateAccount(playerName, uuid);
+		Account account = plugin.getDB().getAccount(offlinePlayer.getUniqueId());
+		account.setName(offlinePlayer.getName());
+		plugin.getDB().saveAccount(account);
 		return true;
 	}
 	@Override

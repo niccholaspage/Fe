@@ -1,18 +1,16 @@
-package com.niccholaspage.Fe.API;
+package com.niccholaspage.Fe;
 
 import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Settings
+public class FeSettings
 {
 	private final JavaPlugin fe;
-	public Settings(JavaPlugin plugin)
+	public FeSettings(JavaPlugin plugin)
 	{
 		this.fe = plugin;
 	}
@@ -40,6 +38,7 @@ public class Settings
 					}
 				} catch(IOException ex) {
 				}
+				config.options().header(null);
 				migrate_v0_to_v1(config);
 				config.set("internal.version", 1);
 				fe.getLogger().info("[Fe] Configuration has been migrated successfully.");
@@ -69,7 +68,7 @@ public class Settings
 	}
 	public boolean isAutoClean()
 	{
-		return fe.getConfig().getBoolean("settings.autoclean");
+		return fe.getConfig().getBoolean("settings.autoclean", true);
 	}
 	public String getCurrencyPrefix()
 	{

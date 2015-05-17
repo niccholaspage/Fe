@@ -1,6 +1,6 @@
 package com.niccholaspage.Fe;
 
-import com.niccholaspage.Fe.API.API;
+import com.niccholaspage.Fe.API.FeAPI;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
@@ -10,7 +10,6 @@ import org.mcstats.Metrics.Graph;
 import org.mcstats.Metrics.Plotter;
 import com.niccholaspage.Fe.API.Account;
 import com.niccholaspage.Fe.API.Database;
-import com.niccholaspage.Fe.API.Settings;
 import com.niccholaspage.Fe.Databases.MySQLDB;
 import com.niccholaspage.Fe.Databases.SQLiteDB;
 import java.io.File;
@@ -20,11 +19,11 @@ import java.util.Set;
 
 public class Fe extends JavaPlugin
 {
-	private final API api = new API(this);
-	private final Set<Database> databases = new HashSet<>();
+	public  final FeAPI api = new FeAPI(this);
+	public  final FeSettings settings = new FeSettings(this);
+	private final FeListener listener = new FeListener(this);
 	private final FeCommands commands = new FeCommands(this);
-	private final FePlayerListener listener = new FePlayerListener(this);
-	public  final Settings settings = new Settings(this);
+	private final Set<Database> databases = new HashSet<>();
 	private Database database;
 	@Override
 	public void onLoad()
@@ -37,11 +36,10 @@ public class Fe extends JavaPlugin
 	{
 		settings.onEnable();
 		Phrases.setupPhrases(new File(getDataFolder(), "phrases.yml"));
-		databases.add(new SQLiteDB(this));
 		databases.add(new MySQLDB(this));
+		databases.add(new SQLiteDB(this));
 		for(Database db : databases)
 			db.getConfigDefaults(db.getConfigSection());
-		getConfig().options().header(null);
 		saveConfig();
 		if(!setupDatabase())
 		{
@@ -52,8 +50,9 @@ public class Fe extends JavaPlugin
 		getServer().getPluginManager().registerEvents(listener, this);
 		setupVault();
 		loadMetrics();
-		reloadConfig();
-		// Auto Clean On Startup
+		// Load all accounts
+		database.loadAccounts();
+		// Autoclean on startup
 		if(api.isAutoClean())
 		{
 			api.clean();
@@ -92,14 +91,14 @@ public class Fe extends JavaPlugin
 	public void onDisable()
 	{
 		getServer().getScheduler().cancelTasks(this);
-		getCurrentDatabase().close();
+		getDB().close();
 		getServer().getServicesManager().unregisterAll(this);
 	}
-	public API getAPI()
+	public FeAPI getAPI()
 	{
 		return api;
 	}
-	public Database getCurrentDatabase()
+	public Database getDB()
 	{
 		return database;
 	}
@@ -113,12 +112,12 @@ public class Fe extends JavaPlugin
 	}
 	public Account getShortenedAccount(String name)
 	{
-		Account account = getAPI().getAccount(name, null);
+		Account account = api.getAccount(name);
 		if(account == null)
 		{
 			Player player = getServer().getPlayer(name);
 			if(player != null)
-				account = getAPI().getAccount(player.getName(), null);
+				account = api.getAccount(player.getName());
 		}
 		return account;
 	}
@@ -151,7 +150,7 @@ public class Fe extends JavaPlugin
 		{
 			Metrics metrics = new Metrics(this);
 			final Graph databaseGraph = metrics.createGraph("Database Engine");
-			databaseGraph.addPlotter(new Plotter(getCurrentDatabase().getName())
+			databaseGraph.addPlotter(new Plotter(getDB().getName())
 			{
 				@Override
 				public int getValue()
@@ -160,7 +159,7 @@ public class Fe extends JavaPlugin
 				}
 			});
 			final Graph defaultHoldings = metrics.createGraph("Default Holdings");
-			defaultHoldings.addPlotter(new Plotter(Double.toString(getAPI().getDefaultHoldings()))
+			defaultHoldings.addPlotter(new Plotter(Double.toString(api.getDefaultHoldings()))
 			{
 				@Override
 				public int getValue()
@@ -169,8 +168,8 @@ public class Fe extends JavaPlugin
 				}
 			});
 			final Graph maxHoldings = metrics.createGraph("Max Holdings");
-			String maxHolding = Double.toString(getAPI().getMaxHoldings());
-			if(getAPI().getMaxHoldings() == -1)
+			String maxHolding = Double.toString(api.getMaxHoldings());
+			if(api.getMaxHoldings() == -1)
 				maxHolding = "Unlimited";
 			maxHoldings.addPlotter(new Plotter(maxHolding)
 			{

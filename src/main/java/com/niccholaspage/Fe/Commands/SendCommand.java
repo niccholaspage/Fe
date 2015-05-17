@@ -37,7 +37,7 @@ public class SendCommand extends SubCommand
 			Phrases.ACCOUNT_DOES_NOT_EXIST.sendWithPrefix(sender);
 			return true;
 		}
-		Account account = plugin.getAPI().getAccount(sender.getName(), null);
+		Account account = plugin.api.getAccount(sender.getName());
 		if(!account.has(money))
 		{
 			Phrases.NOT_ENOUGH_MONEY.sendWithPrefix(sender);
@@ -48,7 +48,7 @@ public class SendCommand extends SubCommand
 			Phrases.MAX_BALANCE_REACHED.sendWithPrefix(sender, receiver.getName());
 			return true;
 		}
-		String formattedMoney = plugin.getAPI().format(money);
+		String formattedMoney = plugin.api.format(money);
 		account.withdraw(money);
 		receiver.deposit(money);
 		Phrases.MONEY_SENT.sendWithPrefix(sender, formattedMoney, receiver.getName());

@@ -1,5 +1,6 @@
 package com.niccholaspage.Fe.Commands;
 
+import com.niccholaspage.Fe.API.Account;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import com.niccholaspage.Fe.Fe;
@@ -21,13 +22,13 @@ public class RemoveCommand extends SubCommand
 		if(args.length < 1)
 			return false;
 		String name = args[0];
-		if(!plugin.getAPI().accountExists(name, null))
+		final Account account = plugin.api.getAccount(name);
+		if(account != null)
 		{
+			plugin.api.removeAccount(account);
+			Phrases.ACCOUNT_REMOVED.sendWithPrefix(sender, Phrases.PRIMARY_COLOR.parse() + name + Phrases.SECONDARY_COLOR.parse());
+		} else
 			Phrases.ACCOUNT_DOES_NOT_EXIST.sendWithPrefix(sender);
-			return true;
-		}
-		plugin.getAPI().removeAccount(name, null);
-		Phrases.ACCOUNT_REMOVED.sendWithPrefix(sender, Phrases.PRIMARY_COLOR.parse() + name + Phrases.SECONDARY_COLOR.parse());
 		return true;
 	}
 }

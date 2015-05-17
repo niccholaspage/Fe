@@ -7,7 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class SQLiteDB extends SQLDB
+public class SQLiteDB extends DatabaseSQL
 {
 	public SQLiteDB(Fe plugin)
 	{
@@ -17,6 +17,11 @@ public class SQLiteDB extends SQLDB
 	public String getName()
 	{
 		return "SQLite";
+	}
+	@Override
+	public boolean isAsync()
+	{
+		return false;
 	}
 	@Override
 	public Connection getNewConnection()

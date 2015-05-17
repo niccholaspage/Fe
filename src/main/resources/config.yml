@@ -7,18 +7,19 @@ settings:
      prefix: ''
      negative: false
      major:
-       single:   Fe
+       single: Fes
        multiple: Fe
      minor:
        enabled: false
-       single:   Fe
+       single: Fe
        multiple: Fe
   database-type: sqlite
+  sqlite: {}
   mysql:
-    database: 'localhost:3306/minecraft'
-    username: '<FeUserDB>'
-    password: '<FePassDB>'
-    database: 
+    connection:
+      database: localhost:3306/minecraft
+      username: user
+      password: pass
     tables:
       accounts: fe_accounts
     columns:

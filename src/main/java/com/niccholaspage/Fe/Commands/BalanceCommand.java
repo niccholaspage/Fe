@@ -28,16 +28,18 @@ public class BalanceCommand extends SubCommand
 				Phrases.ACCOUNT_DOES_NOT_EXIST.sendWithPrefix(sender);
 				return true;
 			}
-			Phrases.ACCOUNT_HAS.sendWithPrefix(sender, account.getName(), plugin.getAPI().format(account));
+			Phrases.ACCOUNT_HAS.sendWithPrefix(sender, account.getName(), plugin.api.format(account));
 		} else {
 			Player player = plugin.getServer().getPlayer(sender.getName());
-			Account account = plugin.getAPI().getAccount(sender.getName(), player != null ? player.getUniqueId().toString() : null);
+			Account account = player != null
+				? plugin.api.getAccount(player.getUniqueId())
+				: plugin.api.getAccount(sender.getName());
 			if(account == null)
 			{
 				Phrases.YOUR_ACCOUNT_DOES_NOT_EXIST.sendWithPrefix(sender);
 				return true;
 			}
-			Phrases.YOU_HAVE.sendWithPrefix(sender, plugin.getAPI().format(account));
+			Phrases.YOU_HAVE.sendWithPrefix(sender, plugin.api.format(account));
 		}
 		return true;
 	}

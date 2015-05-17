@@ -40,7 +40,7 @@ public class SetCommand extends SubCommand
 			Phrases.MAX_BALANCE_REACHED.sendWithPrefix(sender, victim.getName());
 			return true;
 		}
-		String formattedMoney = plugin.getAPI().format(money);
+		String formattedMoney = plugin.api.format(money);
 		victim.setMoney(money);
 		Phrases.PLAYER_SET_MONEY.sendWithPrefix(sender, victim.getName(), formattedMoney);
 		return true;

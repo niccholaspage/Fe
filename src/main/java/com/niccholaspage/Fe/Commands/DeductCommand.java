@@ -35,7 +35,7 @@ public class DeductCommand extends SubCommand
 			Phrases.ACCOUNT_DOES_NOT_EXIST.sendWithPrefix(sender);
 			return true;
 		}
-		String formattedMoney = plugin.getAPI().format(money);
+		String formattedMoney = plugin.api.format(money);
 		victim.withdraw(money);
 		Phrases.PLAYER_DEDUCT_MONEY.sendWithPrefix(sender, formattedMoney, victim.getName());
 		Player receiverPlayer = plugin.getServer().getPlayerExact(victim.getName());

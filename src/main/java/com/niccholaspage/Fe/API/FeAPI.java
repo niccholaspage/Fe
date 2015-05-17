@@ -7,25 +7,26 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
-public class API
+public class FeAPI
 {
 	private final Fe plugin;
-	public API(Fe plugin)
+	public FeAPI(Fe plugin)
 	{
 		this.plugin = plugin;
 	}
 	public List<Account> getTopAccounts()
 	{
-		return plugin.getCurrentDatabase().getTopAccounts(plugin.settings.getShowTop());
+		return plugin.getDB().getTopAccounts(plugin.settings.getShowTop());
 	}
 	public List<Account> getTopAccounts(int size)
 	{
-		return plugin.getCurrentDatabase().getTopAccounts(size);
+		return plugin.getDB().getTopAccounts(size);
 	}
 	public List<Account> getAccounts()
 	{
-		return plugin.getCurrentDatabase().getAccounts();
+		return plugin.getDB().loadAccounts();
 	}
 	public double getDefaultHoldings()
 	{
@@ -67,26 +68,25 @@ public class API
 	{
 		return plugin.settings.getCurrencyMinorMultiple();
 	}
-	@Deprecated
-	public Account createAccount(String name, String uuid)
+	public Account getAccount(String name)
 	{
-		return updateAccount(name, uuid);
+		return plugin.getDB().getAccount(name);
 	}
-	public Account updateAccount(String name, String uuid)
+	public Account getAccount(UUID uuid)
 	{
-		return plugin.getCurrentDatabase().updateAccount(name, uuid);
+		return plugin.getDB().getAccount(uuid);
 	}
-	public void removeAccount(String name, String uuid)
+	public void removeAccount(Account account)
 	{
-		plugin.getCurrentDatabase().removeAccount(name, uuid);
+		plugin.getDB().removeAccount(account);
 	}
-	public Account getAccount(String name, String uuid)
+	public boolean accountExists(String name)
 	{
-		return plugin.getCurrentDatabase().getAccount(name, uuid);
+		return plugin.getDB().accountExists(name);
 	}
-	public boolean accountExists(String name, String uuid)
+	public boolean accountExists(UUID uuid)
 	{
-		return plugin.getCurrentDatabase().accountExists(name, uuid);
+		return plugin.getDB().accountExists(uuid);
 	}
 	public String formatNoColor(double amount)
 	{
@@ -138,6 +138,6 @@ public class API
 	}
 	public void clean()
 	{
-		plugin.getCurrentDatabase().clean();
+		plugin.getDB().cleanAccountsWithDefaultHoldings();
 	}
 }

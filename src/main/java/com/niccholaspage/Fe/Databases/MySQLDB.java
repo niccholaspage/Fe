@@ -1,11 +1,12 @@
 package com.niccholaspage.Fe.Databases;
+
 import org.bukkit.configuration.ConfigurationSection;
 import com.niccholaspage.Fe.Fe;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class MySQLDB extends SQLDB
+public class MySQLDB extends DatabaseSQL
 {
 	public MySQLDB(Fe plugin)
 	{
@@ -15,6 +16,11 @@ public class MySQLDB extends SQLDB
 	public String getName()
 	{
 		return "MySQL";
+	}
+	@Override
+	public boolean isAsync()
+	{
+		return true;
 	}
 	@Override
 	protected Connection getNewConnection()

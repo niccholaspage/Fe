@@ -20,7 +20,7 @@ public class TopCommand extends SubCommand
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)
 	{
-		List<Account> topAccounts = plugin.getAPI().getTopAccounts();
+		List<Account> topAccounts = plugin.api.getTopAccounts();
 		if(topAccounts.size() < 1)
 		{
 			Phrases.NO_ACCOUNTS_EXIST.sendWithPrefix(sender);
@@ -31,7 +31,7 @@ public class TopCommand extends SubCommand
 		{
 			Account account = topAccounts.get(i);
 			String two = Phrases.SECONDARY_COLOR.parse();
-			sender.sendMessage(two + (i + 1) + ". " + Phrases.PRIMARY_COLOR.parse() + account.getName() + two + " - " + plugin.getAPI().format(account));
+			sender.sendMessage(two + (i + 1) + ". " + Phrases.PRIMARY_COLOR.parse() + account.getName() + two + " - " + plugin.api.format(account));
 		}
 		sender.sendMessage(plugin.getEndEqualMessage(28));
 		return true;

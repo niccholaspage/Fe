@@ -1,21 +1,25 @@
 package com.niccholaspage.Fe.API;
 
+import com.niccholaspage.Fe.Databases.DatabaseGeneric;
 import com.niccholaspage.Fe.Fe;
+import java.util.UUID;
+import org.bukkit.entity.Player;
 
 public class Account implements Comparable<Account>
 {
 	private final Fe plugin;
 	private final Database database;
+	private final UUID uuid;
 	private String name;
-	private final String uuid;
-	private Double money;
-	public Account(Fe plugin, String name, String uuid, Database database)
+	private double money;
+	private Player player;
+	public Account(Fe plugin, DatabaseGeneric database, String name, UUID uuid, double money)
 	{
 		this.plugin = plugin;
 		this.database = database;
 		this.name = name;
 		this.uuid = uuid;
-		this.money = null;
+		this.money = money;
 	}
 	public String getName()
 	{
@@ -24,67 +28,59 @@ public class Account implements Comparable<Account>
 	public void setName(String name)
 	{
 		this.name = name;
-		if(money == null)
-			this.money = getMoney();
-		database.saveAccount(name, uuid, money);
+		database.saveAccount(this);
 	}
-	public String getUUID()
+	public UUID getUUID()
 	{
 		return uuid;
 	}
-	public Double getMoney()
+	public double getMoney()
 	{
-		if(money != null)
-			return money;
-		String money_string = database.loadAccountData(name, uuid).get("money");
-		Double parseMoney = 0D;
-		try
-		{
-			parseMoney = Double.parseDouble(money_string);
-		} catch(Exception e) {
-		}
-		if(database.cacheAccounts())
-			this.money = parseMoney;
-		return parseMoney;
+		return money;
 	}
 	public void setMoney(double money)
 	{
-		Double currentMoney = getMoney();
-		if(currentMoney != null && currentMoney == money)
-			return;
-		if(money < 0 && !plugin.getAPI().isCurrencyNegative())
+		if(money < 0 && !plugin.api.isCurrencyNegative())
 			money = 0;
-		currentMoney = plugin.getAPI().getMoneyRounded(money);
-		if(plugin.getAPI().getMaxHoldings() > 0 && currentMoney > plugin.getAPI().getMaxHoldings())
-			currentMoney = plugin.getAPI().getMoneyRounded(plugin.getAPI().getMaxHoldings());
-		if(!database.cacheAccounts() || plugin.getServer().getPlayerExact(getName()) == null)
-			save(currentMoney);
-		else
-			this.money = currentMoney;
+		money = plugin.api.getMoneyRounded(money);
+		final double maxHoldings = plugin.api.getMaxHoldings();
+		if(plugin.api.getMaxHoldings() > 0.0 && money > maxHoldings)
+			money = plugin.api.getMoneyRounded(maxHoldings);
+		this.money = money;
+		database.saveAccount(this);
 	}
 	public void withdraw(double amount)
 	{
-		setMoney(getMoney() - amount);
+		setMoney(money - amount);
 	}
 	public void deposit(double amount)
 	{
-		setMoney(getMoney() + amount);
-	}
-	public boolean canReceive(double amount)
-	{
-		return plugin.getAPI().getMaxHoldings() == -1 || amount + getMoney() < plugin.getAPI().getMaxHoldings();
+		setMoney(money + amount);
 	}
 	public boolean has(double amount)
 	{
 		return getMoney() >= amount;
 	}
-	public void save(double money)
+	public boolean canReceive(double amount)
 	{
-		database.saveAccount(name, uuid, money);
+		final double maxHoldings = plugin.api.getMaxHoldings();
+		return maxHoldings < 0.0 || getMoney() + amount <= maxHoldings;
 	}
-	public boolean equals(Account other)
+	public boolean isConnected()
 	{
-		return other.getName().equals(getName());
+		return player != null;
+	}
+	public Player getPlayer()
+	{
+		return player;
+	}
+	public void connected(Player player)
+	{
+		this.player = player;
+	}
+	public void disconnected()
+	{
+		this.player = null;
 	}
 	@Override
 	public int compareTo(Account other)

@@ -22,7 +22,7 @@ public class CreateCommand extends SubCommand
 		if(args.length < 1)
 			return false;
 		String name = args[0];
-		if(plugin.getAPI().accountExists(name, null))
+		if(plugin.api.accountExists(name))
 		{
 			Phrases.ACCOUNT_EXISTS.sendWithPrefix(sender);
 			return true;
@@ -32,7 +32,7 @@ public class CreateCommand extends SubCommand
 			Phrases.NAME_TOO_LONG.sendWithPrefix(sender);
 			return true;
 		}
-		Account account = plugin.getAPI().updateAccount(name, null);
+		Account account = plugin.api.getAccount(name);
 		Phrases.ACCOUNT_CREATED.sendWithPrefix(sender, Phrases.PRIMARY_COLOR.parse() + account.getName() + Phrases.SECONDARY_COLOR.parse());
 		return true;
 	}

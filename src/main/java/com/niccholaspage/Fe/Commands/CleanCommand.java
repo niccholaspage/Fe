@@ -18,7 +18,7 @@ public class CleanCommand extends SubCommand
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)
 	{
-		plugin.getAPI().clean();
+		plugin.api.clean();
 		Phrases.ACCOUNT_CLEANED.sendWithPrefix(sender);
 		return true;
 	}
