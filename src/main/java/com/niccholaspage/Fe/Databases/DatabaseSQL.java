@@ -62,21 +62,24 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 		try(ResultSet set = connection.createStatement().executeQuery("SELECT * FROM `" + tableAccounts + "`;"))
 		{
 			while(set.next())
-			{
-				final String name = set.getString(columnAccountsUser);
-				final String uuid = set.getString(columnAccountsUUID);
-				final Account account = new Account(plugin, this,
-					name, uuid != null ? UUID.fromString(uuid) : null,
-					set.getDouble(columnAccountsMoney));
-				if(name != null && !"".equals(name))
-					accounts.put(name, account);
-				if(uuid != null && !"".equals(uuid))
-					accounts.put(uuid, account);
-			}
+				fromResultSet(set);
 		} catch(SQLException e) {
 			System.out.println(e);
 		}
 		return new ArrayList(accounts.values());
+	}
+	private Account fromResultSet(ResultSet set) throws SQLException
+	{
+		final String name = set.getString(columnAccountsUser);
+		final String uuid = set.getString(columnAccountsUUID);
+		final Account account = new Account(plugin, this,
+			name, uuid != null ? UUID.fromString(uuid) : null,
+			set.getDouble(columnAccountsMoney));
+		if(name != null && !"".equals(name))
+			accounts.put(name, account);
+		if(uuid != null && !"".equals(uuid))
+			accounts.put(uuid, account);
+		return account;
 	}
 	@Override
 	public int getVersion()
@@ -99,8 +102,8 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 		checkConnection();
 		try
 		{
-			connection.prepareStatement("DELETE FROM " + tableVersion).executeUpdate();
-			connection.prepareStatement("INSERT INTO " + tableVersion + " (version) VALUES (" + version + ")").executeUpdate();
+			query("DELETE FROM `" + tableVersion + "`;");
+			query("INSERT INTO `" + tableVersion + "` (`version`) VALUES ('" + version + "');");
 		} catch(SQLException e) {
 			System.out.println(e);
 		}
@@ -131,6 +134,21 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 			query(query);
 		} catch(SQLException e) {
 			System.out.println(e);
+		}
+	}
+	@Override
+	public void reloadAccount(Account account)
+	{
+		checkConnection();
+		final UUID uuid = account.getUUID();
+		final String query = uuid != null
+			? "SELECT * FROM `" + tableAccounts + "` WHERE `" + columnAccountsUUID + "` = '" + uuid.toString()   + "';"
+			: "SELECT * FROM `" + tableAccounts + "` WHERE `" + columnAccountsUser + "` = '" + account.getName() + "';";
+		try(ResultSet set = connection.createStatement().executeQuery(query))
+		{
+			if(set.next())
+				fromResultSet(set);
+		} catch(SQLException ex) {
 		}
 	}
 	@Override
@@ -189,7 +207,7 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 	{
 		this.columnAccountsMoney = accountsColumnMoney;
 	}
-	private boolean checkConnection()
+	private synchronized boolean checkConnection()
 	{
 		try
 		{
@@ -238,7 +256,7 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 		}
 		return true;
 	}
-	private boolean query(String sql) throws SQLException
+	private synchronized boolean query(String sql) throws SQLException
 	{
 		return connection.createStatement().execute(sql);
 	}

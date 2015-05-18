@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import com.niccholaspage.Fe.API.Account;
+import com.niccholaspage.Fe.API.Database;
 import org.bukkit.event.player.PlayerKickEvent;
 
 public class FeListener implements Listener
@@ -20,7 +21,9 @@ public class FeListener implements Listener
 	public void onPlayerLogin(PlayerLoginEvent event)
 	{
 		final Player player = event.getPlayer();
-		final Account account = plugin.getDB().getAccount(player.getUniqueId());
+		final Database database = plugin.getDB();
+		final Account account = database.createAccount(player.getUniqueId());
+		database.reloadAccount(account);
 		account.setName(player.getName());
 		account.connected(player);
 	}

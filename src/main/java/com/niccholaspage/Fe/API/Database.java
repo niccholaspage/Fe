@@ -27,6 +27,7 @@ public interface Database
 	public Account       getAccount(UUID uuid);
 	public Account       getAccount(String name);
 	public void          saveAccount(Account account);
+	public void          reloadAccount(Account account);
 	public void          removeAccount(Account account);
 	public void          cleanAccountsWithDefaultHoldings();
 	public void          removeAllAccounts();

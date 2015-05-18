@@ -65,6 +65,9 @@ public abstract class DatabaseGeneric implements Database
 	@Override
 	public Account createAccount(UUID uuid)
 	{
+		final Account exist = accounts.get(uuid.toString());
+		if(exist != null)
+			return exist;
 		final Account account = new Account(plugin, this, null, uuid, plugin.api.getDefaultHoldings());
 		accounts.put(uuid.toString(), account);
 		saveAccount(account);
@@ -73,6 +76,9 @@ public abstract class DatabaseGeneric implements Database
 	@Override
 	public Account createAccount(String name)
 	{
+		final Account exist = accounts.get(name);
+		if(exist != null)
+			return exist;
 		final Account account = new Account(plugin, this, name, null, plugin.api.getDefaultHoldings());
 		accounts.put(name, account);
 		saveAccount(account);
@@ -81,6 +87,12 @@ public abstract class DatabaseGeneric implements Database
 	@Override
 	public Account createAccount(UUID uuid, String name)
 	{
+		final Account existByUUID = accounts.get(uuid.toString());
+		if(existByUUID != null)
+			return existByUUID;
+		final Account existByName = accounts.get(name);
+		if(existByName != null)
+			return existByName;
 		final Account account = new Account(plugin, this, name, uuid, plugin.api.getDefaultHoldings());
 		if(uuid != null)
 			accounts.put(uuid.toString(), account);
