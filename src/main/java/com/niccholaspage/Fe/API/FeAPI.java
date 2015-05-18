@@ -96,10 +96,6 @@ public class FeAPI
 	{
 		return plugin.getDB().getAccount(name);
 	}
-	public void renameAccount(Account account, String newName)
-	{
-		plugin.getDB().renameAccount(account, newName);
-	}
 	public void removeAccount(Account account)
 	{
 		plugin.getDB().removeAccount(account);

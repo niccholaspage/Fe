@@ -4,7 +4,6 @@ import com.niccholaspage.Fe.API.Account;
 import com.niccholaspage.Fe.API.Database;
 import org.bukkit.configuration.ConfigurationSection;
 import com.niccholaspage.Fe.Fe;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,6 +30,13 @@ public abstract class DatabaseGeneric implements Database
 	public ConfigurationSection getConfigSection()
 	{
 		return plugin.settings.getDatabaseSection(getConfigName());
+	}
+	@Override
+	public void onRenameAccount(Account account, String oldName, String newName)
+	{
+		accounts.remove(oldName);
+		if(newName != null && !"".equals(newName))
+			accounts.put(newName, account);
 	}
 	@Override
 	public abstract List<Account> loadAccounts();
@@ -92,13 +98,6 @@ public abstract class DatabaseGeneric implements Database
 	public Account getAccount(String name)
 	{
 		return accounts.get(name);
-	}
-	@Override
-	public void renameAccount(Account account, String newName)
-	{
-		accounts.remove(account.getName());
-		if(newName != null && !"".equals(newName))
-			accounts.put(newName, account);
 	}
 	@Override
 	public abstract void saveAccount(Account account);

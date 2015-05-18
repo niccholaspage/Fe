@@ -27,6 +27,7 @@ public class Account implements Comparable<Account>
 	}
 	public void setName(String name)
 	{
+		database.onRenameAccount(this, this.name, name);
 		this.name = name;
 		database.saveAccount(this);
 	}
