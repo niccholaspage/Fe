@@ -4,8 +4,10 @@ import com.niccholaspage.Fe.API.Account;
 import com.niccholaspage.Fe.API.Database;
 import org.bukkit.configuration.ConfigurationSection;
 import com.niccholaspage.Fe.Fe;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -30,11 +32,55 @@ public abstract class DatabaseGeneric implements Database
 		return plugin.settings.getDatabaseSection(getConfigName());
 	}
 	@Override
+	public abstract List<Account> loadAccounts();
+	@Override
+	public List<Account> getAccounts()
+	{
+		return new ArrayList<>(accounts.values());
+	}
+	@Override
 	public List<Account> getTopAccounts(int size)
 	{
-		List<Account> topAccounts = new LinkedList<>(loadAccounts());
-		Collections.sort(topAccounts);
-		return topAccounts.subList(0, size);
+		final List<Account> topList = new LinkedList<>(new LinkedHashSet<>(accounts.values()));
+		Collections.sort(topList);
+		return topList.subList(0, Math.max(size, topList.size()));
+	}
+	@Override
+	public boolean accountExists(UUID uuid)
+	{
+		return accounts.containsKey(uuid.toString());
+	}
+	@Override
+	public boolean accountExists(String name)
+	{
+		return accounts.containsKey(name);
+	}
+	@Override
+	public Account createAccount(UUID uuid)
+	{
+		final Account account = new Account(plugin, this, null, uuid, plugin.api.getDefaultHoldings());
+		accounts.put(uuid.toString(), account);
+		saveAccount(account);
+		return account;
+	}
+	@Override
+	public Account createAccount(String name)
+	{
+		final Account account = new Account(plugin, this, name, null, plugin.api.getDefaultHoldings());
+		accounts.put(name, account);
+		saveAccount(account);
+		return account;
+	}
+	@Override
+	public Account createAccount(UUID uuid, String name)
+	{
+		final Account account = new Account(plugin, this, name, uuid, plugin.api.getDefaultHoldings());
+		if(uuid != null)
+			accounts.put(uuid.toString(), account);
+		if(name != null && !"".equals(name))
+			accounts.put(name, account);
+		saveAccount(account);
+		return account;
 	}
 	@Override
 	public Account getAccount(UUID uuid)
@@ -47,15 +93,20 @@ public abstract class DatabaseGeneric implements Database
 		return accounts.get(name);
 	}
 	@Override
-	public boolean accountExists(UUID uuid)
+	public void renameAccount(Account account, String newName)
 	{
-		return accounts.containsKey(uuid.toString());
+		accounts.remove(account.getName());
+		if(newName != null && !"".equals(newName))
+			accounts.put(newName, account);
 	}
 	@Override
-	public boolean accountExists(String name)
-	{
-		return accounts.containsKey(name);
-	}
+	public abstract void saveAccount(Account account);
+	@Override
+	public abstract void removeAccount(Account account);
+	@Override
+	public abstract void cleanAccountsWithDefaultHoldings();
+	@Override
+	public abstract void removeAllAccounts();
 	/*
 	protected boolean convertToUUID()
 	{

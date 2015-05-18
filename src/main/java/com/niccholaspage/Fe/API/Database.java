@@ -1,0 +1,33 @@
+package com.niccholaspage.Fe.API;
+
+import java.util.List;
+import java.util.UUID;
+import org.bukkit.configuration.ConfigurationSection;
+
+public interface Database
+{
+	public String  getName();
+	public int     getVersion();
+	public void    setVersion(int version);
+	public boolean isAsync();
+	public boolean init();
+	public void    close();
+	public String               getConfigName();
+	public ConfigurationSection getConfigSection();
+	public void                 getConfigDefaults(ConfigurationSection section);
+	public List<Account> loadAccounts();
+	public List<Account> getAccounts();
+	public List<Account> getTopAccounts(int size);
+	public boolean       accountExists(UUID uuid);
+	public boolean       accountExists(String name);
+	public Account       createAccount(UUID uuid);
+	public Account       createAccount(String name);
+	public Account       createAccount(UUID uuid, String name);
+	public Account       getAccount(UUID uuid);
+	public Account       getAccount(String name);
+	public void          renameAccount(Account account, String newName);
+	public void          saveAccount(Account account);
+	public void          removeAccount(Account account);
+	public void          cleanAccountsWithDefaultHoldings();
+	public void          removeAllAccounts();
+}

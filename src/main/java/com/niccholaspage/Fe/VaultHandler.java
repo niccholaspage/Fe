@@ -22,7 +22,7 @@ public class VaultHandler implements Economy
 	public VaultHandler(Fe plugin)
 	{
 		this.plugin = plugin;
-		Bukkit.getServer().getPluginManager().registerEvents(new EconomyServerListener(), plugin);
+		plugin.getServer().getPluginManager().registerEvents(new EconomyServerListener(), plugin);
 		plugin.log("Vault support enabled.");
 	}
 	@Override
@@ -53,12 +53,18 @@ public class VaultHandler implements Economy
 	@Override
 	public double getBalance(String playerName)
 	{
-		return plugin.getDB().getAccount(playerName).getMoney();
+		final Account account = plugin.getDB().getAccount(playerName);
+		return account != null
+			? account.getMoney()
+			: plugin.settings.getDefaultHoldings();
 	}
 	@Override
 	public double getBalance(OfflinePlayer offlinePlayer)
 	{
-		return plugin.getDB().getAccount(offlinePlayer.getUniqueId()).getMoney();
+		final Account account = plugin.getDB().getAccount(offlinePlayer.getUniqueId());
+		return account != null
+			? account.getMoney()
+			: plugin.settings.getDefaultHoldings();
 	}
 	@Override
 	public EconomyResponse withdrawPlayer(String playerName, double amount)
@@ -194,12 +200,12 @@ public class VaultHandler implements Economy
 	@Override
 	public boolean createPlayerAccount(String playerName)
 	{
-		return plugin.getDB().getAccount(playerName) != null;
+		return plugin.getDB().createAccount(playerName) != null;
 	}
 	@Override
 	public boolean createPlayerAccount(OfflinePlayer offlinePlayer)
 	{
-		Account account = plugin.getDB().getAccount(offlinePlayer.getUniqueId());
+		Account account = plugin.getDB().createAccount(offlinePlayer.getUniqueId());
 		account.setName(offlinePlayer.getName());
 		plugin.getDB().saveAccount(account);
 		return true;

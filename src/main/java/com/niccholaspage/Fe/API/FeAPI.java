@@ -16,18 +16,6 @@ public class FeAPI
 	{
 		this.plugin = plugin;
 	}
-	public List<Account> getTopAccounts()
-	{
-		return plugin.getDB().getTopAccounts(plugin.settings.getShowTop());
-	}
-	public List<Account> getTopAccounts(int size)
-	{
-		return plugin.getDB().getTopAccounts(size);
-	}
-	public List<Account> getAccounts()
-	{
-		return plugin.getDB().loadAccounts();
-	}
 	public double getDefaultHoldings()
 	{
 		return plugin.settings.getDefaultHoldings();
@@ -68,25 +56,57 @@ public class FeAPI
 	{
 		return plugin.settings.getCurrencyMinorMultiple();
 	}
-	public Account getAccount(String name)
+	public List<Account> getAccounts()
 	{
-		return plugin.getDB().getAccount(name);
+		return plugin.getDB().loadAccounts();
 	}
-	public Account getAccount(UUID uuid)
+	public List<Account> getTopAccounts()
 	{
-		return plugin.getDB().getAccount(uuid);
+		return plugin.getDB().getTopAccounts(plugin.settings.getShowTop());
 	}
-	public void removeAccount(Account account)
+	public List<Account> getTopAccounts(int size)
 	{
-		plugin.getDB().removeAccount(account);
+		return plugin.getDB().getTopAccounts(size);
+	}
+	public boolean accountExists(UUID uuid)
+	{
+		return plugin.getDB().accountExists(uuid);
 	}
 	public boolean accountExists(String name)
 	{
 		return plugin.getDB().accountExists(name);
 	}
-	public boolean accountExists(UUID uuid)
+	public Account createAccount(UUID uuid)
 	{
-		return plugin.getDB().accountExists(uuid);
+		return plugin.getDB().createAccount(uuid);
+	}
+	public Account createAccount(String name)
+	{
+		return plugin.getDB().createAccount(name);
+	}
+	public Account createAccount(UUID uuid, String name)
+	{
+		return plugin.getDB().createAccount(uuid, name);
+	}
+	public Account getAccount(UUID uuid)
+	{
+		return plugin.getDB().getAccount(uuid);
+	}
+	public Account getAccount(String name)
+	{
+		return plugin.getDB().getAccount(name);
+	}
+	public void renameAccount(Account account, String newName)
+	{
+		plugin.getDB().renameAccount(account, newName);
+	}
+	public void removeAccount(Account account)
+	{
+		plugin.getDB().removeAccount(account);
+	}
+	public void clean()
+	{
+		plugin.getDB().cleanAccountsWithDefaultHoldings();
 	}
 	public String formatNoColor(double amount)
 	{
@@ -135,9 +155,5 @@ public class FeAPI
 	public String format(Account account)
 	{
 		return format(account.getMoney());
-	}
-	public void clean()
-	{
-		plugin.getDB().cleanAccountsWithDefaultHoldings();
 	}
 }

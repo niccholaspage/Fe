@@ -39,26 +39,6 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 			}
 		}, pingDelay, pingDelay);
 	}
-	public void setAccountTable(String accountsName)
-	{
-		this.tableAccounts = accountsName;
-	}
-	public void setVersionTable(String versionName)
-	{
-		this.tableVersion = versionName;
-	}
-	public void setAccountsColumnUser(String accountsColumnUser)
-	{
-		this.columnAccountsUser = accountsColumnUser;
-	}
-	public void setAccountsColumnUUID(String accountsColumnUUID)
-	{
-		this.columnAccountsUUID = accountsColumnUUID;
-	}
-	public void setAccountsColumnMoney(String accountsColumnMoney)
-	{
-		this.columnAccountsMoney = accountsColumnMoney;
-	}
 	@Override
 	public boolean init()
 	{
@@ -75,75 +55,28 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 			System.out.println(e);
 		}
 	}
-	public boolean checkConnection()
-	{
-		try
-		{
-			if(connection == null || connection.isClosed())
-			{
-				connection = getNewConnection();
-				if(connection == null || connection.isClosed())
-					return false;
-				boolean newDatabase;
-				try(ResultSet set = connection.prepareStatement(supportsModification
-					? "SHOW TABLES LIKE '" + tableAccounts + "'"
-					: "SELECT name FROM sqlite_master WHERE type='table' AND name='" + tableAccounts + "'")
-					.executeQuery())
-				{
-					newDatabase = set.next();
-				}
-				query("CREATE TABLE IF NOT EXISTS " + tableAccounts + " (" + columnAccountsUser + " varchar(64) NOT NULL, " + columnAccountsUUID + " varchar(36), " + columnAccountsMoney + " double NOT NULL)");
-				query("CREATE TABLE IF NOT EXISTS " + tableVersion + " (version int NOT NULL)");
-				if(newDatabase)
-				{
-					int version = getVersion();
-					if(version == 0)
-					{
-						if(supportsModification)
-						{
-							query("ALTER TABLE " + tableAccounts + " MODIFY " + columnAccountsUser + " varchar(64) NOT NULL");
-							query("ALTER TABLE " + tableAccounts + " MODIFY " + columnAccountsMoney + " double NOT NULL");
-						}
-						try
-						{
-							query("ALTER TABLE " + tableAccounts + " ADD " + columnAccountsUUID + " char(36);");
-						} catch(Exception e) {
-						}
-						/*
-						if(!convertToUUID())
-							return false;
-						*/
-						setVersion(1);
-					}
-				} else
-					setVersion(1);
-			}
-		} catch(SQLException e) {
-			System.out.println(e);
-			return false;
-		}
-		return true;
-	}
-	public boolean query(String sql) throws SQLException
-	{
-		return connection.createStatement().execute(sql);
-	}
 	@Override
 	public List<Account> loadAccounts()
 	{
 		checkConnection();
-		List<Account> accounts = new ArrayList<>();
-		try(ResultSet set = connection.createStatement().executeQuery("SELECT * from " + tableAccounts))
+		try(ResultSet set = connection.createStatement().executeQuery("SELECT * FROM `" + tableAccounts + "`;"))
 		{
 			while(set.next())
-				accounts.add(new Account(plugin, this,
-					set.getString(columnAccountsUser),
-					UUID.fromString(set.getString(columnAccountsUUID)),
-					set.getDouble(columnAccountsMoney)));
+			{
+				final String name = set.getString(columnAccountsUser);
+				final String uuid = set.getString(columnAccountsUUID);
+				final Account account = new Account(plugin, this,
+					name, uuid != null ? UUID.fromString(uuid) : null,
+					set.getDouble(columnAccountsMoney));
+				if(name != null && !"".equals(name))
+					accounts.put(name, account);
+				if(uuid != null && !"".equals(uuid))
+					accounts.put(uuid, account);
+			}
 		} catch(SQLException e) {
 			System.out.println(e);
 		}
-		return accounts;
+		return new ArrayList(accounts.values());
 	}
 	@Override
 	public int getVersion()
@@ -224,6 +157,7 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 			System.out.println(e);
 		}
 	}
+	@Override
 	public void removeAllAccounts()
 	{
 		checkConnection();
@@ -233,5 +167,78 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 		} catch(SQLException e) {
 			System.out.println(e);
 		}
+	}
+	protected void setAccountTable(String accountsName)
+	{
+		this.tableAccounts = accountsName;
+	}
+	protected void setVersionTable(String versionName)
+	{
+		this.tableVersion = versionName;
+	}
+	protected void setAccountsColumnUser(String accountsColumnUser)
+	{
+		this.columnAccountsUser = accountsColumnUser;
+	}
+	protected void setAccountsColumnUUID(String accountsColumnUUID)
+	{
+		this.columnAccountsUUID = accountsColumnUUID;
+	}
+	protected void setAccountsColumnMoney(String accountsColumnMoney)
+	{
+		this.columnAccountsMoney = accountsColumnMoney;
+	}
+	private boolean checkConnection()
+	{
+		try
+		{
+			if(connection == null || connection.isClosed())
+			{
+				connection = getNewConnection();
+				if(connection == null || connection.isClosed())
+					return false;
+				boolean newDatabase;
+				try(ResultSet set = connection.prepareStatement(supportsModification
+					? "SHOW TABLES LIKE '" + tableAccounts + "';"
+					: "SELECT `name` FROM `sqlite_master` WHERE `type` = 'table' AND `name` = '" + tableAccounts + "';")
+					.executeQuery())
+				{
+					newDatabase = set.next();
+				}
+				query("CREATE TABLE IF NOT EXISTS `" + tableAccounts + "` (`" + columnAccountsUser + "` VARCHAR(16) NOT NULL, `" + columnAccountsUUID + "` CHAR(36), `" + columnAccountsMoney + "` DOUBLE NOT NULL);");
+				query("CREATE TABLE IF NOT EXISTS `" + tableVersion + "` (`version` INT NOT NULL);");
+				if(newDatabase)
+				{
+					int version = getVersion();
+					if(version == 0)
+					{
+						if(supportsModification)
+						{
+							query("ALTER TABLE `" + tableAccounts + "` MODIFY `" + columnAccountsUser + "` VARCHAR(16) NOT NULL");
+							query("ALTER TABLE `" + tableAccounts + "` MODIFY `" + columnAccountsMoney + "` DOUBLE NOT NULL");
+						}
+						try
+						{
+							query("ALTER TABLE `" + tableAccounts + "` ADD `" + columnAccountsUUID + "` CHAR(36);");
+						} catch(Exception e) {
+						}
+						/*
+						if(!convertToUUID())
+							return false;
+						*/
+						setVersion(1);
+					}
+				} else
+					setVersion(1);
+			}
+		} catch(SQLException e) {
+			System.out.println(e);
+			return false;
+		}
+		return true;
+	}
+	private boolean query(String sql) throws SQLException
+	{
+		return connection.createStatement().execute(sql);
 	}
 }
