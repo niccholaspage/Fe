@@ -26,8 +26,7 @@ public class GrantCommand extends SubCommand
 		try
 		{
 			money = Double.parseDouble(args[1]);
-		} catch(NumberFormatException e)
-		{
+		} catch(NumberFormatException e) {
 			return false;
 		}
 		Account victim = plugin.getShortenedAccount(args[0]);

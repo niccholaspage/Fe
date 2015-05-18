@@ -20,7 +20,18 @@ public class TopCommand extends SubCommand
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)
 	{
-		List<Account> topAccounts = plugin.api.getTopAccounts();
+		int topSize = plugin.settings.getShowTop();
+		try
+		{
+			if(args.length > 0 && args[0] != null && !"".equals(args[0]))
+			{
+				int enteredTop = Integer.parseInt(args[0]);
+				if(enteredTop > 0)
+					topSize = enteredTop;
+			}
+		} catch(NumberFormatException e) {
+		}
+		List<Account> topAccounts = plugin.api.getTopAccounts(topSize);
 		if(topAccounts.size() < 1)
 		{
 			Phrases.NO_ACCOUNTS_EXIST.sendWithPrefix(sender);

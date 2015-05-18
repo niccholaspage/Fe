@@ -32,7 +32,7 @@ public class CreateCommand extends SubCommand
 			Phrases.NAME_TOO_LONG.sendWithPrefix(sender);
 			return true;
 		}
-		Account account = plugin.api.getAccount(name);
+		Account account = plugin.api.createAccount(name);
 		Phrases.ACCOUNT_CREATED.sendWithPrefix(sender, Phrases.PRIMARY_COLOR.parse() + account.getName() + Phrases.SECONDARY_COLOR.parse());
 		return true;
 	}

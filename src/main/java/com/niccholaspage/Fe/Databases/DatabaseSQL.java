@@ -136,6 +136,7 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 	@Override
 	public void removeAccount(Account account)
 	{
+		super.removeAccount(account);
 		checkConnection();
 		try
 		{
@@ -206,7 +207,7 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 					newDatabase = set.next();
 				}
 				query("CREATE TABLE IF NOT EXISTS `" + tableAccounts + "` (`" + columnAccountsUser + "` VARCHAR(16) NOT NULL, `" + columnAccountsUUID + "` CHAR(36), `" + columnAccountsMoney + "` DOUBLE NOT NULL);");
-				query("CREATE TABLE IF NOT EXISTS `" + tableVersion + "` (`version` INT NOT NULL);");
+				query("CREATE TABLE IF NOT EXISTS `" + tableVersion  + "` (`version` INT NOT NULL);");
 				if(newDatabase)
 				{
 					int version = getVersion();
@@ -214,7 +215,7 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 					{
 						if(supportsModification)
 						{
-							query("ALTER TABLE `" + tableAccounts + "` MODIFY `" + columnAccountsUser + "` VARCHAR(16) NOT NULL");
+							query("ALTER TABLE `" + tableAccounts + "` MODIFY `" + columnAccountsUser  + "` VARCHAR(16) NOT NULL");
 							query("ALTER TABLE `" + tableAccounts + "` MODIFY `" + columnAccountsMoney + "` DOUBLE NOT NULL");
 						}
 						try

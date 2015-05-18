@@ -6,6 +6,7 @@ import com.niccholaspage.Fe.Fe;
 import com.niccholaspage.Fe.Phrases;
 import com.niccholaspage.Fe.API.CommandType;
 import com.niccholaspage.Fe.API.SubCommand;
+import org.bukkit.plugin.PluginManager;
 
 public class ReloadCommand extends SubCommand
 {
@@ -18,7 +19,9 @@ public class ReloadCommand extends SubCommand
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)
 	{
-		plugin.reloadConfig();
+		final PluginManager pluginManager = plugin.getServer().getPluginManager();
+		pluginManager.disablePlugin(plugin);
+		pluginManager.enablePlugin(plugin);
 		Phrases.CONFIG_RELOADED.sendWithPrefix(sender);
 		return true;
 	}

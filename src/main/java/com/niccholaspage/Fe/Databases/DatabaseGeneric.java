@@ -4,6 +4,7 @@ import com.niccholaspage.Fe.API.Account;
 import com.niccholaspage.Fe.API.Database;
 import org.bukkit.configuration.ConfigurationSection;
 import com.niccholaspage.Fe.Fe;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,7 +44,7 @@ public abstract class DatabaseGeneric implements Database
 	{
 		final List<Account> topList = new LinkedList<>(new LinkedHashSet<>(accounts.values()));
 		Collections.sort(topList);
-		return topList.subList(0, Math.max(size, topList.size()));
+		return topList.subList(0, Math.min(size, topList.size()));
 	}
 	@Override
 	public boolean accountExists(UUID uuid)
@@ -102,7 +103,13 @@ public abstract class DatabaseGeneric implements Database
 	@Override
 	public abstract void saveAccount(Account account);
 	@Override
-	public abstract void removeAccount(Account account);
+	public void removeAccount(Account account)
+	{
+		accounts.remove(account.getName());
+		UUID uuid = account.getUUID();
+		if(uuid != null)
+			accounts.remove(uuid.toString());
+	}
 	@Override
 	public abstract void cleanAccountsWithDefaultHoldings();
 	@Override
