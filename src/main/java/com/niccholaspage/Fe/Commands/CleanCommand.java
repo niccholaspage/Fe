@@ -1,19 +1,17 @@
 package com.niccholaspage.Fe.Commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import com.niccholaspage.Fe.Fe;
-import com.niccholaspage.Fe.Phrases;
 import com.niccholaspage.Fe.API.CommandType;
 import com.niccholaspage.Fe.API.SubCommand;
+import com.niccholaspage.Fe.Fe;
+import com.niccholaspage.Fe.Phrases;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 
 public class CleanCommand extends SubCommand
 {
-	private final Fe plugin;
 	public CleanCommand(Fe plugin)
 	{
-		super("clean", "fe.clean", "clean", Phrases.COMMAND_CLEAN, CommandType.CONSOLE);
-		this.plugin = plugin;
+		super(plugin, "clean", "fe.clean", "clean", Phrases.COMMAND_CLEAN, CommandType.CONSOLE);
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)

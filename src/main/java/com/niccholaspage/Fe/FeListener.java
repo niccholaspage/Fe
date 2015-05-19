@@ -1,14 +1,14 @@
 package com.niccholaspage.Fe;
 
+import com.niccholaspage.Fe.API.Account;
+import com.niccholaspage.Fe.API.Database;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import com.niccholaspage.Fe.API.Account;
-import com.niccholaspage.Fe.API.Database;
-import org.bukkit.event.player.PlayerKickEvent;
 
 public class FeListener implements Listener
 {

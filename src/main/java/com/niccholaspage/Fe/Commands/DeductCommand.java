@@ -1,21 +1,19 @@
 package com.niccholaspage.Fe.Commands;
 
+import com.niccholaspage.Fe.API.Account;
+import com.niccholaspage.Fe.API.CommandType;
+import com.niccholaspage.Fe.API.SubCommand;
+import com.niccholaspage.Fe.Fe;
+import com.niccholaspage.Fe.Phrases;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import com.niccholaspage.Fe.Fe;
-import com.niccholaspage.Fe.Phrases;
-import com.niccholaspage.Fe.API.CommandType;
-import com.niccholaspage.Fe.API.SubCommand;
-import com.niccholaspage.Fe.API.Account;
 
 public class DeductCommand extends SubCommand
 {
-	private final Fe plugin;
 	public DeductCommand(Fe plugin)
 	{
-		super("deduct", "fe.deduct", "deduct [name] [amount]", Phrases.COMMAND_DEDUCT, CommandType.CONSOLE);
-		this.plugin = plugin;
+		super(plugin, "deduct", "fe.deduct", "deduct [name] [amount]", Phrases.COMMAND_DEDUCT, CommandType.CONSOLE);
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)

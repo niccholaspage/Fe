@@ -1,20 +1,18 @@
 package com.niccholaspage.Fe.Commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import com.niccholaspage.Fe.Fe;
-import com.niccholaspage.Fe.Phrases;
+import com.niccholaspage.Fe.API.Account;
 import com.niccholaspage.Fe.API.CommandType;
 import com.niccholaspage.Fe.API.SubCommand;
-import com.niccholaspage.Fe.API.Account;
+import com.niccholaspage.Fe.Fe;
+import com.niccholaspage.Fe.Phrases;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 
 public class CreateCommand extends SubCommand
 {
-	private final Fe plugin;
 	public CreateCommand(Fe plugin)
 	{
-		super("create", "fe.create", "create [name]", Phrases.COMMAND_CREATE, CommandType.CONSOLE);
-		this.plugin = plugin;
+		super(plugin, "create", "fe.create", "create [name]", Phrases.COMMAND_CREATE, CommandType.CONSOLE);
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)

@@ -1,21 +1,19 @@
 package com.niccholaspage.Fe.Commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import com.niccholaspage.Fe.Fe;
-import com.niccholaspage.Fe.Phrases;
+import com.niccholaspage.Fe.API.Account;
 import com.niccholaspage.Fe.API.CommandType;
 import com.niccholaspage.Fe.API.SubCommand;
-import com.niccholaspage.Fe.API.Account;
+import com.niccholaspage.Fe.Fe;
+import com.niccholaspage.Fe.Phrases;
 import java.util.List;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 
 public class TopCommand extends SubCommand
 {
-	private final Fe plugin;
 	public TopCommand(Fe plugin)
 	{
-		super("top", "fe.top", "top", Phrases.COMMAND_TOP, CommandType.CONSOLE);
-		this.plugin = plugin;
+		super(plugin, "top", "fe.top", "top", Phrases.COMMAND_TOP, CommandType.CONSOLE);
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)

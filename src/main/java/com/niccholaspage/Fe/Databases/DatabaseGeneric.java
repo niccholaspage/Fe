@@ -2,7 +2,6 @@ package com.niccholaspage.Fe.Databases;
 
 import com.niccholaspage.Fe.API.Account;
 import com.niccholaspage.Fe.API.Database;
-import org.bukkit.configuration.ConfigurationSection;
 import com.niccholaspage.Fe.Fe;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.bukkit.configuration.ConfigurationSection;
 
 public abstract class DatabaseGeneric implements Database
 {

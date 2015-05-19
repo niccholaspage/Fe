@@ -1,7 +1,7 @@
 package com.niccholaspage.Fe.Databases;
 
-import com.niccholaspage.Fe.Fe;
 import com.niccholaspage.Fe.API.Account;
+import com.niccholaspage.Fe.Fe;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,12 +12,12 @@ import java.util.UUID;
 public abstract class DatabaseSQL extends DatabaseGeneric
 {
 	private final boolean supportsModification;
-	private final long pingDelay       = 20 * 60;
-	private String tableAccounts       = "fe_accounts";
-	private String tableVersion        = "fe_version";
-	private String columnAccountsUser  = "name";
-	private String columnAccountsUUID  = "uuid";
-	private String columnAccountsMoney = "money";
+	private final long pingDelay         = 20 * 60;
+	protected String tableAccounts       = "fe_accounts";
+	protected String tableVersion        = "fe_version";
+	protected String columnAccountsUser  = "name";
+	protected String columnAccountsUUID  = "uuid";
+	protected String columnAccountsMoney = "money";
 	private Connection connection;
 	protected abstract Connection getNewConnection();
 	public DatabaseSQL(Fe plugin, boolean supportsModification)
@@ -40,7 +40,7 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 		}, pingDelay, pingDelay);
 	}
 	@Override
-	public boolean init()
+	public boolean initialize()
 	{
 		return checkConnection();
 	}
@@ -81,57 +81,15 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 			accounts.put(uuid, account);
 		return account;
 	}
-	@Override
-	public int getVersion()
-	{
-		checkConnection();
-		int version = 0;
-		try(ResultSet set = connection.prepareStatement("SELECT * from " + tableVersion).executeQuery())
-		{
-			if(set.next())
-				version = set.getInt("version");
-			return version;
-		} catch(Exception e) {
-			System.out.println(e);
-			return version;
-		}
-	}
-	@Override
-	public void setVersion(int version)
-	{
-		checkConnection();
-		try
-		{
-			query("DELETE FROM `" + tableVersion + "`;");
-			query("INSERT INTO `" + tableVersion + "` (`version`) VALUES ('" + version + "');");
-		} catch(SQLException e) {
-			System.out.println(e);
-		}
-	}
+	protected abstract String[] getQueriesForSaveAccount(Account account);
 	@Override
 	public void saveAccount(Account account)
 	{
 		checkConnection();
-		final String strname = account.getName();
-		final String strblnc = String.valueOf(account.getMoney());
-		String query;
-		if(account.getUUID() != null)
-		{
-			final String struuid = account.getUUID().toString();
-			query = "INSERT INTO `" + tableAccounts + "` (`" + columnAccountsUser + "`, `" + columnAccountsUUID + "`, `" + columnAccountsMoney + "`) "
-				+ "VALUES ('" + strname + "', '" + struuid + "', '" + strblnc + "') ON DUPLICATE KEY UPDATE "
-				+ "`" + columnAccountsUser  + "` = VALUES(`" + columnAccountsUser  + "`), "
-				+ "`" + columnAccountsUUID  + "` = VALUES(`" + columnAccountsUUID  + "`), "
-				+ "`" + columnAccountsMoney + "` = VALUES(`" + columnAccountsMoney + "`);";
-		} else {
-			query = "INSERT INTO `" + tableAccounts + "` (`" + columnAccountsUser + "`, `" + columnAccountsMoney + "`) "
-				+ "VALUES ('" + strname + "', '" + strblnc + "') ON DUPLICATE KEY UPDATE "
-				+ "`" + columnAccountsUser  + "` = VALUES(`" + columnAccountsUser  + "`), "
-				+ "`" + columnAccountsMoney + "` = VALUES(`" + columnAccountsMoney + "`);";
-		}
 		try
 		{
-			query(query);
+			for(String query : getQueriesForSaveAccount(account))
+				query(query);
 		} catch(SQLException e) {
 			System.out.println(e);
 		}
@@ -259,5 +217,30 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 	private synchronized boolean query(String sql) throws SQLException
 	{
 		return connection.createStatement().execute(sql);
+	}
+	private int getVersion()
+	{
+		checkConnection();
+		int version = 0;
+		try(ResultSet set = connection.prepareStatement("SELECT * from " + tableVersion).executeQuery())
+		{
+			if(set.next())
+				version = set.getInt("version");
+			return version;
+		} catch(Exception e) {
+			System.out.println(e);
+			return version;
+		}
+	}
+	private void setVersion(int version)
+	{
+		checkConnection();
+		try
+		{
+			query("DELETE FROM `" + tableVersion + "`;");
+			query("INSERT INTO `" + tableVersion + "` (`version`) VALUES ('" + version + "');");
+		} catch(SQLException e) {
+			System.out.println(e);
+		}
 	}
 }

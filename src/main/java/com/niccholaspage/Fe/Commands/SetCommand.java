@@ -1,21 +1,18 @@
 package com.niccholaspage.Fe.Commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import com.niccholaspage.Fe.Fe;
-import com.niccholaspage.Fe.Phrases;
+import com.niccholaspage.Fe.API.Account;
 import com.niccholaspage.Fe.API.CommandType;
 import com.niccholaspage.Fe.API.SubCommand;
-import com.niccholaspage.Fe.API.Account;
+import com.niccholaspage.Fe.Fe;
+import com.niccholaspage.Fe.Phrases;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 
 public class SetCommand extends SubCommand
 {
-	private final Fe plugin;
-
 	public SetCommand(Fe plugin)
 	{
-		super("set", "fe.set", "set [name] [amount]", Phrases.COMMAND_SET, CommandType.CONSOLE);
-		this.plugin = plugin;
+		super(plugin, "set", "fe.set", "set [name] [amount]", Phrases.COMMAND_SET, CommandType.CONSOLE);
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)

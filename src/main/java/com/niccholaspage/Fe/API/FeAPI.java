@@ -2,12 +2,12 @@ package com.niccholaspage.Fe.API;
 
 import com.niccholaspage.Fe.Fe;
 import com.niccholaspage.Fe.Phrases;
-import org.bukkit.ChatColor;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import org.bukkit.ChatColor;
 
 public class FeAPI
 {

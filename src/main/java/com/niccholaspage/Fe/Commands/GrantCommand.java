@@ -1,21 +1,19 @@
 package com.niccholaspage.Fe.Commands;
 
+import com.niccholaspage.Fe.API.Account;
+import com.niccholaspage.Fe.API.CommandType;
+import com.niccholaspage.Fe.API.SubCommand;
+import com.niccholaspage.Fe.Fe;
+import com.niccholaspage.Fe.Phrases;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import com.niccholaspage.Fe.Fe;
-import com.niccholaspage.Fe.Phrases;
-import com.niccholaspage.Fe.API.CommandType;
-import com.niccholaspage.Fe.API.SubCommand;
-import com.niccholaspage.Fe.API.Account;
 
 public class GrantCommand extends SubCommand
 {
-	private final Fe plugin;
 	public GrantCommand(Fe plugin)
 	{
-		super("grant", "fe.grant", "grant [name] [amount]", Phrases.COMMAND_GRANT, CommandType.CONSOLE);
-		this.plugin = plugin;
+		super(plugin, "grant", "fe.grant", "grant [name] [amount]", Phrases.COMMAND_GRANT, CommandType.CONSOLE);
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)

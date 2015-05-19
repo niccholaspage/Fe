@@ -1,12 +1,12 @@
 package com.niccholaspage.Fe.Databases;
 
 import com.niccholaspage.Fe.API.Account;
-import org.bukkit.configuration.ConfigurationSection;
 import com.niccholaspage.Fe.Fe;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import org.bukkit.configuration.ConfigurationSection;
 
 public class MySQLDB extends DatabaseSQL implements Runnable
 {
@@ -28,9 +28,9 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 		return true;
 	}
 	@Override
-	public boolean init()
+	public boolean initialize()
 	{
-		if(super.init())
+		if(super.initialize())
 		{
 			dispatcher = new Thread(this);
 			dispatcher.start();
@@ -153,5 +153,30 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 		if(child == null)
 			child = parent.createSection(childName);
 		return child;
+	}
+	@Override
+	protected String[] getQueriesForSaveAccount(Account account)
+	{
+		final String strName = account.getName();
+		final String strBlnc = String.valueOf(account.getMoney());
+		if(account.getUUID() != null)
+		{
+			final String struuid = account.getUUID().toString();
+			return new String[]
+			{
+				"INSERT INTO `" + tableAccounts + "` (`" + columnAccountsUser + "`, `" + columnAccountsUUID + "`, `" + columnAccountsMoney + "`) "
+					+ "VALUES ('" + strName + "', '" + struuid + "', '" + strBlnc + "') ON DUPLICATE KEY UPDATE "
+					+ "`" + columnAccountsUser  + "` = VALUES(`" + columnAccountsUser  + "`), "
+					+ "`" + columnAccountsUUID  + "` = VALUES(`" + columnAccountsUUID  + "`), "
+					+ "`" + columnAccountsMoney + "` = VALUES(`" + columnAccountsMoney + "`);",
+			};
+		}
+		return new String[]
+		{
+			"INSERT INTO `" + tableAccounts + "` (`" + columnAccountsUser + "`, `" + columnAccountsMoney + "`) "
+				+ "VALUES ('" + strName + "', '" + strBlnc + "') ON DUPLICATE KEY UPDATE "
+				+ "`" + columnAccountsUser  + "` = VALUES(`" + columnAccountsUser  + "`), "
+				+ "`" + columnAccountsMoney + "` = VALUES(`" + columnAccountsMoney + "`);",
+		};
 	}
 }

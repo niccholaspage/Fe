@@ -1,20 +1,18 @@
 package com.niccholaspage.Fe.Commands;
 
 import com.niccholaspage.Fe.API.Account;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import com.niccholaspage.Fe.Fe;
-import com.niccholaspage.Fe.Phrases;
 import com.niccholaspage.Fe.API.CommandType;
 import com.niccholaspage.Fe.API.SubCommand;
+import com.niccholaspage.Fe.Fe;
+import com.niccholaspage.Fe.Phrases;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 
 public class RemoveCommand extends SubCommand
 {
-	private final Fe plugin;
 	public RemoveCommand(Fe plugin)
 	{
-		super("remove", "fe.remove", "remove [name]", Phrases.COMMAND_REMOVE, CommandType.CONSOLE);
-		this.plugin = plugin;
+		super(plugin, "remove", "fe.remove", "remove [name]", Phrases.COMMAND_REMOVE, CommandType.CONSOLE);
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)

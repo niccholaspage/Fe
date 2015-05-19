@@ -21,6 +21,7 @@ public class FeSettings
 	}
 	public void onEnable()
 	{
+		fe.reloadConfig();
 		final FileConfiguration config = fe.getConfig();
 		int version = config.getInt("internal.version", 0);
 		switch(version)

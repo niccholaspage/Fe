@@ -1,6 +1,14 @@
 package com.niccholaspage.Fe;
 
+import com.niccholaspage.Fe.API.Account;
+import com.niccholaspage.Fe.API.Database;
 import com.niccholaspage.Fe.API.FeAPI;
+import com.niccholaspage.Fe.Databases.MySQLDB;
+import com.niccholaspage.Fe.Databases.SQLiteDB;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
@@ -8,14 +16,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 import org.mcstats.Metrics.Graph;
 import org.mcstats.Metrics.Plotter;
-import com.niccholaspage.Fe.API.Account;
-import com.niccholaspage.Fe.API.Database;
-import com.niccholaspage.Fe.Databases.MySQLDB;
-import com.niccholaspage.Fe.Databases.SQLiteDB;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 public class Fe extends JavaPlugin
 {
@@ -29,7 +29,7 @@ public class Fe extends JavaPlugin
 	public void onLoad()
 	{
 		settings.onLoad();
-		Phrases.init(this);
+		Phrases.initialize(this);
 	}
 	@Override
 	public void onEnable()
@@ -74,7 +74,8 @@ public class Fe extends JavaPlugin
 			log(Phrases.DATABASE_TYPE_DOES_NOT_EXIST);
 			return false;
 		}
-		if(!database.init())
+		log("Using " + database.getName());
+		if(!database.initialize())
 		{
 			log(Phrases.DATABASE_FAILURE_DISABLE);
 			setEnabled(false);
@@ -102,6 +103,13 @@ public class Fe extends JavaPlugin
 	{
 		return database;
 	}
+	public Database findDB(String targetName)
+	{
+		for(Database db : databases)
+			if(db.getConfigName().equals(targetName))
+				return db;
+		return null;
+	}
 	public void log(String message)
 	{
 		getLogger().info(message);
@@ -115,9 +123,13 @@ public class Fe extends JavaPlugin
 		Account account = api.getAccount(name);
 		if(account == null)
 		{
-			Player player = getServer().getPlayer(name);
+			final Player player = getServer().getPlayer(name);
 			if(player != null)
-				account = api.getAccount(player.getName());
+			{
+				account = api.getAccount(player.getUniqueId().toString());
+				if(account == null)
+					account = api.getAccount(player.getName());
+			}
 		}
 		return account;
 	}

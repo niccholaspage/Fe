@@ -1,11 +1,12 @@
 package com.niccholaspage.Fe.Databases;
 
-import org.bukkit.configuration.ConfigurationSection;
+import com.niccholaspage.Fe.API.Account;
 import com.niccholaspage.Fe.Fe;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import org.bukkit.configuration.ConfigurationSection;
 
 public class SQLiteDB extends DatabaseSQL
 {
@@ -38,5 +39,25 @@ public class SQLiteDB extends DatabaseSQL
 	@Override
 	public void getConfigDefaults(ConfigurationSection section)
 	{
+	}
+	@Override
+	protected String[] getQueriesForSaveAccount(Account account)
+	{
+		final String strName = account.getName();
+		final String strBlnc = String.valueOf(account.getMoney());
+		if(account.getUUID() != null)
+		{
+			final String struuid = account.getUUID().toString();
+			return new String[]
+			{
+				"INSERT OR REPLACE INTO `" + tableAccounts + "` (`" + columnAccountsUser + "`, `" + columnAccountsUUID + "`, `" + columnAccountsMoney + "`) "
+					+ "VALUES ('" + strName + "', '" + struuid + "', '" + strBlnc + "');",
+			};
+		}
+		return new String[]
+		{
+			"INSERT OR REPLACE INTO `" + tableAccounts + "` (`" + columnAccountsUser + "`, `" + columnAccountsMoney + "`) "
+				+ "VALUES ('" + strName + "', '" + strBlnc + "');",
+		};
 	}
 }
