@@ -31,13 +31,13 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 	@Override
 	public boolean initialize()
 	{
+		maximumConsistency = getConfigSection().getBoolean("maximum-consistency", true);
 		if(super.initialize())
 		{
 			dispatcher = new Thread(this);
 			dispatcher.start();
 			return true;
 		}
-		maximumConsistency = getConfigSection().getBoolean("maximum-consistency");
 		return false;
 	}
 	@Override
@@ -82,7 +82,7 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 	public Account getAccount(UUID uuid)
 	{
 		final Account account = super.getAccount(uuid);
-		if(maximumConsistency)
+		if(maximumConsistency && account != null)
 			super.reloadAccount(account);
 		return account;
 	}
@@ -90,7 +90,7 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 	public Account getAccount(String name)
 	{
 		final Account account = super.getAccount(name);
-		if(maximumConsistency)
+		if(maximumConsistency && account != null)
 			super.reloadAccount(account);
 		return account;
 	}

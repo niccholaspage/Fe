@@ -40,6 +40,7 @@ public class Fe extends JavaPlugin
 		databases.add(new SQLiteDB(this));
 		for(Database db : databases)
 			db.getConfigDefaults(db.getConfigSection());
+		getConfig().options().copyDefaults(true);
 		saveConfig();
 		if(!setupDatabase())
 		{
