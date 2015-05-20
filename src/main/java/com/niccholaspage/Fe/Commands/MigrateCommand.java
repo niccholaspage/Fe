@@ -20,7 +20,7 @@ public class MigrateCommand extends SubCommand
 	{
 		if(args != null && args.length > 0 && args[0] != null && !"".equals(args[0]))
 		{
-			final String targetName = args[0].toString().replace(" ", "").toLowerCase();
+			final String targetName = args[0].replace(" ", "").toLowerCase();
 			final Database source = plugin.getDB();
 			final Database target = plugin.findDB(targetName);
 			if(target != null)

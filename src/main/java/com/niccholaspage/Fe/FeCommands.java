@@ -5,6 +5,7 @@ import com.niccholaspage.Fe.API.SubCommand;
 import com.niccholaspage.Fe.Commands.BalanceCommand;
 import com.niccholaspage.Fe.Commands.CleanCommand;
 import com.niccholaspage.Fe.Commands.CreateCommand;
+import com.niccholaspage.Fe.Commands.DebugCommand;
 import com.niccholaspage.Fe.Commands.DeductCommand;
 import com.niccholaspage.Fe.Commands.GrantCommand;
 import com.niccholaspage.Fe.Commands.HelpCommand;
@@ -36,6 +37,7 @@ public class FeCommands implements CommandExecutor
 		commands.add(new GrantCommand(plugin));
 		commands.add(new DeductCommand(plugin));
 		commands.add(new CleanCommand(plugin));
+		commands.add(new DebugCommand(plugin));
 		commands.add(new MigrateCommand(plugin));
 		commands.add(new ReloadCommand(plugin));
 	}

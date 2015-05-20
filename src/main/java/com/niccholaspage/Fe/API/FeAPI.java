@@ -152,4 +152,25 @@ public class FeAPI
 	{
 		return format(account.getMoney());
 	}
+	public void printDebugStackTrace()
+	{
+		if(plugin.settings.debug())
+		{
+			final String prefix = "[" + plugin.getName() + "]";
+			final StringBuilder sb = new StringBuilder(prefix);
+			sb.append("[DEBUG] An API method was invoked from the path:").append(System.lineSeparator());
+			for(StackTraceElement ste : Thread.currentThread().getStackTrace())
+			{
+				final String className = ste.getClassName();
+				if(!className.equals(FeAPI.class.getName())
+					&& !className.equals(Thread.class.getName())
+					)
+					sb.append(prefix).append("[DEBUG] ")
+						.append(className.startsWith(Fe.class.getPackage().getName()) ? ChatColor.GREEN : ChatColor.GRAY)
+						.append(ste.toString())
+						.append(System.lineSeparator());
+			}
+			plugin.getServer().getConsoleSender().sendMessage(sb.toString());
+		}
+	}
 }

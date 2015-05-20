@@ -47,6 +47,7 @@ public enum Phrases
 	SECONDARY_COLOR             (ChatColor.GRAY.toString()),
 	TERTIARY_COLOR              (ChatColor.DARK_GRAY.toString()),
 	ARGUMENT_COLOR              (ChatColor.YELLOW.toString()),
+	DEBUG_STATUS                ("Debugging is $1 now."),
 	COMMAND_BALANCE             ("Checks your balance", true),
 	COMMAND_SEND                ("Sends another player money", true),
 	COMMAND_TOP                 ("Checks the top 5 richest players", true),
@@ -57,6 +58,7 @@ public enum Phrases
 	COMMAND_GRANT               ("Grants a player money", true),
 	COMMAND_DEDUCT              ("Deducts money from a player", true),
 	COMMAND_CLEAN               ("Cleans the accounts with default balance", true),
+	COMMAND_DEBUG               ("Toggles console debug info", true),
 	COMMAND_RELOAD              ("Reloads the config", true),
 	COMMAND_MIGRATE             ("Migrates from default database into specified one", true),
 	;

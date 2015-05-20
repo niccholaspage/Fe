@@ -51,6 +51,15 @@ public class FeSettings
 				break;
 		}
 	}
+	public boolean debug()
+	{
+		return fe.getConfig().getBoolean("settings.debug", false);
+	}
+	public void debug(boolean enable)
+	{
+		fe.getConfig().set("settings.debug", enable);
+		fe.saveConfig();
+	}
 	public double getDefaultHoldings()
 	{
 		return fe.getConfig().getDouble("settings.new-player-holdings", 10.00);
