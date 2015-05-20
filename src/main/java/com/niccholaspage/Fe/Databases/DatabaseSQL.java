@@ -104,7 +104,18 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 		try(ResultSet set = connection.createStatement().executeQuery(query))
 		{
 			if(set.next())
-				fromResultSet(set);
+			{
+				final AccountInt internal = (AccountInt)account;
+				final String dbuuid = set.getString(columnAccountsUUID);
+				final String dbname = set.getString(columnAccountsUser);
+				internal.uuid  = dbuuid != null ? UUID.fromString(dbuuid) : internal.uuid;
+				internal.name  = dbname != null ? dbname : internal.name;
+				internal.money = set.getDouble(columnAccountsMoney);
+				if(internal.name != null && !"".equals(internal.name))
+					accounts.put(dbname, account);
+				if(internal.uuid != null)
+					accounts.put(internal.uuid.toString(), account);
+			}
 		} catch(SQLException ex) {
 		}
 	}

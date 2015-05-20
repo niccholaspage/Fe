@@ -5,6 +5,7 @@ import com.niccholaspage.Fe.Fe;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -12,6 +13,7 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 {
 	private final LinkedBlockingQueue<DefferedTask> queue = new LinkedBlockingQueue<>();
 	private Thread dispatcher;
+	private boolean maximumConsistency = true;
 	public MySQLDB(Fe plugin)
 	{
 		super(plugin, true);
@@ -35,6 +37,7 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 			dispatcher.start();
 			return true;
 		}
+		maximumConsistency = getConfigSection().getBoolean("maximum-consistency");
 		return false;
 	}
 	@Override
@@ -74,6 +77,22 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 				MySQLDB.super.saveAccount(getAccount());
 			}
 		});
+	}
+	@Override
+	public Account getAccount(UUID uuid)
+	{
+		final Account account = super.getAccount(uuid);
+		if(maximumConsistency)
+			super.reloadAccount(account);
+		return account;
+	}
+	@Override
+	public Account getAccount(String name)
+	{
+		final Account account = super.getAccount(name);
+		if(maximumConsistency)
+			super.reloadAccount(account);
+		return account;
 	}
 	@Override
 	public void reloadAccount(Account account)
@@ -133,9 +152,6 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 	@Override
 	public void getConfigDefaults(ConfigurationSection section)
 	{
-		section.addDefault("connection.database", "localhost:3306/minecraft");
-		section.addDefault("connection.username", "user");
-		section.addDefault("connection.password", "pass");
 		final ConfigurationSection tables = getSection(section, "tables");
 		tables.addDefault("accounts", "fe_accounts");
 		final ConfigurationSection columns = getSection(section, "columns");
@@ -143,6 +159,11 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 		columnsAccounts.addDefault("username", "name");
 		columnsAccounts.addDefault("money", "money");
 		columnsAccounts.addDefault("uuid", "uuid");
+		final ConfigurationSection connection = getSection(section, "connection");
+		connection.addDefault("database", "localhost:3306/minecraft");
+		connection.addDefault("username", "user");
+		connection.addDefault("password", "pass");
+		section.addDefault("maximum-consistency", true);
 	}
 	private ConfigurationSection getSection(ConfigurationSection parent, String childName)
 	{

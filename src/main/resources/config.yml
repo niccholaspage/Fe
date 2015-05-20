@@ -16,6 +16,7 @@ settings:
   database-type: sqlite
   sqlite: {}
   mysql:
+    maximum-consistency: true
     connection:
       database: localhost:3306/minecraft
       username: user

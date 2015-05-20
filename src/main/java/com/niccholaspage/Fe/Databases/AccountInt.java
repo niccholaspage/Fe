@@ -10,7 +10,7 @@ public class AccountInt implements Account
 {
 	private final Fe plugin;
 	private final Database database;
-	protected final UUID uuid;
+	protected UUID   uuid;
 	protected String name;
 	protected double money;
 	private Player player;
@@ -77,6 +77,11 @@ public class AccountInt implements Account
 		final double maxHoldings = plugin.api.getMaxHoldings();
 		return maxHoldings < 0.0 || getMoney() + amount <= maxHoldings;
 	}
+	@Override
+	public int compareTo(Account other)
+	{
+		return (int)(other.getMoney() - getMoney());
+	}
 	public boolean isConnected()
 	{
 		return player != null;
@@ -92,10 +97,5 @@ public class AccountInt implements Account
 	public void disconnected()
 	{
 		this.player = null;
-	}
-	@Override
-	public int compareTo(Account other)
-	{
-		return (int)(other.getMoney() - getMoney());
 	}
 }
