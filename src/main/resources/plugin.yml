@@ -51,6 +51,7 @@ permissions:
       fe.balance.other: true
       fe.send: true
       fe.top: true
+      fe.help: true
       fe.?: true
   fe.admin:
     children:
@@ -60,7 +61,9 @@ permissions:
       fe.grant: true
       fe.deduct: true
       fe.clean: true
+      fe.debug: true
       fe.reload: true
+      fe.migrate: true
       fe.notify: true
   fe.*:
     children:
