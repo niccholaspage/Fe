@@ -1,6 +1,6 @@
 package com.niccholaspage.Fe;
 
-import com.niccholaspage.Fe.API.Account;
+import com.niccholaspage.Fe.Databases.AccountInt;
 import com.niccholaspage.Fe.API.Database;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,7 +22,7 @@ public class FeListener implements Listener
 	{
 		final Player player = event.getPlayer();
 		final Database database = plugin.getDB();
-		final Account account = database.createAccount(player.getUniqueId());
+		final AccountInt account = (AccountInt)database.createAccount(player.getUniqueId());
 		database.reloadAccount(account);
 		account.setName(player.getName());
 		account.connected(player);
@@ -30,13 +30,13 @@ public class FeListener implements Listener
 	@EventHandler
 	public void onPlayerQuit(PlayerKickEvent event)
 	{
-		final Account account = plugin.getDB().getAccount(event.getPlayer().getUniqueId());
+		final AccountInt account = (AccountInt)plugin.getDB().getAccount(event.getPlayer().getUniqueId());
 		account.disconnected();
 	}
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event)
 	{
-		final Account account = plugin.getDB().getAccount(event.getPlayer().getUniqueId());
+		final AccountInt account = (AccountInt)plugin.getDB().getAccount(event.getPlayer().getUniqueId());
 		account.disconnected();
 	}
 }

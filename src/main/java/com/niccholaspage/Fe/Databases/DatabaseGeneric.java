@@ -48,7 +48,7 @@ public abstract class DatabaseGeneric implements Database
 	@Override
 	public List<Account> getTopAccounts(int size)
 	{
-		final List<Account> topList = new LinkedList<>(new LinkedHashSet<>(accounts.values()));
+		final LinkedList<Account> topList = new LinkedList<>(new LinkedHashSet<>(accounts.values()));
 		Collections.sort(topList);
 		return topList.subList(0, Math.min(size, topList.size()));
 	}
@@ -68,7 +68,7 @@ public abstract class DatabaseGeneric implements Database
 		final Account exist = accounts.get(uuid.toString());
 		if(exist != null)
 			return exist;
-		final Account account = new Account(plugin, this, null, uuid, plugin.api.getDefaultHoldings());
+		final AccountInt account = new AccountInt(plugin, this, null, uuid, plugin.api.getDefaultHoldings());
 		accounts.put(uuid.toString(), account);
 		saveAccount(account);
 		return account;
@@ -79,7 +79,7 @@ public abstract class DatabaseGeneric implements Database
 		final Account exist = accounts.get(name);
 		if(exist != null)
 			return exist;
-		final Account account = new Account(plugin, this, name, null, plugin.api.getDefaultHoldings());
+		final AccountInt account = new AccountInt(plugin, this, name, null, plugin.api.getDefaultHoldings());
 		accounts.put(name, account);
 		saveAccount(account);
 		return account;
@@ -93,9 +93,8 @@ public abstract class DatabaseGeneric implements Database
 		final Account existByName = accounts.get(name);
 		if(existByName != null)
 			return existByName;
-		final Account account = new Account(plugin, this, name, uuid, plugin.api.getDefaultHoldings());
-		if(uuid != null)
-			accounts.put(uuid.toString(), account);
+		final Account account = new AccountInt(plugin, this, name, uuid, plugin.api.getDefaultHoldings());
+		accounts.put(uuid.toString(), account);
 		if(name != null && !"".equals(name))
 			accounts.put(name, account);
 		saveAccount(account);
@@ -135,10 +134,10 @@ public abstract class DatabaseGeneric implements Database
 		plugin.log(Phrases.STARTING_UUID_CONVERSION);
 		List<Account> accounts = loadAccounts();
 		Map<String, Double> accountMonies = new HashMap<>();
-		for(Account account : accounts)
+		for(AccountInt account : accounts)
 			accountMonies.put(account.getName(), account.getMoney());
 		List<String> names = new ArrayList<>();
-		for(Account account : accounts)
+		for(AccountInt account : accounts)
 			names.add(account.getName());
 		try
 		{

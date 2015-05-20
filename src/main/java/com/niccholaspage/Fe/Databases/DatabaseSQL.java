@@ -72,7 +72,7 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 	{
 		final String name = set.getString(columnAccountsUser);
 		final String uuid = set.getString(columnAccountsUUID);
-		final Account account = new Account(plugin, this,
+		final AccountInt account = new AccountInt(plugin, this,
 			name, uuid != null ? UUID.fromString(uuid) : null,
 			set.getDouble(columnAccountsMoney));
 		if(name != null && !"".equals(name))

@@ -50,6 +50,7 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 			} catch(InterruptedException e) {
 			}
 		}
+		processActiveTasks();
 		super.close();
 	}
 	@Override
@@ -77,7 +78,7 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 	@Override
 	public void reloadAccount(Account account)
 	{
-		doAllTasks();
+		processActiveTasks();
 		queue.offer(new DefferedTask(account)
 		{
 			@Override
@@ -90,7 +91,7 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 	@Override
 	public void removeAccount(Account account)
 	{
-		doAllTasks();
+		processActiveTasks();
 		queue.offer(new DefferedTask(account)
 		{
 			@Override
@@ -100,7 +101,7 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 			}
 		});
 	}
-	private synchronized int doAllTasks()
+	private synchronized int processActiveTasks()
 	{
 		int result = 0;
 		for(DefferedTask task = queue.poll(); task != null; task = queue.poll())
