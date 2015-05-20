@@ -16,7 +16,6 @@ settings:
   database-type: sqlite
   sqlite: {}
   mysql:
-    saving-granularity: 30000
     connection:
       database: localhost:3306/minecraft
       username: user

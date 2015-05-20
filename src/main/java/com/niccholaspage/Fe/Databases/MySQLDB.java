@@ -5,13 +5,12 @@ import com.niccholaspage.Fe.Fe;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class MySQLDB extends DatabaseSQL implements Runnable
 {
-	private final static int defaultGranularity = 30000;
-	private final ConcurrentLinkedQueue<DefferedTask> queue = new ConcurrentLinkedQueue<>();
+	private final LinkedBlockingQueue<DefferedTask> queue = new LinkedBlockingQueue<>();
 	private Thread dispatcher;
 	public MySQLDB(Fe plugin)
 	{
@@ -58,17 +57,15 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 	{
 		try
 		{
-			final int granularity = getConfigSection().getInt("saving-granularity", defaultGranularity);
-			for(;;)
-				if(doAllTasks() == 0)
-					Thread.sleep(granularity);
+			for(DefferedTask task = queue.take(); task != null; task = queue.take())
+				task.run();
 		} catch(InterruptedException e) {
 		}
 	}
 	@Override
 	public void saveAccount(Account account)
 	{
-		queue.add(new DefferedTask(account)
+		queue.offer(new DefferedTask(account)
 		{
 			@Override
 			public void run()
@@ -81,7 +78,7 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 	public void reloadAccount(Account account)
 	{
 		doAllTasks();
-		queue.add(new DefferedTask(account)
+		queue.offer(new DefferedTask(account)
 		{
 			@Override
 			public void run()
@@ -94,7 +91,7 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 	public void removeAccount(Account account)
 	{
 		doAllTasks();
-		queue.add(new DefferedTask(account)
+		queue.offer(new DefferedTask(account)
 		{
 			@Override
 			public void run()
@@ -135,7 +132,6 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 	@Override
 	public void getConfigDefaults(ConfigurationSection section)
 	{
-		section.addDefault("saving-granularity", defaultGranularity);
 		section.addDefault("connection.database", "localhost:3306/minecraft");
 		section.addDefault("connection.username", "user");
 		section.addDefault("connection.password", "pass");
@@ -155,28 +151,22 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 		return child;
 	}
 	@Override
-	protected String[] getQueriesForSaveAccount(Account account)
+	protected String getSaveAccountQuery(Account account)
 	{
 		final String strName = account.getName();
 		final String strBlnc = String.valueOf(account.getMoney());
 		if(account.getUUID() != null)
 		{
 			final String struuid = account.getUUID().toString();
-			return new String[]
-			{
-				"INSERT INTO `" + tableAccounts + "` (`" + columnAccountsUser + "`, `" + columnAccountsUUID + "`, `" + columnAccountsMoney + "`) "
-					+ "VALUES ('" + strName + "', '" + struuid + "', '" + strBlnc + "') ON DUPLICATE KEY UPDATE "
-					+ "`" + columnAccountsUser  + "` = VALUES(`" + columnAccountsUser  + "`), "
-					+ "`" + columnAccountsUUID  + "` = VALUES(`" + columnAccountsUUID  + "`), "
-					+ "`" + columnAccountsMoney + "` = VALUES(`" + columnAccountsMoney + "`);",
-			};
-		}
-		return new String[]
-		{
-			"INSERT INTO `" + tableAccounts + "` (`" + columnAccountsUser + "`, `" + columnAccountsMoney + "`) "
-				+ "VALUES ('" + strName + "', '" + strBlnc + "') ON DUPLICATE KEY UPDATE "
+			return "INSERT INTO `" + tableAccounts + "` (`" + columnAccountsUser + "`, `" + columnAccountsUUID + "`, `" + columnAccountsMoney + "`) "
+				+ "VALUES ('" + strName + "', '" + struuid + "', '" + strBlnc + "') ON DUPLICATE KEY UPDATE "
 				+ "`" + columnAccountsUser  + "` = VALUES(`" + columnAccountsUser  + "`), "
-				+ "`" + columnAccountsMoney + "` = VALUES(`" + columnAccountsMoney + "`);",
-		};
+				+ "`" + columnAccountsUUID  + "` = VALUES(`" + columnAccountsUUID  + "`), "
+				+ "`" + columnAccountsMoney + "` = VALUES(`" + columnAccountsMoney + "`);";
+		}
+		return "INSERT INTO `" + tableAccounts + "` (`" + columnAccountsUser + "`, `" + columnAccountsMoney + "`) "
+			+ "VALUES ('" + strName + "', '" + strBlnc + "') ON DUPLICATE KEY UPDATE "
+			+ "`" + columnAccountsUser  + "` = VALUES(`" + columnAccountsUser  + "`), "
+			+ "`" + columnAccountsMoney + "` = VALUES(`" + columnAccountsMoney + "`);";
 	}
 }

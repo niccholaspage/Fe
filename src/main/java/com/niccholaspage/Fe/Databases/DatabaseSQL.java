@@ -81,15 +81,14 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 			accounts.put(uuid, account);
 		return account;
 	}
-	protected abstract String[] getQueriesForSaveAccount(Account account);
+	protected abstract String getSaveAccountQuery(Account account);
 	@Override
 	public void saveAccount(Account account)
 	{
 		checkConnection();
 		try
 		{
-			for(String query : getQueriesForSaveAccount(account))
-				query(query);
+			query(getSaveAccountQuery(account));
 		} catch(SQLException e) {
 			System.out.println(e);
 		}

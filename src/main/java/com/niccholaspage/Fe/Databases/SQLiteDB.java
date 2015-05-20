@@ -41,23 +41,17 @@ public class SQLiteDB extends DatabaseSQL
 	{
 	}
 	@Override
-	protected String[] getQueriesForSaveAccount(Account account)
+	protected String getSaveAccountQuery(Account account)
 	{
 		final String strName = account.getName();
 		final String strBlnc = String.valueOf(account.getMoney());
 		if(account.getUUID() != null)
 		{
 			final String struuid = account.getUUID().toString();
-			return new String[]
-			{
-				"INSERT OR REPLACE INTO `" + tableAccounts + "` (`" + columnAccountsUser + "`, `" + columnAccountsUUID + "`, `" + columnAccountsMoney + "`) "
-					+ "VALUES ('" + strName + "', '" + struuid + "', '" + strBlnc + "');",
-			};
+			return "INSERT OR REPLACE INTO `" + tableAccounts + "` (`" + columnAccountsUser + "`, `" + columnAccountsUUID + "`, `" + columnAccountsMoney + "`) "
+				+ "VALUES ('" + strName + "', '" + struuid + "', '" + strBlnc + "');";
 		}
-		return new String[]
-		{
-			"INSERT OR REPLACE INTO `" + tableAccounts + "` (`" + columnAccountsUser + "`, `" + columnAccountsMoney + "`) "
-				+ "VALUES ('" + strName + "', '" + strBlnc + "');",
-		};
+		return "INSERT OR REPLACE INTO `" + tableAccounts + "` (`" + columnAccountsUser + "`, `" + columnAccountsMoney + "`) "
+			+ "VALUES ('" + strName + "', '" + strBlnc + "');";
 	}
 }
