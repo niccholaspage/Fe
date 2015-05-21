@@ -194,6 +194,27 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 				}
 				query("CREATE TABLE IF NOT EXISTS `" + tableAccounts + "` (`" + columnAccountsUser + "` VARCHAR(16) NOT NULL, `" + columnAccountsUUID + "` CHAR(36), `" + columnAccountsMoney + "` DOUBLE NOT NULL);");
 				query("CREATE TABLE IF NOT EXISTS `" + tableVersion  + "` (`version` INT NOT NULL);");
+				// Add `id` column
+				try
+				{
+					query("ALTER TABLE `" + tableAccounts + "` ADD COLUMN `id` INT UNSIGNED NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (`id`), ADD UNIQUE INDEX `id_UNIQUE` (`id` ASC);");
+				} catch(SQLException e) {
+					// `id` already exists
+				}
+				// Add UNIQUE KEY for UUID
+				try
+				{
+					query("ALTER TABLE `" + tableAccounts + "` ADD UNIQUE INDEX `uuid_UNIQUE` (`" + columnAccountsUUID + "` ASC);");
+				} catch(SQLException e) {
+					// `uuid_UNIQUE` already exists
+				}
+				// Add UNIQUE KEY for nickname
+				try
+				{
+					query("ALTER TABLE `" + tableAccounts + "` ADD UNIQUE INDEX `name_UNIQUE` (`" + columnAccountsUser + "` ASC);");
+				} catch(SQLException e) {
+					// `name_UNIQUE` already exists
+				}
 				if(newDatabase)
 				{
 					int version = getVersion();
