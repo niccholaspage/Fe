@@ -51,8 +51,8 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 		{
 			if(connection != null)
 				connection.close();
-		} catch(SQLException e) {
-			System.out.println(e);
+		} catch(SQLException ex) {
+			System.err.println(ex);
 		}
 	}
 	@Override
@@ -63,8 +63,8 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 		{
 			while(set.next())
 				fromResultSet(set);
-		} catch(SQLException e) {
-			System.out.println(e);
+		} catch(SQLException ex) {
+			System.err.println(ex);
 		}
 		return new ArrayList(accounts.values());
 	}
@@ -89,8 +89,8 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 		try
 		{
 			query(getSaveAccountQuery(account));
-		} catch(SQLException e) {
-			System.out.println(e);
+		} catch(SQLException ex) {
+			System.err.println(ex);
 		}
 	}
 	@Override
@@ -117,6 +117,7 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 					accounts.put(internal.uuid.toString(), account);
 			}
 		} catch(SQLException ex) {
+			System.err.println(ex);
 		}
 	}
 	@Override
@@ -129,8 +130,8 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 			query(account.getUUID() != null
 				? "DELETE FROM `" + tableAccounts + "` WHERE `" + columnAccountsUUID + "` = '" + account.getUUID().toString() + "';"
 				: "DELETE FROM `" + tableAccounts + "` WHERE `" + columnAccountsUser + "` = '" + account.getName() + "';");
-		} catch(SQLException e) {
-			System.out.println(e);
+		} catch(SQLException ex) {
+			System.err.println(ex);
 		}
 	}
 	@Override
@@ -140,8 +141,8 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 		try
 		{
 			query("DELETE FROM `" + tableAccounts + "` WHERE `" + columnAccountsMoney + "` = '" + plugin.api.getDefaultHoldings() + "';");
-		} catch(SQLException e) {
-			System.out.println(e);
+		} catch(SQLException ex) {
+			System.err.println(ex);
 		}
 	}
 	@Override
@@ -151,8 +152,8 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 		try
 		{
 			query("DELETE FROM `" + tableAccounts + "`;");
-		} catch(SQLException e) {
-			System.out.println(e);
+		} catch(SQLException ex) {
+			System.err.println(ex);
 		}
 	}
 	protected void setAccountTable(String accountsName)
@@ -198,22 +199,28 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 				try
 				{
 					query("ALTER TABLE `" + tableAccounts + "` ADD COLUMN `id` INT UNSIGNED NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (`id`), ADD UNIQUE INDEX `id_UNIQUE` (`id` ASC);");
-				} catch(SQLException e) {
-					// `id` already exists
+				} catch(SQLException ex) {
+					// `id` already exists?
+					if(!ex.getMessage().contains("already exists"))
+						System.err.println(ex);
 				}
 				// Add UNIQUE KEY for UUID
 				try
 				{
 					query("ALTER TABLE `" + tableAccounts + "` ADD UNIQUE INDEX `uuid_UNIQUE` (`" + columnAccountsUUID + "` ASC);");
-				} catch(SQLException e) {
-					// `uuid_UNIQUE` already exists
+				} catch(SQLException ex) {
+					// `uuid_UNIQUE` already exists?
+					if(!ex.getMessage().contains("already exists"))
+						System.err.println(ex);
 				}
 				// Add UNIQUE KEY for nickname
 				try
 				{
 					query("ALTER TABLE `" + tableAccounts + "` ADD UNIQUE INDEX `name_UNIQUE` (`" + columnAccountsUser + "` ASC);");
-				} catch(SQLException e) {
-					// `name_UNIQUE` already exists
+				} catch(SQLException ex) {
+					// `name_UNIQUE` already exists?
+					if(!ex.getMessage().contains("already exists"))
+						System.err.println(ex);
 				}
 				if(newDatabase)
 				{
@@ -228,19 +235,16 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 						try
 						{
 							query("ALTER TABLE `" + tableAccounts + "` ADD `" + columnAccountsUUID + "` CHAR(36);");
-						} catch(Exception e) {
+						} catch(SQLException ex) {
+							System.err.println(ex);
 						}
-						/*
-						if(!convertToUUID())
-							return false;
-						*/
 						setVersion(1);
 					}
 				} else
 					setVersion(1);
 			}
-		} catch(SQLException e) {
-			System.out.println(e);
+		} catch(SQLException ex) {
+			System.err.println(ex);
 			return false;
 		}
 		return true;
@@ -258,8 +262,8 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 			if(set.next())
 				version = set.getInt("version");
 			return version;
-		} catch(Exception e) {
-			System.out.println(e);
+		} catch(SQLException ex) {
+			System.err.println(ex);
 			return version;
 		}
 	}
@@ -270,8 +274,8 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 		{
 			query("DELETE FROM `" + tableVersion + "`;");
 			query("INSERT INTO `" + tableVersion + "` (`version`) VALUES ('" + version + "');");
-		} catch(SQLException e) {
-			System.out.println(e);
+		} catch(SQLException ex) {
+			System.err.println(ex);
 		}
 	}
 }

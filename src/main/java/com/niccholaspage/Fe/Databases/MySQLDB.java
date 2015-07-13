@@ -145,7 +145,8 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 				"jdbc:mysql://" + config.getString("connection.database"),
 				config.getString("connection.username"),
 				config.getString("connection.password"));
-		} catch(ClassNotFoundException | SQLException e) {
+		} catch(ClassNotFoundException | SQLException ex) {
+			System.err.println(ex);
 			return null;
 		}
 	}
