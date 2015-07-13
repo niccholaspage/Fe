@@ -28,7 +28,7 @@ public class FeListener implements Listener
 		account.connected(player);
 	}
 	@EventHandler
-	public void onPlayerQuit(PlayerKickEvent event)
+	public void onPlayerKick(PlayerKickEvent event)
 	{
 		final AccountInt account = (AccountInt)plugin.getDB().getAccount(event.getPlayer().getUniqueId());
 		account.disconnected();
