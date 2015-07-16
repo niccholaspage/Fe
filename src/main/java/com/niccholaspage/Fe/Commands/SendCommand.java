@@ -46,9 +46,14 @@ public class SendCommand extends SubCommand
 			Phrases.MAX_BALANCE_REACHED.sendWithPrefix(sender, receiver.getName());
 			return true;
 		}
-		String formattedMoney = plugin.api.format(money);
+		if(account.equals(receiver))
+		{
+			Phrases.YOU_HAVE.sendWithPrefix(sender, plugin.api.format(account));
+			return true;
+		}
 		account.withdraw(money);
 		receiver.deposit(money);
+		String formattedMoney = plugin.api.format(money);
 		Phrases.MONEY_SENT.sendWithPrefix(sender, formattedMoney, receiver.getName());
 		Player receiverPlayer = plugin.getServer().getPlayerExact(receiver.getName());
 		if(receiverPlayer != null)
