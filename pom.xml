@@ -35,6 +35,12 @@
             <artifactId>mongo-java-driver</artifactId>
             <version>2.10.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jdbc</artifactId>
+            <version>7.0.52</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
     <build>
         <defaultGoal>clean package install</defaultGoal>
@@ -79,6 +85,8 @@
                             <artifactSet>
                                 <includes>
                                     <include>org.mongodb:mongo-java-driver</include>
+                                    <include>org.apache.tomcat:tomcat-jdbc</include>
+                                    <include>org.apache.tomcat:tomcat-juli</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
