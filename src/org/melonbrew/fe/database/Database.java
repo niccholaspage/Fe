@@ -10,13 +10,15 @@ import java.util.*;
 
 public abstract class Database {
     private final Fe plugin;
-    private final Set<Account> cachedAccounts;
+    private final HashMap<UUID, Account> cachedAccountsUUID;
+    private final HashMap<String, Account> cachedAccountsUsername;
     protected boolean cacheAccounts;
 
     public Database(Fe plugin) {
         this.plugin = plugin;
 
-        this.cachedAccounts = new HashSet<Account>();
+        this.cachedAccountsUUID = new HashMap<UUID, Account>();
+        this.cachedAccountsUsername = new HashMap<String, Account>();
     }
 
     public boolean init() {
@@ -26,38 +28,27 @@ public abstract class Database {
     }
 
     public List<Account> getTopAccounts(int size) {
-        List<Account> topAccounts = loadTopAccounts(size * 2);
-
-        if (!cachedAccounts.isEmpty()) {
-            for (Account account : cachedAccounts) {
+        List<Account> topAccounts = this.loadTopAccounts(size * 2);
+        if (!this.cachedAccountsUUID.isEmpty()) {
+            final Account lowest = topAccounts.get(topAccounts.size() - 1);
+            final List<Account> cachedTopAccounts = new ArrayList<Account>();
+            for (final Account account : this.cachedAccountsUUID.values()) {
                 topAccounts.remove(account);
-            }
-
-            List<Account> cachedTopAccounts = new ArrayList<Account>(cachedAccounts);
-
-            Collections.sort(cachedTopAccounts, new Comparator<Account>() {
-                public int compare(Account account1, Account account2) {
-                    return (int) (account2.getMoney() - account1.getMoney());
+                if (lowest.getMoney() <= account.getMoney()) {
+                    cachedTopAccounts.add(account);
                 }
-            });
-
-            if (cachedAccounts.size() > size) {
-                cachedTopAccounts = cachedTopAccounts.subList(0, size);
             }
-
             topAccounts.addAll(cachedTopAccounts);
         }
-
         Collections.sort(topAccounts, new Comparator<Account>() {
-            public int compare(Account account1, Account account2) {
-                return (int) (account2.getMoney() - account1.getMoney());
+            @Override
+            public int compare(final Account account1, final Account account2) {
+                return (int)(account2.getMoney() - account1.getMoney());
             }
         });
-
         if (topAccounts.size() > size) {
             topAccounts = topAccounts.subList(0, size);
         }
-
         return topAccounts;
     }
 
@@ -82,9 +73,8 @@ public abstract class Database {
     public abstract void clean();
 
     public void removeAllAccounts() {
-        for (Account account : new HashSet<Account>(cachedAccounts)) {
-            cachedAccounts.remove(account);
-        }
+        cachedAccountsUUID.clear();
+        cachedAccountsUsername.clear();
     }
 
     protected boolean convertToUUID() {
@@ -146,15 +136,11 @@ public abstract class Database {
     }
 
     public void close() {
-        Iterator<Account> iterator = cachedAccounts.iterator();
-
-        while (iterator.hasNext()) {
-            Account account = iterator.next();
-
+        for (final Account account : this.cachedAccountsUUID.values()) {
             account.save(account.getMoney());
-
-            iterator.remove();
         }
+        this.cachedAccountsUUID.clear();
+        this.cachedAccountsUsername.clear();
     }
 
     public abstract String getName();
@@ -202,7 +188,8 @@ public abstract class Database {
             Player player = plugin.getServer().getPlayerExact(name);
 
             if (player != null) {
-                cachedAccounts.add(account);
+                this.cachedAccountsUsername.put(name, account);
+                this.cachedAccountsUUID.put(UUID.fromString(uuid), account);
             }
         }
 
@@ -218,17 +205,16 @@ public abstract class Database {
     }
 
     public Account getCachedAccount(String name, String uuid) {
-        for (Account account : cachedAccounts) {
-            if (account.getName().equals(name)) {
-                return account;
-            }
+        if (uuid != null) {
+            return this.cachedAccountsUUID.get(UUID.fromString(uuid));
         }
-
-        return null;
+        return this.cachedAccountsUsername.get(name);
     }
 
     public boolean removeCachedAccount(Account account) {
-        return cachedAccounts.remove(account);
+        this.cachedAccountsUUID.remove(UUID.fromString(account.getUUID()));
+        this.cachedAccountsUsername.remove(account.getName());
+        return true;
     }
 
     public abstract int getVersion();
