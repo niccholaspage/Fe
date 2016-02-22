@@ -2,7 +2,7 @@ holdings: 10.00
 
 maxholdings: -1
 
-prefix: Fe
+prefix: '&f[&6Fe&f]'
 
 topsize: 5
 
