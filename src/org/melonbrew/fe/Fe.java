@@ -281,9 +281,7 @@ public class Fe extends JavaPlugin {
     }
 
     public String getMessagePrefix() {
-        String third = Phrase.TERTIARY_COLOR.parse();
-
-        return third + "[" + Phrase.PRIMARY_COLOR.parse() + "$1" + third + "] " + Phrase.SECONDARY_COLOR.parse();
+        return Phrase.PRIMARY_COLOR.parse() + "$1" + Phrase.SECONDARY_COLOR.parse();
     }
 
     public String getEqualMessage(String inBetween, int length) {
