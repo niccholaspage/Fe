@@ -117,7 +117,7 @@ public enum Phrase {
     }
 
     private String parseWithPrefix(String... params) {
-        return plugin.getMessagePrefix().replace("$1", plugin.getConfig().getString("prefix")) + parse(params);
+        return plugin.getMessagePrefix().replace("$1", ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix"))) + parse(params);
     }
 
     public void send(CommandSender sender, String... params) {
