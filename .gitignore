@@ -1,35 +1,80 @@
-# Eclipse
-/.classpath
-/.project
-/.settings
+# Subversion
+.svn
 
-# Netbeans
-/nbproject
-nb-configuration.xml
+## IDEs ##
 
-# We use maven!
-/build.xml
-
-# Maven
-/target
-dependency-reduced-pom.xml
-
-# Vim
-.*.sw[a-p]
-
-# Various other potential build files
-/build
-/bin
-/dist
-/manifest.mf
-
-/world
-
-# Mac filesystem dust
-.DS_Store
+# Android Studio
+*.apk
+*.ap_
+*.dex
+bin/
+gen/
+out/
+.navigation/
+proguard/
+/local.properties
+/captures
 
 # IntelliJ
 *.iml
 *.ipr
 *.iws
 .idea/
+
+# Netbeans IDE
+nbproject/
+nbactions.xml
+
+# Eclipse stuff
+.classpath
+.project
+.settings/
+
+# vim
+.*.sw[a-p]
+
+## Build systems ##
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# We use maven!
+build.xml
+
+# Maven
+dependency-reduced-pom.xml
+target/
+
+# Gradle
+!gradle-wrapper.jar
+.gradle
+build/
+gradle-app.setting
+.gradletasknamecache
+
+# Package Files
+*.jar
+*.war
+*.ear
+
+# Various other potential build files
+*.class
+build/
+bin/
+dist/
+manifest.mf
+
+## Other files ##
+
+# Mac filesystem dust
+.DS_Store/
+
+# Logs
+*.log*
+hs_err_pid*
+
+# Keystore files
+*.jks
+
+# delombok
+*/src/main/lombok
