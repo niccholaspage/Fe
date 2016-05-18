@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.Phrase;
 import org.melonbrew.fe.database.Account;
@@ -39,10 +40,18 @@ public class FePlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        Database database = plugin.getFeDatabase();
-
         Player player = event.getPlayer();
-
+        unLoad(player);
+    }
+    
+    @EveentHandler
+    public void onPlayerKick(PlayerKickEvent event) {
+        Player player = event.getPlayer();
+        unLoad(player);
+    }
+    
+    public void unLoad(Player player) {
+        Database database = plugin.getFeDatabase();
         Account account = database.getCachedAccount(player.getName(), player.getUniqueId().toString());
 
         if (account != null) {
