@@ -138,6 +138,20 @@ public class Fe extends JavaPlugin {
             return -1;
         }
     }
+    
+    public void onDisable() {
+        for(Player player : getServer().getOnlinePlayers()) {
+            Database database = plugin.getFeDatabase();
+
+			 Account account = database.getCachedAccount(player.getName(), player.getUniqueId().toString());
+
+			 if (account != null) {
+				 account.save(account.getMoney());
+
+				 database.removeCachedAccount(account);
+			 }
+		}
+    }
 
     public double getLatestVersion() {
         return latestVersion;
