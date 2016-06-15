@@ -19,8 +19,6 @@ public interface Database
 	public List<Account> getTopAccounts(int size);
 	public boolean accountExists(UUID uuid);
 	public boolean accountExists(String name);
-	public Account createAccount(UUID uuid);
-	public Account createAccount(String name);
 	public Account createAccount(UUID uuid, String name);
 	public Account getAccount(UUID uuid);
 	public Account getAccount(String name);

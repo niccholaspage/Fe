@@ -76,14 +76,6 @@ public class FeAPI
 	{
 		return plugin.getDB().accountExists(name);
 	}
-	public Account createAccount(UUID uuid)
-	{
-		return plugin.getDB().createAccount(uuid);
-	}
-	public Account createAccount(String name)
-	{
-		return plugin.getDB().createAccount(name);
-	}
 	public Account createAccount(UUID uuid, String name)
 	{
 		return plugin.getDB().createAccount(uuid, name);

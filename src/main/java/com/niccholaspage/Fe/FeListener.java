@@ -17,12 +17,12 @@ public class FeListener implements Listener
 	{
 		this.plugin = plugin;
 	}
-	@EventHandler(priority = EventPriority.LOWEST)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerLogin(PlayerLoginEvent event)
 	{
 		final Player player = event.getPlayer();
 		final Database database = plugin.getDB();
-		final AccountInt account = (AccountInt)database.createAccount(player.getUniqueId());
+		final AccountInt account = (AccountInt)database.createAccount(player.getUniqueId(), player.getName());
 		database.reloadAccount(account);
 		account.setName(player.getName());
 		account.connected(player);

@@ -35,6 +35,7 @@ public class Fe extends JavaPlugin
 	public void onEnable()
 	{
 		settings.onEnable();
+                log("Language File location:" + new File(getDataFolder(), "phrases.yml").getAbsolutePath());
 		Phrases.setupPhrases(new File(getDataFolder(), "phrases.yml"));
 		databases.add(new MySQLDB(this));
 		databases.add(new SQLiteDB(this));

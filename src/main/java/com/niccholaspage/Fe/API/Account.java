@@ -6,9 +6,7 @@ public interface Account extends Comparable<Account>
 {
 	public UUID    getUUID();
 	public String  getName();
-	public String  getNewName();
 	public void    setName(String name);
-	public void    setNewName(String newName);
 	public double  getMoney();
 	public void    setMoney(double money);
 	public boolean has(double amount);

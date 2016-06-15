@@ -63,28 +63,6 @@ public abstract class DatabaseGeneric implements Database
 		return accounts.containsKey(name);
 	}
 	@Override
-	public Account createAccount(UUID uuid)
-	{
-		final Account exist = accounts.get(uuid.toString());
-		if(exist != null)
-			return exist;
-		final AccountInt account = new AccountInt(plugin, this, null, uuid, plugin.api.getDefaultHoldings());
-		accounts.put(uuid.toString(), account);
-		saveAccount(account);
-		return account;
-	}
-	@Override
-	public Account createAccount(String name)
-	{
-		final Account exist = accounts.get(name);
-		if(exist != null)
-			return exist;
-		final AccountInt account = new AccountInt(plugin, this, name, null, plugin.api.getDefaultHoldings());
-		accounts.put(name, account);
-		saveAccount(account);
-		return account;
-	}
-	@Override
 	public Account createAccount(UUID uuid, String name)
 	{
 		final Account existByUUID = accounts.get(uuid.toString());

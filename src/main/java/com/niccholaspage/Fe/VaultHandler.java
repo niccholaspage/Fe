@@ -3,6 +3,8 @@ package com.niccholaspage.Fe;
 import com.niccholaspage.Fe.API.Account;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
@@ -50,6 +52,7 @@ public class VaultHandler implements Economy, Listener
 	{
 		return plugin.api.getCurrencyMajorMultiple();
 	}
+	@Deprecated
 	@Override
 	public double getBalance(String playerName)
 	{
@@ -68,6 +71,7 @@ public class VaultHandler implements Economy, Listener
 			? account.getMoney()
 			: plugin.api.getDefaultHoldings();
 	}
+	@Deprecated
 	@Override
 	public EconomyResponse withdrawPlayer(String playerName, double amount)
 	{
@@ -94,6 +98,7 @@ public class VaultHandler implements Economy, Listener
 		} else
 			return new EconomyResponse(0, account.getMoney(), ResponseType.FAILURE, "Insufficient funds");
 	}
+	@Deprecated
 	@Override
 	public EconomyResponse depositPlayer(String playerName, double amount)
 	{
@@ -116,6 +121,7 @@ public class VaultHandler implements Economy, Listener
 		account.deposit(amount);
 		return new EconomyResponse(amount, account.getMoney(), ResponseType.SUCCESS, "");
 	}
+	@Deprecated
 	@Override
 	public boolean has(String playerName, double amount)
 	{
@@ -126,6 +132,7 @@ public class VaultHandler implements Economy, Listener
 	{
 		return getBalance(offlinePlayer) >= amount;
 	}
+	@Deprecated
 	@Override
 	public EconomyResponse createBank(String name, String player)
 	{
@@ -156,6 +163,7 @@ public class VaultHandler implements Economy, Listener
 	{
 		return new EconomyResponse(0.0, 0.0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
 	}
+	@Deprecated
 	@Override
 	public EconomyResponse isBankOwner(String name, String playerName)
 	{
@@ -166,6 +174,7 @@ public class VaultHandler implements Economy, Listener
 	{
 		return new EconomyResponse(0.0, 0.0, ResponseType.NOT_IMPLEMENTED, "Fe does not support bank accounts!");
 	}
+	@Deprecated
 	@Override
 	public EconomyResponse isBankMember(String name, String playerName)
 	{
@@ -191,6 +200,7 @@ public class VaultHandler implements Economy, Listener
 	{
 		return false;
 	}
+	@Deprecated
 	@Override
 	public boolean hasAccount(String playerName)
 	{
@@ -203,17 +213,18 @@ public class VaultHandler implements Economy, Listener
 		plugin.api.printDebugStackTrace();
 		return plugin.api.accountExists(offlinePlayer.getUniqueId());
 	}
+	@Deprecated
 	@Override
 	public boolean createPlayerAccount(String playerName)
 	{
 		plugin.api.printDebugStackTrace();
-		return plugin.getDB().createAccount(playerName) != null;
+		return plugin.getDB().createAccount(UUID.randomUUID(), playerName) != null;
 	}
 	@Override
 	public boolean createPlayerAccount(OfflinePlayer offlinePlayer)
 	{
 		plugin.api.printDebugStackTrace();
-		Account account = plugin.getDB().createAccount(offlinePlayer.getUniqueId());
+		Account account = plugin.getDB().createAccount(offlinePlayer.getUniqueId(), offlinePlayer.getName());
 		account.setName(offlinePlayer.getName());
 		plugin.getDB().saveAccount(account);
 		return true;
@@ -223,6 +234,7 @@ public class VaultHandler implements Economy, Listener
 	{
 		return -1;
 	}
+	@Deprecated
 	@Override
 	public boolean hasAccount(String playerName, String worldName)
 	{
@@ -233,6 +245,7 @@ public class VaultHandler implements Economy, Listener
 	{
 		return hasAccount(offlinePlayer);
 	}
+	@Deprecated
 	@Override
 	public double getBalance(String playerName, String worldName)
 	{
@@ -243,6 +256,7 @@ public class VaultHandler implements Economy, Listener
 	{
 		return getBalance(offlinePlayer);
 	}
+	@Deprecated
 	@Override
 	public boolean has(String playerName, String worldName, double amount)
 	{
@@ -253,6 +267,7 @@ public class VaultHandler implements Economy, Listener
 	{
 		return has(offlinePlayer, amount);
 	}
+	@Deprecated
 	@Override
 	public EconomyResponse withdrawPlayer(String playerName, String worldName, double amount)
 	{
@@ -263,6 +278,7 @@ public class VaultHandler implements Economy, Listener
 	{
 		return withdrawPlayer(offlinePlayer, amount);
 	}
+	@Deprecated
 	@Override
 	public EconomyResponse depositPlayer(String playerName, String worldName, double amount)
 	{
@@ -273,6 +289,7 @@ public class VaultHandler implements Economy, Listener
 	{
 		return depositPlayer(offlinePlayer, amount);
 	}
+	@Deprecated
 	@Override
 	public boolean createPlayerAccount(String playerName, String worldName)
 	{

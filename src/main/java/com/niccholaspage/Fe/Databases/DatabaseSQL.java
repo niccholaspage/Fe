@@ -88,6 +88,8 @@ public abstract class DatabaseSQL extends DatabaseGeneric
 		checkConnection();
 		try
 		{
+			if(plugin.settings.debug()) System.out.println("MySQL task - Player: " + account.getName());
+			if(plugin.settings.debug()) System.out.println("MySQL query: " + getSaveAccountQuery(account));
 			query(getSaveAccountQuery(account));
 		} catch(SQLException ex) {
 			System.err.println(ex);

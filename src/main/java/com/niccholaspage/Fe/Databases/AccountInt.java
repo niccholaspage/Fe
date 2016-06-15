@@ -12,7 +12,6 @@ public class AccountInt implements Account
 	private final Database database;
 	protected UUID   uuid;
 	protected String name;
-	protected String newName;
 	protected double money;
 	private Player player;
 	public AccountInt(Fe plugin, DatabaseGeneric database, String name, UUID uuid, double money)
@@ -34,10 +33,10 @@ public class AccountInt implements Account
 		return this.name;
 	}
 	@Override
-	public void setName(String newname)
+	public void setName(String name)
 	{
-		this.setNewName(newname);
-		database.onRenameAccount(this, this.getName(), this.getNewName());
+		database.onRenameAccount(this, this.name, name);
+		this.name = name;
 		database.saveAccount(this);
 	}
 	@Override
@@ -98,14 +97,5 @@ public class AccountInt implements Account
 	public void disconnected()
 	{
 		this.player = null;
-	}
-	@Override
-	public String getNewName() {
-		return this.newName;
-	}
-	@Override
-	public void setNewName(String newName) {
-		this.newName = newName;
-		
 	}
 }

@@ -176,25 +176,13 @@ public class MySQLDB extends DatabaseSQL implements Runnable
 	@Override
 	protected String getSaveAccountQuery(Account account)
 	{
-		final String strName;
-		if(account.getName() != account.getNewName()) {
-			if(account.getNewName() == null) {
-				strName = "null";
-			} else {
-				strName = "'"+account.getNewName()+"'";
-			}
-		} else {
-			strName = account.getName();
-		}
-		if(account.getNewName() != account.getName()) {
-			account.setNewName(null);
-		}
+		final String strName = account.getName();
 		final String strBlnc = String.valueOf(account.getMoney());
 		if(account.getUUID() != null)
 		{
 			final String struuid = account.getUUID().toString();
 			return "INSERT INTO `" + tableAccounts + "` (`" + columnAccountsUser + "`, `" + columnAccountsUUID + "`, `" + columnAccountsMoney + "`) "
-				+ "VALUES (" + strName + ", '" + struuid + "', '" + strBlnc + "') ON DUPLICATE KEY UPDATE "
+				+ "VALUES ('" + strName + "', '" + struuid + "', '" + strBlnc + "') ON DUPLICATE KEY UPDATE "
 				+ "`" + columnAccountsUser  + "` = VALUES(`" + columnAccountsUser  + "`), "
 				+ "`" + columnAccountsUUID  + "` = VALUES(`" + columnAccountsUUID  + "`), "
 				+ "`" + columnAccountsMoney + "` = VALUES(`" + columnAccountsMoney + "`);";
