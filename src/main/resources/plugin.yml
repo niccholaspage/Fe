@@ -1,0 +1,71 @@
+name:    ${project.bukkitpluginname}
+main:    ${project.groupId}.${project.artifactId}.${project.name}
+version: ${project.version}
+load:    startup
+
+commands:
+  fe:
+    usage: /<command> <name>
+    description: Checks your balance
+    aliases:
+    - money
+
+softdepend:
+- Vault
+
+permissions:
+  fe.balance:
+    description: Allows you to check your balance with the /fe command
+    default: true
+  fe.balance.other:
+    description: Allows you to check other players' balances with the /fe name command
+    default: true
+  fe.send:
+    description: Allows you to send money to other players with the /fe send name amount command
+    default: true
+  fe.top:
+    description: Allows you to check the top 5 richest players with the /fe top command
+    default: true
+  fe.?:
+    description: Allows you to get help with the /fe help command
+    default: true
+  fe.create:
+    description: Allows you to create an account
+  fe.remove:
+    description: Allows you to remove an account
+  fe.set:
+    description: Allows you to set other player's balance with the /fe set name amount command
+  fe.grant:
+    description: Allows you grant players money with the /fe grant name amount command
+  fe.deduct:
+    description: Allows you to deduct money from a player with the /fe deduct name amount command
+  fe.clean:
+    description: Allows you to clean all accounts with the default balance with the /fe clean command
+  fe.reload:
+    description: Allows you to reload the configuration with the /fe reload command
+  fe.notify:
+    description: Allows you to receive a notification when Fe is out of date
+  fe.member:
+    children:
+      fe.balance: true
+      fe.balance.other: true
+      fe.send: true
+      fe.top: true
+      fe.help: true
+      fe.?: true
+  fe.admin:
+    children:
+      fe.create: true
+      fe.remove: true
+      fe.set: true
+      fe.grant: true
+      fe.deduct: true
+      fe.clean: true
+      fe.debug: true
+      fe.reload: true
+      fe.migrate: true
+      fe.notify: true
+  fe.*:
+    children:
+      fe.member: true
+      fe.admin: true
