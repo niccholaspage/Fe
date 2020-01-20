@@ -88,9 +88,9 @@ public abstract class Database {
     }
 
     protected boolean convertToUUID() {
-        if (!plugin.getServer().getOnlineMode()) {
-            //Disable plugin?
-        }
+//        if (!plugin.getServer().getOnlineMode()) {
+//            TODO Disable plugin?
+//        }
 
         plugin.log(Phrase.STARTING_UUID_CONVERSION);
 

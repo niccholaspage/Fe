@@ -108,7 +108,7 @@ public class Fe extends JavaPlugin {
 
         version = version.substring(0, version.indexOf("-SNAPSHOT"));
 
-        String fixed = "";
+        StringBuilder fixed = new StringBuilder();
 
         boolean doneFirst = false;
 
@@ -123,11 +123,11 @@ public class Fe extends JavaPlugin {
                 }
             }
 
-            fixed += c;
+            fixed.append(c);
         }
 
         try {
-            double ret = Double.parseDouble(fixed);
+            double ret = Double.parseDouble(fixed.toString());
 
             if (isSnapshot) {
                 ret -= 0.001;
@@ -301,13 +301,13 @@ public class Fe extends JavaPlugin {
     }
 
     public String getEndEqualMessage(int length) {
-        String message = Phrase.SECONDARY_COLOR.parse() + "";
+        StringBuilder message = new StringBuilder(Phrase.SECONDARY_COLOR.parse() + "");
 
         for (int i = 0; i < length; i++) {
-            message += "=";
+            message.append("=");
         }
 
-        return message;
+        return message.toString();
     }
 
     private void loadMetrics() {
@@ -345,7 +345,7 @@ public class Fe extends JavaPlugin {
             });
 
             metrics.start();
-        } catch (IOException e) {
+        } catch (IOException ignored) {
 
         }
     }

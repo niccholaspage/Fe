@@ -50,7 +50,7 @@ public class UpdateCheck implements Runnable {
                     plugin.log(Phrase.FE_OUTDATED, version);
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }

@@ -115,9 +115,7 @@ public class FeCommand implements CommandExecutor {
 
         String[] realArgs = new String[args.length - 1];
 
-        for (int i = 1; i < args.length; i++) {
-            realArgs[i - 1] = args[i];
-        }
+        System.arraycopy(args, 1, realArgs, 0, args.length - 1);
 
         if (!command.onCommand(sender, cmd, commandLabel, realArgs)) {
             Phrase.TRY_COMMAND.sendWithPrefix(sender, parse(commandLabel, command));
@@ -159,7 +157,7 @@ public class FeCommand implements CommandExecutor {
     private String parseArg(String argument, String operatorsColor, String argumentColor) {
         String operator = argument.substring(0, 1);
 
-        argument = argument.substring(1, argument.length());
+        argument = argument.substring(1);
 
         String reverse;
 
