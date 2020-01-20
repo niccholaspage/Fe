@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.melonbrew.fe.Fe;
 import org.melonbrew.fe.Phrase;
+import org.melonbrew.fe.UUIDFetcher;
 import org.melonbrew.fe.command.CommandType;
 import org.melonbrew.fe.command.SubCommand;
 import org.melonbrew.fe.database.Account;

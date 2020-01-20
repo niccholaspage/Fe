@@ -62,11 +62,11 @@ public enum Phrase {
 
     private String message;
 
-    private Phrase(String defaultMessage) {
+    Phrase(String defaultMessage) {
         this(defaultMessage, false);
     }
 
-    private Phrase(String defaultMessage, boolean categorized) {
+    Phrase(String defaultMessage, boolean categorized) {
         this.defaultMessage = defaultMessage;
 
         this.categorized = categorized;
